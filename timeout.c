@@ -24,6 +24,10 @@ void Timeout_Struct_Init(void){
 	Timeout.CurrVal     = NULL;
 }
 
+void Timeout_Reg_Init(void){
+	//Initialize registers if necessary
+}
+
 void Timeout_Delay_1us(void){
 	__NOP();
 	__NOP();
@@ -93,6 +97,9 @@ uint8_t Timeout_Error_Assign(int32_t val, uint8_t error_code){
 	Timeout_Set_MicroSeconds(val);
 	if(Timeout_Occured()){
 		Timeout.Error = error_code;
+		if(Timeout.StickyError == NULL){
+			Timeout.StickyError = error_code;
+		}
 		return TRUE;
 	}
 	else{
@@ -100,6 +107,9 @@ uint8_t Timeout_Error_Assign(int32_t val, uint8_t error_code){
 	}
 }
 
+void Timeout_Error_Force_Assign(uint8_t error_code){
+	Timeout.Error = error_code;
+}
 
 uint8_t Timeout_Error_Get(void){
 	return Timeout.Error;
@@ -109,7 +119,13 @@ void Timeout_Error_Clear(void){
 	Timeout.Error = NULL;
 }
 
+uint8_t Timeout_Sticky_Error_Get(void){
+	return Timeout.StickyError;
+}
 
+void Timeout_Sticky_Error_Clear(void){
+	Timeout.StickyError = NULL;
+}
 
 int32_t Timeout_CurrVal_Get(void){
 	return Timeout.CurrVal;
@@ -136,6 +152,11 @@ void Timeout_Arm(void){
 	Timeout_SetVal_Clear();
 	Timeout_CurrVal_Clear();
 	Timeout_Error_Clear();
+}
+
+void Timeout_Init(void){
+	Timeout_Struct_Init();
+	Timeout_Reg_Init();
 }
 
 

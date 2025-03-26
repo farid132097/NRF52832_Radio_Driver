@@ -398,6 +398,11 @@
               <FileType>5</FileType>
               <FilePath>.\timeout.h</FilePath>
             </File>
+            <File>
+              <FileName>radio.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\radio.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -417,6 +422,11 @@
               <FileName>timeout.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\timeout.c</FilePath>
+            </File>
+            <File>
+              <FileName>radio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\radio.c</FilePath>
             </File>
           </Files>
         </Group>

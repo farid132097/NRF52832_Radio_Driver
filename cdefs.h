@@ -12,6 +12,8 @@
 #define  NULL                    0x00U
 #define  TRUE                    0x01U
 #define  FALSE                   0x00U
+#define  COMPLETE                0x01U
+#define  INCOMPLETE              0x00U
 #define  LOGIC_HIGH              0x01U
 #define  LOGIC_LOW               0x00U
 
