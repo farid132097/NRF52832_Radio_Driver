@@ -1,0 +1,122 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.36.0.0
+Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Faridul Islam, NA, LIC=----
+ 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.36.0.0
+Toolchain Path:  C:\Keil_v5\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.16
+Assembler:       Armasm.exe V6.16
+Linker/Locator:  ArmLink.exe V6.16
+Library Manager: ArmAr.exe V6.16
+Hex Converter:   FromElf.exe V6.16
+CPU DLL:         SARMCM3.DLL V5.36.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      UL2CM3.DLL V1.164.0.0
+Dialog DLL:      TCM.DLL V1.53.0.0
+ 
+<h2>Project:</h2>
+D:\Projects\Embedded Projects\Personal\Keil\NRF52832_Radio_Driver\nrf52832_radio_driver.uvprojx
+Project File Date:  03/26/2025
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.16', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
+Rebuild target 'NRF52832'
+assembling arm_startup_nrf52.s...
+compiling app.c...
+compiling main.c...
+compiling timeout.c...
+RTE/Device/nRF52832_xxAA/system_nrf52.c(32): warning: In file included from...
+C:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include\system_nrf52_approtect.h(51): warning: 'nrf52_configuration_249' was marked unused but was used [-Wused-but-marked-unused]
+            if (nrf52_configuration_249())
+                ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(72): warning: no previous prototype for function 'nvmc_wait' [-Wmissing-prototypes]
+void nvmc_wait(void)
+     ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(72): note: declare 'static' if the function is not intended to be used outside of this translation unit
+void nvmc_wait(void)
+^
+static 
+RTE/Device/nRF52832_xxAA/system_nrf52.c(79): warning: no previous prototype for function 'nvmc_config' [-Wmissing-prototypes]
+void nvmc_config(uint32_t mode)
+     ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(79): note: declare 'static' if the function is not intended to be used outside of this translation unit
+void nvmc_config(uint32_t mode)
+^
+static 
+RTE/Device/nRF52832_xxAA/system_nrf52.c(115): warning: 'nrf52_errata_12' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_12()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(123): warning: 'nrf52_errata_16' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_16()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(131): warning: 'nrf52_errata_31' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_31()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(139): warning: 'nrf52_errata_32' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_32()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(147): warning: 'nrf52_errata_36' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_36()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(157): warning: 'nrf52_errata_37' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_37()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(165): warning: 'nrf52_errata_57' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_57()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(176): warning: 'nrf52_errata_66' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_66()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(216): warning: 'nrf52_errata_108' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_108()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(240): warning: 'nrf52_errata_136' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_136()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(250): warning: 'nrf52_errata_182' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_182()){
+            ^
+14 warnings generated.
+compiling system_nrf52.c...
+linking...
+Program Size: Code=1360 RO-data=544 RW-data=4 ZI-data=8288  
+".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 14 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                https://www.keil.com/pack/ARM.CMSIS.6.1.0.pack
+                ARM.CMSIS.6.1.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 6.1.0
+
+Package Vendor: NordicSemiconductor
+                http://developer.nordicsemi.com/nRF5_SDK/pieces/nRF_DeviceFamilyPack/NordicSemiconductor.nRF_DeviceFamilyPack.8.44.1.pack
+                NordicSemiconductor.nRF_DeviceFamilyPack.8.44.1
+                Nordic Semiconductor nRF ARM devices Device Family Pack with BSD license.
+   * Component: Startup Version: 8.44.1
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_NRF52832
+  C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include
+  C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:6.1.0
+
+   * Component: NordicSemiconductor::Device:Startup:8.44.1
+      Source file:   Device\Source\arm\arm_startup_nrf52.s
+      Include file:  Device\Include\system_nrf.h
+      Include file:  Device\Include\system_nrf52.h
+      Source file:   Device\Source\system_nrf52.c
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>
