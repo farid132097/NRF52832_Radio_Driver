@@ -7,7 +7,7 @@
 
 void App_Config(void){
   Timeout_Init();
-	
+	Radio_Init();
 }
 
 void App_Mainloop(void){

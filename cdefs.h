@@ -14,6 +14,8 @@
 #define  FALSE                   0x00U
 #define  COMPLETE                0x01U
 #define  INCOMPLETE              0x00U
+#define  SUCCESSFUL              0x01U
+#define  FAILED                  0x00U
 #define  LOGIC_HIGH              0x01U
 #define  LOGIC_LOW               0x00U
 

@@ -15,7 +15,6 @@
 
 typedef struct radio_t{
 	uint8_t RegInit;
-	
 }radio_t;
 
 static radio_t Radio;
@@ -31,7 +30,7 @@ void Radio_HFCLK_Start(void){
 	  NRF_CLOCK->TASKS_HFCLKSTART = 1;
 		Timeout_Arm();
 	  while(NRF_CLOCK->EVENTS_HFCLKSTARTED == 0){
-		  if(Timeout_Error_Assign(1000, Radio_Error_Set(ERROR_RADIO_HFCLK_START_FAILED))){
+		  if(Timeout_Error_Assign(1000, ERROR_RADIO_HFCLK_START_FAILED)){
 			  break;
 		  }
 	  }
@@ -48,7 +47,7 @@ void Radio_HFCLK_Stop(void){
 	  NRF_CLOCK->TASKS_HFCLKSTOP = 1;
 	  Timeout_Arm();
 	  while( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_STATE_Msk) != CLOCK_HFCLKSTAT_STATE_NotRunning ){
-		  if(Timeout_Error_Assign(1000, Radio_Error_Set(ERROR_RADIO_HFCLK_STOP_FAILED))){
+		  if(Timeout_Error_Assign(1000, ERROR_RADIO_HFCLK_STOP_FAILED)){
 			  break;
 		  }
 	  }
@@ -85,7 +84,7 @@ void Radio_Power_Enable(void){
 	  NRF_RADIO->POWER = 1;
 		Timeout_Arm();
 	  while(NRF_RADIO->POWER == 0){
-		  if(Timeout_Error_Assign(1000, Radio_Error_Set(ERROR_RADIO_POWER_ENABLE_FAILED))){
+		  if(Timeout_Error_Assign(1000, ERROR_RADIO_POWER_ENABLE_FAILED)){
 			  break;
 		  }
 	  }
@@ -97,7 +96,7 @@ void Radio_Power_Disable(void){
 	  NRF_RADIO->POWER = 0;
 		Timeout_Arm();
 	  while(NRF_RADIO->POWER == 1){
-		  if(Timeout_Error_Assign(1000, Radio_Error_Set(ERROR_RADIO_POWER_DISABLE_FAILED))){
+		  if(Timeout_Error_Assign(1000, ERROR_RADIO_POWER_DISABLE_FAILED)){
 			  break;
 		  }
 	  }
@@ -123,7 +122,7 @@ void Radio_Mode_Disable(void){
 	  NRF_RADIO->TASKS_DISABLE = 1;
 		Timeout_Arm();
 	  while(NRF_RADIO->EVENTS_DISABLED == 0){
-	    if(Timeout_Error_Assign(1000, Radio_Error_Set(ERROR_RADIO_MODE_SWITCH_DISABLE_FAILED))){
+	    if(Timeout_Error_Assign(1000, ERROR_RADIO_MODE_SWITCH_DISABLE_FAILED)){
 			  break;
 		  }
 	  }
@@ -137,7 +136,7 @@ void Radio_Mode_Tx(void){
 	  NRF_RADIO->TASKS_TXEN = 1;
 		Timeout_Arm();
 	  while(NRF_RADIO->EVENTS_READY == 0){
-		  if(Timeout_Error_Assign(1000, Radio_Error_Set(ERROR_RADIO_MODE_SWITCH_TX_FAILED))){
+		  if(Timeout_Error_Assign(1000, ERROR_RADIO_MODE_SWITCH_TX_FAILED)){
 			  break;
 		  }
     }
@@ -151,7 +150,7 @@ void Radio_Mode_Rx(void){
 	  NRF_RADIO->TASKS_RXEN = 1;
 		Timeout_Arm();
 	  while(NRF_RADIO->EVENTS_READY == 0){
-		  if(Timeout_Error_Assign(1000, Radio_Error_Set(ERROR_RADIO_MODE_SWITCH_RX_FAILED))){
+		  if(Timeout_Error_Assign(1000, ERROR_RADIO_MODE_SWITCH_RX_FAILED)){
 			  break;
 		  }
     }
@@ -161,11 +160,11 @@ void Radio_Mode_Rx(void){
 }
 
 
-void Radio_Start_Task(uint32_t delay){
+void Radio_Start_Task(int32_t delay){
 	NRF_RADIO->EVENTS_END = 0;
 	NRF_RADIO->TASKS_START = 1;
 	while(NRF_RADIO->EVENTS_END == 0){
-	  if(Timeout_Error_Assign((int32_t)delay, Radio_Error_Set(ERROR_RADIO_TASK_TIMEOUT_OCCURED))){
+	  if(Timeout_Error_Assign((int32_t)delay, ERROR_RADIO_TASK_TIMEOUT_OCCURED)){
 			break;
 		}
 	}
@@ -175,7 +174,6 @@ void Radio_Start_Task(uint32_t delay){
 
 uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
 	uint8_t sts  = TRUE;
-	Radio_Active();
 	Radio_Mode_Tx();
 	if(Timeout_Error_Get() != NULL){
 		Radio_Mode_Disable();
@@ -193,9 +191,8 @@ uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
 	return sts;
 }
 
-uint8_t Radio_Rx(uint8_t *buf, uint32_t timeout){
-	uint8_t sts  = TRUE;
-	Radio_Active();
+uint8_t Radio_Rx(uint8_t *buf, int32_t timeout){
+	uint8_t sts  = SUCCESSFUL;
 	Radio_Mode_Rx();
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
@@ -208,7 +205,7 @@ uint8_t Radio_Rx(uint8_t *buf, uint32_t timeout){
 	}
 	
 	if(NRF_RADIO->EVENTS_CRCOK != 1){
-		//Radio_Error_Set(ERROR_RADIO_CRC_NOT_OK);
+		Timeout_Error_Force_Assign(ERROR_RADIO_CRC_NOT_OK);
 		return FALSE;
 	}
 	else{
@@ -219,20 +216,15 @@ uint8_t Radio_Rx(uint8_t *buf, uint32_t timeout){
 }
 	
 uint8_t Radio_Tx_Ack(uint8_t *buf, uint8_t len){
-	uint8_t sts = 0;
-	
-	Radio_Tx(buf, len);
-	if(Timeout_Error_Get() != NULL){
-		return FALSE;
+	uint8_t sts = FAILED;
+	if(Radio_Tx(buf, len) == SUCCESSFUL){
+		sts = Radio_Rx(buf, 800);
 	}
-	
-	sts = Radio_Rx(buf, 800);
-	
 	return sts;
 }
 	
 
-uint8_t Radio_Rx_Ack(uint8_t *buf, uint32_t timeout){
+uint8_t Radio_Rx_Ack(uint8_t *buf, int32_t timeout){
 	uint8_t sts = TRUE;
 	
 	Radio_Rx(buf, timeout);
@@ -252,11 +244,6 @@ uint8_t Radio_Rx_Ack(uint8_t *buf, uint32_t timeout){
 		return FALSE;
 	}
 	return sts;
-}
-
-
-uint8_t Radio_Error_Set(uint8_t error_code){
-	return (error_code );
 }
 
 
