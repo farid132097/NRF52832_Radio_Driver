@@ -26,6 +26,7 @@ int32_t  Timeout_SetVal_Get(void);
 void     Timeout_SetVal_Clear(void);
 void     Timeout_Status_Clear(void);
 void     Timeout_Arm(void);
+void     Timeout_Handler(void);
 void     Timeout_Init(void);
 
 

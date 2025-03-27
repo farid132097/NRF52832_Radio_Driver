@@ -154,6 +154,14 @@ void Timeout_Arm(void){
 	Timeout_Error_Clear();
 }
 
+
+__WEAK void Timeout_Handler(void){
+	while(1){
+		//add function for robust implementation
+	}
+}
+
+
 void Timeout_Init(void){
 	Timeout_Struct_Init();
 	Timeout_Reg_Init();

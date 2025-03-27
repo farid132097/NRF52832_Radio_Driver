@@ -30,6 +30,10 @@ Rebuild target 'NRF52832'
 assembling arm_startup_nrf52.s...
 compiling main.c...
 compiling app.c...
+timeout.c(158): warning: function 'Timeout_Handler' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+__WEAK void Timeout_Handler(void){
+                                 ^
+1 warning generated.
 compiling timeout.c...
 compiling radio.c...
 RTE/Device/nRF52832_xxAA/system_nrf52.c(32): warning: In file included from...
@@ -87,7 +91,7 @@ RTE/Device/nRF52832_xxAA/system_nrf52.c(250): warning: 'nrf52_errata_182' was ma
 compiling system_nrf52.c...
 linking...
 Program Size: Code=1936 RO-data=544 RW-data=4 ZI-data=8312  
-".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 14 Warning(s).
+".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 15 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -114,9 +118,9 @@ Package Vendor: NordicSemiconductor
 
    * Component: NordicSemiconductor::Device:Startup:8.44.1
       Source file:   Device\Source\arm\arm_startup_nrf52.s
+      Source file:   Device\Source\system_nrf52.c
       Include file:  Device\Include\system_nrf52.h
       Include file:  Device\Include\system_nrf.h
-      Source file:   Device\Source\system_nrf52.c
 Build Time Elapsed:  00:00:00
 </pre>
 </body>
