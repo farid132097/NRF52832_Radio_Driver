@@ -6,8 +6,7 @@
  * faridmdislam@gmail.com
  * LL Driver : RADIO Library
  * Created : December 15, 2024, 9:30 PM
- * Rev2.1 
- * Last Modified : 28 Mar, 2025
+ * Last Modified : 28 Mar, 2025, Rev2.2
  *
  */
 
@@ -16,13 +15,19 @@
 #include "cdefs.h"
 #include "timeout.h"
 
-#define  RADIO_BUF_SIZE 36
+
+#define  RADIO_BUF_SIZE              (36U)
+#define  RADIO_SYS_BUF_START         (18U)
+#define  RADIO_DATA_BUF_START        (26U)
+#define  RADIO_SYS_BUF_MAX_LEN       (RADIO_DATA_BUF_START - RADIO_SYS_BUF_START)
+#define  RADIO_DATA_BUF_MAX_LEN      (RADIO_BUF_SIZE - RADIO_DATA_BUF_START)
+
 
 typedef struct packet_t{
 	uint8_t  Length;
 	uint8_t  PID;
 	uint8_t  DstLoad;
-	uint8_t  Reserved1;
+	uint8_t  Reserved0;
 	uint32_t SRCH;
 	uint32_t SRCL;
 	uint32_t DSTH;
@@ -32,9 +37,10 @@ typedef struct packet_t{
 
 typedef struct radio_t{
 	uint8_t  RegInit;
-	uint8_t  Reserved5;
-	uint8_t  Reserved6;
-	uint8_t  Reserved7;
+	uint8_t  SysDataAvailable;
+	int16_t  SysParam0;
+	int16_t  SysParam1;
+	int16_t  Reserved1;
 	packet_t TxPacket;
 	packet_t RxPacket;
 }radio_t;
@@ -44,6 +50,9 @@ static radio_t Radio;
 
 void Radio_Struct_Init(void){
 	Radio.RegInit          = INCOMPLETE;
+	Radio.SysDataAvailable = FALSE;
+	Radio.SysParam0        = NULL;
+	Radio.SysParam1        = NULL;
 	Radio.TxPacket.Length  = 0;
 	Radio.TxPacket.PID     = 0;
 	Radio.TxPacket.DstLoad = TRUE; //Target Destination Loaded
@@ -75,7 +84,7 @@ void Radio_Struct_Init(void){
 	Radio.TxPacket.Buf[17] = (Radio.TxPacket.DSTL >>  0) & 0xFF;
 	
 	//Clear Only Data Sections of Tx Buf
-	for(uint8_t i=18; i<RADIO_BUF_SIZE; i++){
+	for(uint8_t i=RADIO_DATA_BUF_START; i<RADIO_BUF_SIZE; i++){
 		Radio.TxPacket.Buf[i] = 0;
 	}
 	
@@ -114,8 +123,14 @@ void Radio_Tx_Copy_Dst_Addr(void){
 }
 
 void Radio_Tx_Set_Len(uint8_t len){
-	Radio.TxPacket.Buf[0] = len;
-	Radio.TxPacket.Length = len;
+	if(len < RADIO_BUF_SIZE){
+	  Radio.TxPacket.Buf[0] = len;
+	  Radio.TxPacket.Length = len;
+	}
+	else{
+		Radio.TxPacket.Buf[0] = RADIO_BUF_SIZE;
+	  Radio.TxPacket.Length = RADIO_BUF_SIZE;
+	}
 }
 
 void Radio_Tx_Set_PID(uint8_t pid){
@@ -123,12 +138,37 @@ void Radio_Tx_Set_PID(uint8_t pid){
 	Radio.TxPacket.PID    = pid;
 }
 
+//Should Never be used; if used, must be reinitialized system
+void Radio_Tx_Clear_Buf(void){
+	for(uint8_t i=0; i<RADIO_BUF_SIZE; i++){
+		Radio.TxPacket.Buf[i] = 0;
+	}
+}
+
+//Should be used after reception of a system packet
+void Radio_Tx_Clear_System_Buf(void){
+	for(uint8_t i=RADIO_SYS_BUF_START; i<RADIO_DATA_BUF_START; i++){
+		Radio.TxPacket.Buf[i] = 0;
+	}
+}
+
+//Should be used after each data packet reception
+void Radio_Tx_Clear_Data_Buf(void){
+	for(uint8_t i=RADIO_DATA_BUF_START; i<RADIO_BUF_SIZE; i++){
+		Radio.TxPacket.Buf[i] = 0;
+	}
+}
+
 void Radio_Tx_Set_Buf(uint8_t index, uint8_t data){
 	Radio.TxPacket.Buf[index] = data;
 }
 
+void Radio_Tx_Set_Sys_Buf(uint8_t index, uint8_t data){
+	Radio.TxPacket.Buf[index + RADIO_SYS_BUF_START] = data;
+}
+
 void Radio_Tx_Set_Data_Buf(uint8_t index, uint8_t data){
-	Radio.TxPacket.Buf[index + 18] = data;
+	Radio.TxPacket.Buf[index + RADIO_DATA_BUF_START] = data;
 }
 
 uint32_t Radio_Rx_Extract_SrcH(void){
@@ -176,7 +216,95 @@ uint8_t Radio_Rx_Get_Buf(uint8_t index){
 }
 
 uint8_t Radio_Rx_Get_Data_Buf(uint8_t index){
-	return Radio.RxPacket.Buf[index + 18];
+	return Radio.RxPacket.Buf[index + RADIO_DATA_BUF_START];
+}
+
+uint8_t Radio_Rx_Get_Sys_Buf(uint8_t index){
+	return Radio.RxPacket.Buf[index + RADIO_SYS_BUF_START];
+}
+
+uint16_t Radio_CRC_Calculate_Byte(uint16_t crc, uint8_t data){
+	uint16_t temp = data;
+	temp <<= 8;
+  crc = crc ^ temp;
+  for(uint8_t i = 0; i < 8; i++){
+    if(crc & 0x8000){
+			temp   = crc;
+			temp <<= 0x01;
+			temp  ^= 0x1021;
+	    crc = temp;
+	  }
+    else{
+	    crc <<= 1;
+	  }
+  }
+  return crc;
+}
+
+uint16_t Radio_CRC_Calculate_Block(uint8_t *buf, uint8_t start, uint8_t end){
+  uint16_t crc = 0;
+  for(uint8_t i = start; i < end; i++){
+    crc = Radio_CRC_Calculate_Byte(crc,buf[i]);
+  }
+  return crc;
+}
+
+void Radio_Build_Sys_Packet(uint8_t *buf, uint8_t len){
+	//Byte0 must be 1 to indicate that SysData Present
+	//Last 2 bytes are CRC of SysData, total 3 bytes offset
+	uint16_t crc;
+	Radio_Tx_Set_Sys_Buf(0, TRUE);
+	for(uint8_t i=0; i<len; i++){
+		if(i < RADIO_SYS_BUF_MAX_LEN - 3){
+		  Radio_Tx_Set_Sys_Buf(i+1, buf[i]);
+		}
+	}
+	crc = Radio_CRC_Calculate_Block(Radio.TxPacket.Buf, RADIO_SYS_BUF_START, RADIO_DATA_BUF_START-2);
+	Radio_Tx_Set_Buf(RADIO_DATA_BUF_START-2, (crc >> 8) );
+	Radio_Tx_Set_Buf(RADIO_DATA_BUF_START-1, (crc & 0xFF) );
+}
+
+void Radio_Process_Sys_Data(void){
+	uint16_t crc_calc, crc_rec;
+	if( Radio_Rx_Get_Sys_Buf(0) == TRUE ){
+		//crc calculation includes sys_status byte, byte0
+		crc_calc  = Radio_CRC_Calculate_Block(Radio.RxPacket.Buf, RADIO_SYS_BUF_START, RADIO_DATA_BUF_START-2);
+		crc_rec   = Radio_Rx_Get_Buf(RADIO_DATA_BUF_START-2);
+		crc_rec <<= 8;
+		crc_rec  |= Radio_Rx_Get_Buf(RADIO_DATA_BUF_START-1);
+		if( crc_calc == crc_rec){
+			Radio.SysParam0   = Radio_Rx_Get_Sys_Buf(1); //Buf[19]
+			Radio.SysParam0 <<= 8;
+			Radio.SysParam0  |= Radio_Rx_Get_Sys_Buf(2); //Buf[20]
+			Radio.SysParam1   = Radio_Rx_Get_Sys_Buf(3); //Buf[21]
+			Radio.SysParam1 <<= 8;
+			Radio.SysParam1  |= Radio_Rx_Get_Sys_Buf(4); //Buf[22]
+			Radio.SysDataAvailable = TRUE;
+		}
+		//Clear System Buffer
+		Radio_Tx_Clear_System_Buf();
+	}
+}
+
+uint8_t Radio_Sys_Data_Available(void){
+	if(Radio.SysDataAvailable == TRUE){
+		Radio.SysDataAvailable = FALSE;
+		return TRUE;
+	}
+	return FALSE;
+}
+
+//Clears System Data Available Flag
+void Radio_Clear_Sys_Data_Available(void){
+	Radio.SysDataAvailable = FALSE;
+}
+
+int16_t Radio_Get_Sys_Param0(void){
+	return Radio.SysParam0;
+}
+
+int16_t Radio_Get_Sys_Param1(void){
+	return Radio.SysParam1;
 }
 
 void Radio_HFCLK_Start(void){
@@ -209,25 +337,26 @@ void Radio_HFCLK_Stop(void){
 	}
 }
 
+
 void Radio_Reg_Init(void){
 	if(Radio.RegInit == INCOMPLETE){
-	  NRF_RADIO->TXPOWER = RADIO_TXPOWER_TXPOWER_Pos4dBm;
+	  NRF_RADIO->TXPOWER   = RADIO_TXPOWER_TXPOWER_Pos4dBm;
 	  NRF_RADIO->FREQUENCY = 10;
-	  NRF_RADIO->MODE = (RADIO_MODE_MODE_Nrf_2Mbit<<RADIO_MODE_MODE_Pos);
-	  NRF_RADIO->PREFIX0 = 0x11223344;
-	  NRF_RADIO->BASE0   = 0x11111111;
-	  NRF_RADIO->TXADDRESS = 0;
+	  NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_2Mbit<<RADIO_MODE_MODE_Pos);
+	  NRF_RADIO->PREFIX0   = 0x11223344;
+	  NRF_RADIO->BASE0     = 0x11111111;
+	  NRF_RADIO->TXADDRESS   = 0;
 	  NRF_RADIO->RXADDRESSES = 1;
-    NRF_RADIO->PCNF0  = 0;
-	  NRF_RADIO->PCNF1  = (40<<RADIO_PCNF1_MAXLEN_Pos)  |
-	                      (36 <<RADIO_PCNF1_STATLEN_Pos)|
-	                      (4 <<RADIO_PCNF1_BALEN_Pos)   |
-	                      (RADIO_PCNF1_ENDIAN_Big<<RADIO_PCNF1_ENDIAN_Pos);
-	  NRF_RADIO->SHORTS = 0x00000000;
-	  NRF_RADIO->CRCCNF = RADIO_CRCCNF_LEN_Two<<RADIO_CRCCNF_LEN_Pos;
+    NRF_RADIO->PCNF0    = 0;
+	  NRF_RADIO->PCNF1    = (36 <<RADIO_PCNF1_MAXLEN_Pos)  |
+	                        (32 <<RADIO_PCNF1_STATLEN_Pos) |
+	                        (4  <<RADIO_PCNF1_BALEN_Pos)   |
+	                        (RADIO_PCNF1_ENDIAN_Big<<RADIO_PCNF1_ENDIAN_Pos);
+	  NRF_RADIO->SHORTS   = 0x00000000;
+	  NRF_RADIO->CRCCNF   = RADIO_CRCCNF_LEN_Two<<RADIO_CRCCNF_LEN_Pos;
 	  NRF_RADIO->MODECNF0 = (1<<9)|(1<<0);
-	  NRF_RADIO->CRCINIT = 0xFFFFFF;
-	  NRF_RADIO->CRCPOLY = 0x11021;
+	  NRF_RADIO->CRCINIT  = 0xFFFFFF;
+	  NRF_RADIO->CRCPOLY  = 0x11021;
 	  NRF_RADIO->EVENTS_ADDRESS = 0;
 	  NRF_RADIO->EVENTS_PAYLOAD = 0;
 		Radio.RegInit = COMPLETE;
@@ -374,10 +503,11 @@ uint8_t Radio_Rx(int32_t timeout){
 
 	
 uint8_t Radio_Tx_Ack(void){
-	uint8_t sts = FAILED;
+	uint8_t  sts = FAILED;
 	if(Radio_Tx() == SUCCESSFUL){
 		sts = Radio_Rx(100);
-		if( (sts == SUCCESSFUL) && (Radio_Rx_Extract_DstH() == Radio.TxPacket.SRCH) && (Radio_Rx_Extract_DstL() == Radio.TxPacket.SRCL)){
+		if( (sts == SUCCESSFUL) && (Radio_Rx_Extract_DstH() == Radio.TxPacket.SRCH) && (Radio_Rx_Extract_DstL() == Radio.TxPacket.SRCL) ){
+			Radio_Process_Sys_Data();
 			return SUCCESSFUL;
 		}
 		return FAILED;
@@ -401,9 +531,17 @@ uint8_t Radio_Rx_Ack(int32_t timeout){
 		NRF_RADIO->EVENTS_ADDRESS = 0;
 		NRF_RADIO->EVENTS_PAYLOAD = 0;
 	}
-	Radio_Tx_Copy_Dst_Addr();
-	Radio_Tx();
-	Radio_Tx_Load_Dst_Addr();
+	
+	if( (Radio_Rx_Extract_DstH() == Radio.TxPacket.SRCH) && (Radio_Rx_Extract_DstL() == Radio.TxPacket.SRCL) ){
+	  Radio_Tx_Copy_Dst_Addr();
+	  Radio_Tx();
+	  Radio_Tx_Load_Dst_Addr();
+		Radio_Process_Sys_Data();
+	}
+	else{
+		return FALSE;
+	}
+		
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
 	}

@@ -26,7 +26,9 @@ void App_Mainloop(void){
 		UART_Tx_Number_Hex_SP(Radio_Rx_Extract_DstL());
 		
 		UART_Tx_Parameter_SP("UpTime", (Radio_Rx_Get_Data_Buf(0)<<24) | (Radio_Rx_Get_Data_Buf(1)<<16) | (Radio_Rx_Get_Data_Buf(2)<<8) | (Radio_Rx_Get_Data_Buf(3)) );
-		UART_Tx_Parameter_NL("VCap", (Radio_Rx_Get_Data_Buf(6)<<8) | (Radio_Rx_Get_Data_Buf(7)) );
+		UART_Tx_Parameter_SP("VCap", (Radio_Rx_Get_Data_Buf(4)<<8) | (Radio_Rx_Get_Data_Buf(5)) );
+		UART_Tx_Parameter_SP("SP0", Radio_Get_Sys_Param0() );
+		UART_Tx_Parameter_NL("SP1", Radio_Get_Sys_Param1() );
 	}
 	
 	if(Timeout_Sticky_Error_Get() == NULL){

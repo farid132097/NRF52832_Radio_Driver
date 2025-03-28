@@ -43,14 +43,31 @@ void     Radio_Tx_Load_Dst_Addr(void);
 void     Radio_Tx_Copy_Dst_Addr(void);
 void     Radio_Tx_Set_Len(uint8_t len);
 void     Radio_Tx_Set_PID(uint8_t len);
+
+void     Radio_Tx_Clear_Buf(void);
+void     Radio_Tx_Clear_System_Buf(void);
+void     Radio_Tx_Clear_Data_Buf(void);
 void     Radio_Tx_Set_Buf(uint8_t index, uint8_t data);
+void     Radio_Tx_Set_Sys_Buf(uint8_t index, uint8_t data);
 void     Radio_Tx_Set_Data_Buf(uint8_t index, uint8_t data);
+
 uint32_t Radio_Rx_Extract_SrcH(void);
 uint32_t Radio_Rx_Extract_SrcL(void);
 uint32_t Radio_Rx_Extract_DstH(void);
 uint32_t Radio_Rx_Extract_DstL(void);
 uint8_t  Radio_Rx_Get_Buf(uint8_t index);
+uint8_t  Radio_Rx_Get_Sys_Buf(uint8_t index);
 uint8_t  Radio_Rx_Get_Data_Buf(uint8_t index);
+
+uint16_t Radio_CRC_Calculate_Byte(uint16_t crc, uint8_t data);
+uint16_t Radio_CRC_Calculate_Block(uint8_t *buf, uint8_t start, uint8_t end);
+void     Radio_Build_Sys_Packet(uint8_t *buf, uint8_t len);
+void     Radio_Process_Sys_Data(void);
+uint8_t  Radio_Sys_Data_Available(void);
+void     Radio_Clear_Sys_Data_Available(void);
+int16_t  Radio_Get_Sys_Param0(void);
+int16_t  Radio_Get_Sys_Param1(void);
+
 void     Radio_HFCLK_Start(void);
 void     Radio_HFCLK_Stop(void);
 void     Radio_Reg_Init(void);
