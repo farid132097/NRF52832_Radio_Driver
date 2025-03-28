@@ -128,7 +128,7 @@ void Radio_Tx_Set_Buf(uint8_t index, uint8_t data){
 }
 
 void Radio_Tx_Set_Data_Buf(uint8_t index, uint8_t data){
-	Radio.TxPacket.Buf[index+18] = data;
+	Radio.TxPacket.Buf[index + 18] = data;
 }
 
 uint32_t Radio_Rx_Extract_SrcH(void){
@@ -136,7 +136,7 @@ uint32_t Radio_Rx_Extract_SrcH(void){
 	uint32_t temp = 0;
 	for(i=0; i<4; i++){
 		temp <<= 8;
-		temp  |= Radio.RxPacket.Buf[2+i];
+		temp  |= Radio.RxPacket.Buf[2 + i];
 	}
 	return temp;
 }
@@ -146,7 +146,7 @@ uint32_t Radio_Rx_Extract_SrcL(void){
 	uint32_t temp = 0;
 	for(i=0; i<4; i++){
 		temp <<= 8;
-		temp  |= Radio.RxPacket.Buf[6+i];
+		temp  |= Radio.RxPacket.Buf[6 + i];
 	}
 	return temp;
 }
@@ -156,7 +156,7 @@ uint32_t Radio_Rx_Extract_DstH(void){
 	uint32_t temp = 0;
 	for(i=0; i<4; i++){
 		temp <<= 8;
-		temp  |= Radio.RxPacket.Buf[10+i];
+		temp  |= Radio.RxPacket.Buf[10 + i];
 	}
 	return temp;
 }
@@ -166,9 +166,17 @@ uint32_t Radio_Rx_Extract_DstL(void){
 	uint32_t temp = 0;
 	for(i=0; i<4; i++){
 		temp <<= 8;
-		temp  |= Radio.RxPacket.Buf[14+i];
+		temp  |= Radio.RxPacket.Buf[14 + i];
 	}
 	return temp;
+}
+
+uint8_t Radio_Rx_Get_Buf(uint8_t index){
+	return Radio.RxPacket.Buf[index];
+}
+
+uint8_t Radio_Rx_Get_Data_Buf(uint8_t index){
+	return Radio.RxPacket.Buf[index + 18];
 }
 
 void Radio_HFCLK_Start(void){

@@ -49,6 +49,8 @@ uint32_t Radio_Rx_Extract_SrcH(void);
 uint32_t Radio_Rx_Extract_SrcL(void);
 uint32_t Radio_Rx_Extract_DstH(void);
 uint32_t Radio_Rx_Extract_DstL(void);
+uint8_t  Radio_Rx_Get_Buf(uint8_t index);
+uint8_t  Radio_Rx_Get_Data_Buf(uint8_t index);
 void     Radio_HFCLK_Start(void);
 void     Radio_HFCLK_Stop(void);
 void     Radio_Reg_Init(void);

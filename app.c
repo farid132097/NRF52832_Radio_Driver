@@ -25,7 +25,8 @@ void App_Mainloop(void){
 		UART_Tx_Parameter_Hex_SP("DST",Radio_Rx_Extract_DstH());
 		UART_Tx_Number_Hex_SP(Radio_Rx_Extract_DstL());
 		
-		UART_Tx_Text_NL("Received packet");
+		UART_Tx_Parameter_SP("UpTime", (Radio_Rx_Get_Data_Buf(0)<<24) | (Radio_Rx_Get_Data_Buf(1)<<16) | (Radio_Rx_Get_Data_Buf(2)<<8) | (Radio_Rx_Get_Data_Buf(3)) );
+		UART_Tx_Parameter_NL("VCap", (Radio_Rx_Get_Data_Buf(6)<<8) | (Radio_Rx_Get_Data_Buf(7)) );
 	}
 	
 	if(Timeout_Sticky_Error_Get() == NULL){
