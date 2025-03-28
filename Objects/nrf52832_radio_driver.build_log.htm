@@ -17,25 +17,33 @@ Library Manager: ArmAr.exe V6.16
 Hex Converter:   FromElf.exe V6.16
 CPU DLL:         SARMCM3.DLL V5.36.0.0
 Dialog DLL:      DCM.DLL V1.17.3.0
-Target DLL:      UL2CM3.DLL V1.164.0.0
+Target DLL:      CMSIS_AGDI.dll V1.33.0.0
 Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
 D:\Projects\Embedded Projects\Personal\Keil\NRF52832_Radio_Driver\nrf52832_radio_driver.uvprojx
-Project File Date:  03/26/2025
+Project File Date:  03/28/2025
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.16', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Rebuild target 'NRF52832'
 assembling arm_startup_nrf52.s...
 compiling main.c...
+compiling radio.c...
+app.c(10): warning: no previous extern declaration for non-static variable 'buf' [-Wmissing-variable-declarations]
+uint8_t buf[64];
+        ^
+app.c(10): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+uint8_t buf[64];
+^
+1 warning generated.
 compiling app.c...
 timeout.c(158): warning: function 'Timeout_Handler' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
 __WEAK void Timeout_Handler(void){
                                  ^
 1 warning generated.
 compiling timeout.c...
-compiling radio.c...
+compiling uart.c...
 RTE/Device/nRF52832_xxAA/system_nrf52.c(32): warning: In file included from...
 C:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include\system_nrf52_approtect.h(51): warning: 'nrf52_configuration_249' was marked unused but was used [-Wused-but-marked-unused]
             if (nrf52_configuration_249())
@@ -90,8 +98,8 @@ RTE/Device/nRF52832_xxAA/system_nrf52.c(250): warning: 'nrf52_errata_182' was ma
 14 warnings generated.
 compiling system_nrf52.c...
 linking...
-Program Size: Code=1936 RO-data=544 RW-data=4 ZI-data=8312  
-".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 15 Warning(s).
+Program Size: Code=2964 RO-data=544 RW-data=4 ZI-data=8464  
+".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 16 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -119,9 +127,9 @@ Package Vendor: NordicSemiconductor
    * Component: NordicSemiconductor::Device:Startup:8.44.1
       Source file:   Device\Source\arm\arm_startup_nrf52.s
       Source file:   Device\Source\system_nrf52.c
-      Include file:  Device\Include\system_nrf52.h
       Include file:  Device\Include\system_nrf.h
-Build Time Elapsed:  00:00:00
+      Include file:  Device\Include\system_nrf52.h
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
