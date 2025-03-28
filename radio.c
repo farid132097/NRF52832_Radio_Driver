@@ -43,7 +43,7 @@ static radio_t Radio;
 	
 
 void Radio_Struct_Init(void){
-	Radio.RegInit        = INCOMPLETE;
+	Radio.RegInit          = INCOMPLETE;
 	Radio.TxPacket.Length  = 0;
 	Radio.TxPacket.PID     = 0;
 	Radio.TxPacket.DstLoad = TRUE; //Target Destination Loaded
@@ -111,6 +111,24 @@ void Radio_Tx_Copy_Dst_Addr(void){
 	}
 	//Because of ACK packet, Target Dst Addr not loaded
 	Radio.TxPacket.DstLoad = FALSE; 
+}
+
+void Radio_Tx_Set_Len(uint8_t len){
+	Radio.TxPacket.Buf[0] = len;
+	Radio.TxPacket.Length = len;
+}
+
+void Radio_Tx_Set_PID(uint8_t pid){
+	Radio.TxPacket.Buf[1] = pid;
+	Radio.TxPacket.PID    = pid;
+}
+
+void Radio_Tx_Set_Buf(uint8_t index, uint8_t data){
+	Radio.TxPacket.Buf[index] = data;
+}
+
+void Radio_Tx_Set_Data_Buf(uint8_t index, uint8_t data){
+	Radio.TxPacket.Buf[index+18] = data;
 }
 
 uint32_t Radio_Rx_Extract_DstH(void){
