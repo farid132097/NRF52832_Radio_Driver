@@ -4,8 +4,11 @@
  * File:   radio.c
  * Author: MD. Faridul Islam
  * faridmdislam@gmail.com
- * LL Driver -> RADIO Library
- * Created on December 15, 2024, 9:30 PM
+ * LL Driver : RADIO Library
+ * Created : December 15, 2024, 9:30 PM
+ * Rev2.1 
+ * Last Modified : 28 Mar, 2025
+ *
  */
 
 #include "nrf.h"
@@ -13,15 +16,121 @@
 #include "cdefs.h"
 #include "timeout.h"
 
+#define  RADIO_BUF_SIZE 36
+
+typedef struct packet_t{
+	uint8_t  Length;
+	uint8_t  PID;
+	uint8_t  DstLoad;
+	uint8_t  Reserved1;
+	uint32_t SRCH;
+	uint32_t SRCL;
+	uint32_t DSTH;
+	uint32_t DSTL;
+	uint8_t  Buf[RADIO_BUF_SIZE];
+}packet_t;
+
 typedef struct radio_t{
-	uint8_t RegInit;
+	uint8_t  RegInit;
+	uint8_t  Reserved5;
+	uint8_t  Reserved6;
+	uint8_t  Reserved7;
+	packet_t TxPacket;
+	packet_t RxPacket;
 }radio_t;
 
 static radio_t Radio;
 	
 
 void Radio_Struct_Init(void){
-	Radio.RegInit = INCOMPLETE;
+	Radio.RegInit        = INCOMPLETE;
+	Radio.TxPacket.Length  = 0;
+	Radio.TxPacket.PID     = 0;
+	Radio.TxPacket.DstLoad = TRUE; //Target Destination Loaded
+	Radio.TxPacket.SRCH    = OWN_DEV_ADDRESS_QWORD_H;
+	Radio.TxPacket.SRCL    = OWN_DEV_ADDRESS_QWORD_L;
+	Radio.TxPacket.DSTH    = REC_DEV_ADDRESS_QWORD_H;
+	Radio.TxPacket.DSTL    = REC_DEV_ADDRESS_QWORD_L;
+	Radio.TxPacket.Buf[0]  = Radio.TxPacket.Length;
+	Radio.TxPacket.Buf[1]  = Radio.TxPacket.PID;
+	
+	//Load 64 Bit Source Address
+	Radio.TxPacket.Buf[2]  = (Radio.TxPacket.SRCH >> 24) & 0xFF;
+	Radio.TxPacket.Buf[3]  = (Radio.TxPacket.SRCH >> 16) & 0xFF;
+	Radio.TxPacket.Buf[4]  = (Radio.TxPacket.SRCH >>  8) & 0xFF;
+	Radio.TxPacket.Buf[5]  = (Radio.TxPacket.SRCH >>  0) & 0xFF;
+	Radio.TxPacket.Buf[6]  = (Radio.TxPacket.SRCL >> 24) & 0xFF;
+	Radio.TxPacket.Buf[7]  = (Radio.TxPacket.SRCL >> 16) & 0xFF;
+	Radio.TxPacket.Buf[8]  = (Radio.TxPacket.SRCL >>  8) & 0xFF;
+	Radio.TxPacket.Buf[9]  = (Radio.TxPacket.SRCL >>  0) & 0xFF;
+	
+	//Load 64 Bit Destination Address
+	Radio.TxPacket.Buf[10] = (Radio.TxPacket.DSTH >> 24) & 0xFF;
+	Radio.TxPacket.Buf[11] = (Radio.TxPacket.DSTH >> 16) & 0xFF;
+	Radio.TxPacket.Buf[12] = (Radio.TxPacket.DSTH >>  8) & 0xFF;
+	Radio.TxPacket.Buf[13] = (Radio.TxPacket.DSTH >>  0) & 0xFF;
+	Radio.TxPacket.Buf[14] = (Radio.TxPacket.DSTL >> 24) & 0xFF;
+	Radio.TxPacket.Buf[15] = (Radio.TxPacket.DSTL >> 16) & 0xFF;
+	Radio.TxPacket.Buf[16] = (Radio.TxPacket.DSTL >>  8) & 0xFF;
+	Radio.TxPacket.Buf[17] = (Radio.TxPacket.DSTL >>  0) & 0xFF;
+	
+	//Clear Only Data Sections of Tx Buf
+	for(uint8_t i=18; i<RADIO_BUF_SIZE; i++){
+		Radio.TxPacket.Buf[i] = 0;
+	}
+	
+	//Clear All Rx Buf
+	for(uint8_t i=0; i<RADIO_BUF_SIZE; i++){
+		Radio.RxPacket.Buf[i] = 0;
+	}
+}
+
+void Radio_Tx_Set_Dst_Addr(uint32_t dstH, uint32_t dstL){
+	Radio.TxPacket.DSTH = dstH;
+	Radio.TxPacket.DSTL = dstL;
+}
+
+void Radio_Tx_Load_Dst_Addr(void){
+	if(Radio.TxPacket.DstLoad == FALSE){
+	  Radio.TxPacket.Buf[10] = (Radio.TxPacket.DSTH >> 24) & 0xFF;
+	  Radio.TxPacket.Buf[11] = (Radio.TxPacket.DSTH >> 16) & 0xFF;
+	  Radio.TxPacket.Buf[12] = (Radio.TxPacket.DSTH >>  8) & 0xFF;
+	  Radio.TxPacket.Buf[13] = (Radio.TxPacket.DSTH >>  0) & 0xFF;
+	  Radio.TxPacket.Buf[14] = (Radio.TxPacket.DSTL >> 24) & 0xFF;
+	  Radio.TxPacket.Buf[15] = (Radio.TxPacket.DSTL >> 16) & 0xFF;
+	  Radio.TxPacket.Buf[16] = (Radio.TxPacket.DSTL >>  8) & 0xFF;
+	  Radio.TxPacket.Buf[17] = (Radio.TxPacket.DSTL >>  0) & 0xFF;
+	  Radio.TxPacket.DstLoad = TRUE; //Dest Load Complete
+	}
+}
+
+void Radio_Tx_Copy_Dst_Addr(void){
+	for(uint8_t i=0; i<8; i++){
+		//For Ack packet, Destination of TX device will be Source address of the RX device
+		Radio.TxPacket.Buf[10+i] = Radio.RxPacket.Buf[2+i];
+	}
+	//Because of ACK packet, Target Dst Addr not loaded
+	Radio.TxPacket.DstLoad = FALSE; 
+}
+
+uint32_t Radio_Rx_Extract_DstH(void){
+	uint8_t i;
+	uint32_t temp = 0;
+	for(i=0; i<4; i++){
+		temp <<= 8;
+		temp  |= Radio.RxPacket.Buf[10+i];
+	}
+	return temp;
+}
+
+uint32_t Radio_Rx_Extract_DstL(void){
+	uint8_t i;
+	uint32_t temp = 0;
+	for(i=0; i<4; i++){
+		temp <<= 8;
+		temp  |= Radio.RxPacket.Buf[14+i];
+	}
+	return temp;
 }
 
 void Radio_HFCLK_Start(void){
@@ -173,17 +282,17 @@ void Radio_Start_Task(int32_t delay){
 
 
 
-uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
+uint8_t Radio_Tx(void){
 	uint8_t sts  = TRUE;
 	Timeout_Arm();
+	Radio_Tx_Load_Dst_Addr();
 	Radio_Mode_Tx();
 	if(Timeout_Error_Get() != NULL){
 		Radio_Mode_Disable();
 		return FALSE;
 	}
 	
-	buf[0] = len;
-	NRF_RADIO->PACKETPTR = (uint32_t)buf;
+	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
 	Radio_Start_Task(1000);
 	
 	Radio_Mode_Rx();
@@ -193,7 +302,7 @@ uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
 	return sts;
 }
 
-uint8_t Radio_Rx(uint8_t *buf, int32_t timeout){
+uint8_t Radio_Rx(int32_t timeout){
 	uint8_t sts  = SUCCESSFUL;
 	Timeout_Arm();
 	Radio_Mode_Rx();
@@ -201,7 +310,7 @@ uint8_t Radio_Rx(uint8_t *buf, int32_t timeout){
 		return FALSE;
 	}
 	
-	NRF_RADIO->PACKETPTR = (uint32_t)buf;
+	NRF_RADIO->PACKETPTR = (uint32_t)Radio.RxPacket.Buf;
 	Radio_Start_Task(timeout);
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
@@ -217,20 +326,25 @@ uint8_t Radio_Rx(uint8_t *buf, int32_t timeout){
 	
 	return sts;
 }
+
 	
-uint8_t Radio_Tx_Ack(uint8_t *buf, uint8_t len){
+uint8_t Radio_Tx_Ack(void){
 	uint8_t sts = FAILED;
-	if(Radio_Tx(buf, len) == SUCCESSFUL){
-		sts = Radio_Rx(buf, 800);
+	if(Radio_Tx() == SUCCESSFUL){
+		sts = Radio_Rx(800);
+		if( (sts == SUCCESSFUL) && (Radio_Rx_Extract_DstH() == Radio.TxPacket.SRCH) && (Radio_Rx_Extract_DstL() == Radio.TxPacket.SRCL)){
+			return SUCCESSFUL;
+		}
+		return FAILED;
 	}
 	return sts;
 }
 	
 
-uint8_t Radio_Rx_Ack(uint8_t *buf, int32_t timeout){
+uint8_t Radio_Rx_Ack(int32_t timeout){
 	uint8_t sts = TRUE;
 	
-	Radio_Rx(buf, timeout);
+	Radio_Rx(timeout);
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
 	}
@@ -242,7 +356,8 @@ uint8_t Radio_Rx_Ack(uint8_t *buf, int32_t timeout){
 		NRF_RADIO->EVENTS_ADDRESS = 0;
 		NRF_RADIO->EVENTS_PAYLOAD = 0;
 	}
-	Radio_Tx(buf, 5);
+	Radio_Tx_Copy_Dst_Addr();
+	Radio_Tx();
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
 	}

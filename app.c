@@ -18,11 +18,11 @@ void App_Config(void){
 }
 
 void App_Mainloop(void){
-	if(Radio_Rx_Ack(buf, 5000000)){
+	if(Radio_Rx_Ack(5000)){
 		UART_Tx_Text_NL("Received packet");
 	}
 	
-	if(Timeout_Sticky_Error_Get() != NULL){
+	if(Timeout_Sticky_Error_Get() == ERROR_RADIO_CRC_NOT_OK){
 		UART_Tx_Parameter_Hex_NL("StickyErr", Timeout_Sticky_Error_Get());
 		Timeout_Sticky_Error_Clear();
 	}
