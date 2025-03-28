@@ -27,9 +27,8 @@ Project File Date:  03/28/2025
 <h2>Output:</h2>
 *** Using Compiler 'V6.16', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Rebuild target 'NRF52832'
-assembling arm_startup_nrf52.s...
 compiling main.c...
-compiling radio.c...
+assembling arm_startup_nrf52.s...
 app.c(10): warning: no previous extern declaration for non-static variable 'buf' [-Wmissing-variable-declarations]
 uint8_t buf[64];
         ^
@@ -43,7 +42,7 @@ __WEAK void Timeout_Handler(void){
                                  ^
 1 warning generated.
 compiling timeout.c...
-compiling uart.c...
+compiling radio.c...
 RTE/Device/nRF52832_xxAA/system_nrf52.c(32): warning: In file included from...
 C:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include\system_nrf52_approtect.h(51): warning: 'nrf52_configuration_249' was marked unused but was used [-Wused-but-marked-unused]
             if (nrf52_configuration_249())
@@ -97,8 +96,9 @@ RTE/Device/nRF52832_xxAA/system_nrf52.c(250): warning: 'nrf52_errata_182' was ma
             ^
 14 warnings generated.
 compiling system_nrf52.c...
+compiling uart.c...
 linking...
-Program Size: Code=2964 RO-data=544 RW-data=4 ZI-data=8464  
+Program Size: Code=2992 RO-data=544 RW-data=4 ZI-data=8464  
 ".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 16 Warning(s).
 
 <h2>Software Packages used:</h2>
@@ -129,7 +129,7 @@ Package Vendor: NordicSemiconductor
       Source file:   Device\Source\system_nrf52.c
       Include file:  Device\Include\system_nrf.h
       Include file:  Device\Include\system_nrf52.h
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>

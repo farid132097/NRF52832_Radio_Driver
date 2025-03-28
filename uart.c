@@ -14,8 +14,8 @@
 
 #define  UART_DOUBLE_SPEED
 #define  UART_ENABLE_TX    
-//#define  UART_ENABLE_RX    
-//#define  UART_ENABLE_RX_INT
+#define  UART_ENABLE_RX    
+#define  UART_ENABLE_RX_INT
 
 #define  UART_BUFFER_SIZE            64U
 #define  UART_RX_PCKT_CMPLT_DELAY    50U
