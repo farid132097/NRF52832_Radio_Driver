@@ -28,7 +28,6 @@ Project File Date:  03/28/2025
 *** Using Compiler 'V6.16', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Rebuild target 'NRF52832'
 assembling arm_startup_nrf52.s...
-compiling main.c...
 app.c(11): warning: no previous extern declaration for non-static variable 'buf' [-Wmissing-variable-declarations]
 uint8_t buf[64];
         ^
@@ -37,6 +36,7 @@ uint8_t buf[64];
 ^
 1 warning generated.
 compiling app.c...
+compiling main.c...
 timeout.c(161): warning: function 'Timeout_Handler' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
 __WEAK void Timeout_Handler(void){
                                  ^
@@ -98,7 +98,7 @@ RTE/Device/nRF52832_xxAA/system_nrf52.c(250): warning: 'nrf52_errata_182' was ma
 compiling system_nrf52.c...
 compiling uart.c...
 linking...
-Program Size: Code=3460 RO-data=544 RW-data=4 ZI-data=8512  
+Program Size: Code=3440 RO-data=544 RW-data=4 ZI-data=8512  
 ".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 16 Warning(s).
 
 <h2>Software Packages used:</h2>

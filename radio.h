@@ -8,8 +8,8 @@
  * Device address for this node (TX)
  * Device address must not be 0x0000000000000000 or 0xFFFFFFFFFFFFFFFF
  */
-#define  OWN_DEV_ADDRESS_QWORD_H (0xF0000000UL)
-#define  OWN_DEV_ADDRESS_QWORD_L (0x12345678UL)
+#define  OWN_DEV_ADDRESS_QWORD_H (0xFFFFFFFFUL)
+#define  OWN_DEV_ADDRESS_QWORD_L (0xFFFFFFFFUL)
 
 
 

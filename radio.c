@@ -157,7 +157,7 @@ void Radio_HFCLK_Start(void){
 	  NRF_CLOCK->TASKS_HFCLKSTART = 1;
 		Timeout_Arm();
 	  while(NRF_CLOCK->EVENTS_HFCLKSTARTED == 0){
-		  if(Timeout_Error_Assign(1000, ERROR_RADIO_HFCLK_START_FAILED)){
+		  if(Timeout_Error_Assign(300, ERROR_RADIO_HFCLK_START_FAILED)){
 			  break;
 		  }
 	  }
@@ -174,7 +174,7 @@ void Radio_HFCLK_Stop(void){
 	  NRF_CLOCK->TASKS_HFCLKSTOP = 1;
 	  Timeout_Arm();
 	  while( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_STATE_Msk) != CLOCK_HFCLKSTAT_STATE_NotRunning ){
-		  if(Timeout_Error_Assign(1000, ERROR_RADIO_HFCLK_STOP_FAILED)){
+		  if(Timeout_Error_Assign(300, ERROR_RADIO_HFCLK_STOP_FAILED)){
 			  break;
 		  }
 	  }
@@ -211,7 +211,7 @@ void Radio_Power_Enable(void){
 	  NRF_RADIO->POWER = 1;
 		Timeout_Arm();
 	  while(NRF_RADIO->POWER == 0){
-		  if(Timeout_Error_Assign(1000, ERROR_RADIO_POWER_ENABLE_FAILED)){
+		  if(Timeout_Error_Assign(300, ERROR_RADIO_POWER_ENABLE_FAILED)){
 			  break;
 		  }
 	  }
@@ -223,7 +223,7 @@ void Radio_Power_Disable(void){
 	  NRF_RADIO->POWER = 0;
 		Timeout_Arm();
 	  while(NRF_RADIO->POWER == 1){
-		  if(Timeout_Error_Assign(1000, ERROR_RADIO_POWER_DISABLE_FAILED)){
+		  if(Timeout_Error_Assign(300, ERROR_RADIO_POWER_DISABLE_FAILED)){
 			  break;
 		  }
 	  }
@@ -249,7 +249,7 @@ void Radio_Mode_Disable(void){
 	  NRF_RADIO->TASKS_DISABLE = 1;
 		Timeout_Arm();
 	  while(NRF_RADIO->EVENTS_DISABLED == 0){
-	    if(Timeout_Error_Assign(1000, ERROR_RADIO_MODE_SWITCH_DISABLE_FAILED)){
+	    if(Timeout_Error_Assign(300, ERROR_RADIO_MODE_SWITCH_DISABLE_FAILED)){
 			  break;
 		  }
 	  }
@@ -263,7 +263,7 @@ void Radio_Mode_Tx(void){
 	  NRF_RADIO->TASKS_TXEN = 1;
 		Timeout_Arm();
 	  while(NRF_RADIO->EVENTS_READY == 0){
-		  if(Timeout_Error_Assign(1000, ERROR_RADIO_MODE_SWITCH_TX_FAILED)){
+		  if(Timeout_Error_Assign(300, ERROR_RADIO_MODE_SWITCH_TX_FAILED)){
 			  break;
 		  }
     }
@@ -277,7 +277,7 @@ void Radio_Mode_Rx(void){
 	  NRF_RADIO->TASKS_RXEN = 1;
 		Timeout_Arm();
 	  while(NRF_RADIO->EVENTS_READY == 0){
-		  if(Timeout_Error_Assign(1000, ERROR_RADIO_MODE_SWITCH_RX_FAILED)){
+		  if(Timeout_Error_Assign(300, ERROR_RADIO_MODE_SWITCH_RX_FAILED)){
 			  break;
 		  }
     }
@@ -303,7 +303,6 @@ void Radio_Start_Task(int32_t delay){
 uint8_t Radio_Tx(void){
 	uint8_t sts  = TRUE;
 	Timeout_Arm();
-	Radio_Tx_Load_Dst_Addr();
 	Radio_Mode_Tx();
 	if(Timeout_Error_Get() != NULL){
 		Radio_Mode_Disable();
@@ -311,7 +310,7 @@ uint8_t Radio_Tx(void){
 	}
 	
 	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
-	Radio_Start_Task(1000);
+	Radio_Start_Task(300);
 	
 	Radio_Mode_Rx();
 	if(Timeout_Error_Get() != NULL){
@@ -349,7 +348,7 @@ uint8_t Radio_Rx(int32_t timeout){
 uint8_t Radio_Tx_Ack(void){
 	uint8_t sts = FAILED;
 	if(Radio_Tx() == SUCCESSFUL){
-		sts = Radio_Rx(800);
+		sts = Radio_Rx(100);
 		if( (sts == SUCCESSFUL) && (Radio_Rx_Extract_DstH() == Radio.TxPacket.SRCH) && (Radio_Rx_Extract_DstL() == Radio.TxPacket.SRCL)){
 			return SUCCESSFUL;
 		}
@@ -376,6 +375,7 @@ uint8_t Radio_Rx_Ack(int32_t timeout){
 	}
 	Radio_Tx_Copy_Dst_Addr();
 	Radio_Tx();
+	Radio_Tx_Load_Dst_Addr();
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
 	}
