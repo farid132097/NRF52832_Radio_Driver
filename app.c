@@ -2,6 +2,7 @@
 
 #include "nrf.h"
 #include "app.h"
+#include "cdefs.h"
 #include "timeout.h"
 #include "radio.h"
 #include "uart.h"
@@ -19,5 +20,10 @@ void App_Config(void){
 void App_Mainloop(void){
 	if(Radio_Rx_Ack(buf, 5000000)){
 		UART_Tx_Text_NL("Received packet");
+	}
+	
+	if(Timeout_Sticky_Error_Get() != NULL){
+		UART_Tx_Parameter_Hex_NL("StickyErr", Timeout_Sticky_Error_Get());
+		Timeout_Sticky_Error_Clear();
 	}
 }

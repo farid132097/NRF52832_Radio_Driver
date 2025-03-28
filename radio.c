@@ -163,6 +163,7 @@ void Radio_Mode_Rx(void){
 void Radio_Start_Task(int32_t delay){
 	NRF_RADIO->EVENTS_END = 0;
 	NRF_RADIO->TASKS_START = 1;
+	Timeout_Arm();
 	while(NRF_RADIO->EVENTS_END == 0){
 	  if(Timeout_Error_Assign((int32_t)delay, ERROR_RADIO_TASK_TIMEOUT_OCCURED)){
 			break;
@@ -174,6 +175,7 @@ void Radio_Start_Task(int32_t delay){
 
 uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
 	uint8_t sts  = TRUE;
+	Timeout_Arm();
 	Radio_Mode_Tx();
 	if(Timeout_Error_Get() != NULL){
 		Radio_Mode_Disable();
@@ -193,6 +195,7 @@ uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
 
 uint8_t Radio_Rx(uint8_t *buf, int32_t timeout){
 	uint8_t sts  = SUCCESSFUL;
+	Timeout_Arm();
 	Radio_Mode_Rx();
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;

@@ -109,6 +109,9 @@ uint8_t Timeout_Error_Assign(int32_t val, uint8_t error_code){
 
 void Timeout_Error_Force_Assign(uint8_t error_code){
 	Timeout.Error = error_code;
+	if(Timeout.StickyError == NULL){
+		Timeout.StickyError = error_code;
+	}
 }
 
 uint8_t Timeout_Error_Get(void){
