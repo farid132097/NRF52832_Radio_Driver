@@ -131,6 +131,26 @@ void Radio_Tx_Set_Data_Buf(uint8_t index, uint8_t data){
 	Radio.TxPacket.Buf[index+18] = data;
 }
 
+uint32_t Radio_Rx_Extract_SrcH(void){
+	uint8_t i;
+	uint32_t temp = 0;
+	for(i=0; i<4; i++){
+		temp <<= 8;
+		temp  |= Radio.RxPacket.Buf[2+i];
+	}
+	return temp;
+}
+
+uint32_t Radio_Rx_Extract_SrcL(void){
+	uint8_t i;
+	uint32_t temp = 0;
+	for(i=0; i<4; i++){
+		temp <<= 8;
+		temp  |= Radio.RxPacket.Buf[6+i];
+	}
+	return temp;
+}
+
 uint32_t Radio_Rx_Extract_DstH(void){
 	uint8_t i;
 	uint32_t temp = 0;

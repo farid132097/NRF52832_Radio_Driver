@@ -19,6 +19,12 @@ void App_Config(void){
 
 void App_Mainloop(void){
 	if(Radio_Rx_Ack(5000)){
+		UART_Tx_Parameter_Hex_SP("SRC",Radio_Rx_Extract_SrcH());
+		UART_Tx_Number_Hex_SP(Radio_Rx_Extract_SrcL());
+		
+		UART_Tx_Parameter_Hex_SP("DST",Radio_Rx_Extract_DstH());
+		UART_Tx_Number_Hex_SP(Radio_Rx_Extract_DstL());
+		
 		UART_Tx_Text_NL("Received packet");
 	}
 	

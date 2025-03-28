@@ -45,6 +45,8 @@ void     Radio_Tx_Set_Len(uint8_t len);
 void     Radio_Tx_Set_PID(uint8_t len);
 void     Radio_Tx_Set_Buf(uint8_t index, uint8_t data);
 void     Radio_Tx_Set_Data_Buf(uint8_t index, uint8_t data);
+uint32_t Radio_Rx_Extract_SrcH(void);
+uint32_t Radio_Rx_Extract_SrcL(void);
 uint32_t Radio_Rx_Extract_DstH(void);
 uint32_t Radio_Rx_Extract_DstL(void);
 void     Radio_HFCLK_Start(void);
