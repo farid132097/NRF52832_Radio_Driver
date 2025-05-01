@@ -8,27 +8,21 @@
 #include "uart.h"
 
 
-uint8_t buf[64];
-
 void App_Config(void){
   Timeout_Init();
 	Radio_Init();
-	UART_Init(UARTE_BAUDRATE_BAUDRATE_Baud115200);
+	UART_Init(UARTE_BAUDRATE_BAUDRATE_Baud38400);
 	UART_Tx_Text_NL("Debug started");
 }
 
 void App_Mainloop(void){
 	if(Radio_Rx_Ack(5000)){
-		UART_Tx_Parameter_Hex_SP("SRC",Radio_Rx_Extract_SrcH());
-		UART_Tx_Number_Hex_SP(Radio_Rx_Extract_SrcL());
-		
-		UART_Tx_Parameter_Hex_SP("DST",Radio_Rx_Extract_DstH());
-		UART_Tx_Number_Hex_SP(Radio_Rx_Extract_DstL());
+		UART_Tx_Parameter_Hex_SP("SRC",Radio_Rx_Extract_SrcAddr());
+		UART_Tx_Parameter_Hex_SP("DST",Radio_Rx_Extract_DstAddr());
 		
 		UART_Tx_Parameter_SP("UpTime", (Radio_Rx_Get_Data_Buf(0)<<24) | (Radio_Rx_Get_Data_Buf(1)<<16) | (Radio_Rx_Get_Data_Buf(2)<<8) | (Radio_Rx_Get_Data_Buf(3)) );
 		UART_Tx_Parameter_SP("VCap", (Radio_Rx_Get_Data_Buf(4)<<8) | (Radio_Rx_Get_Data_Buf(5)) );
-		UART_Tx_Parameter_SP("SP0", Radio_Get_Sys_Param0() );
-		UART_Tx_Parameter_NL("SP1", Radio_Get_Sys_Param1() );
+		UART_Tx_Parameter_NL("VChrg", (Radio_Rx_Get_Data_Buf(6)<<8) | (Radio_Rx_Get_Data_Buf(7)) );
 	}
 	
 	if(Timeout_Sticky_Error_Get() == NULL){

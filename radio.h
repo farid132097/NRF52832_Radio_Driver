@@ -38,57 +38,36 @@ enum{
 };
 
 void     Radio_Struct_Init(void);
-void     Radio_Tx_Set_Dst_Addr(uint32_t dstH, uint32_t dstL);
-void     Radio_Tx_Load_Dst_Addr(void);
+void     Radio_Tx_Set_Dst_Addr(uint64_t dst_addr);
 void     Radio_Tx_Copy_Dst_Addr(void);
 void     Radio_Tx_Set_Len(uint8_t len);
-void     Radio_Tx_Set_PID(uint8_t len);
+void     Radio_Tx_Set_PID(uint8_t pid);
 
-void     Radio_Tx_Clear_Buf(void);
-void     Radio_Tx_Clear_System_Buf(void);
 void     Radio_Tx_Clear_Data_Buf(void);
-void     Radio_Tx_Set_Buf(uint8_t index, uint8_t data);
-void     Radio_Tx_Set_Sys_Buf(uint8_t index, uint8_t data);
 void     Radio_Tx_Set_Data_Buf(uint8_t index, uint8_t data);
-
-uint32_t Radio_Rx_Extract_SrcH(void);
-uint32_t Radio_Rx_Extract_SrcL(void);
-uint32_t Radio_Rx_Extract_DstH(void);
-uint32_t Radio_Rx_Extract_DstL(void);
-uint8_t  Radio_Rx_Get_Buf(uint8_t index);
-uint8_t  Radio_Rx_Get_Sys_Buf(uint8_t index);
+uint64_t Radio_Rx_Extract_SrcAddr(void);
+uint64_t Radio_Rx_Extract_DstAddr(void);
 uint8_t  Radio_Rx_Get_Data_Buf(uint8_t index);
-
 uint16_t Radio_CRC_Calculate_Byte(uint16_t crc, uint8_t data);
 uint16_t Radio_CRC_Calculate_Block(uint8_t *buf, uint8_t start, uint8_t end);
-void     Radio_Build_Sys_Packet(uint8_t *buf, uint8_t len);
-void     Radio_Process_Sys_Data(void);
-uint8_t  Radio_Sys_Data_Available(void);
-void     Radio_Clear_Sys_Data_Available(void);
-int16_t  Radio_Get_Sys_Param0(void);
-int16_t  Radio_Get_Sys_Param1(void);
 
 void     Radio_HFCLK_Start(void);
 void     Radio_HFCLK_Stop(void);
 void     Radio_Reg_Init(void);
-void     Radio_Power_Disable(void);
 void     Radio_Power_Enable(void);
-
+void     Radio_Power_Disable(void);
 void     Radio_Active(void);
 void     Radio_Power_Down(void);
-
 void     Radio_Mode_Disable(void);
 void     Radio_Mode_Tx(void);
 void     Radio_Mode_Rx(void);
 void     Radio_Start_Task(int32_t delay);
-
 uint8_t  Radio_Tx(void);
 uint8_t  Radio_Rx(int32_t timeout);
-
 uint8_t  Radio_Tx_Ack(void);
 uint8_t  Radio_Rx_Ack(int32_t timeout);
-
 void     Radio_Init(void);
+
 
 
 
