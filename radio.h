@@ -75,6 +75,7 @@ uint64_t Radio_Rx_SrcAddr_Get(void);
 uint64_t Radio_Rx_DstAddr_Get(void);
 uint16_t Radio_Rx_CRC16_Get(void);
 uint8_t  Radio_Rx_CRCSts_Get(void);
+uint8_t  Radio_Rx_RetryEn_Get(void);
 
 void     Radio_Init(void);
 

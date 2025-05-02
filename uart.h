@@ -60,12 +60,10 @@ void     UART_Determine_Digit_Numbers(uint32_t num);
 void     UART_Tx_Number_Digits(void);
 void     UART_Tx_Number(int32_t num);
 
-void     UART_Tx_Number_Hex32_Raw(uint32_t val);
-void     UART_Tx_Number_Hex32(uint32_t val);
+void     UART_Tx_Number_Hex_Raw(uint64_t val);
 void     UART_Tx_Number_Hex(uint64_t val);
 
-void     UART_Tx_Number_Bin32_Raw(uint32_t val);
-void     UART_Tx_Number_Bin32(uint32_t val);
+void     UART_Tx_Number_Bin_Raw(uint64_t val);
 void     UART_Tx_Number_Bin(uint64_t val);
 
 

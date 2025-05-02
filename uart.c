@@ -360,43 +360,61 @@ void UART_Tx_Number(int32_t num){
   UART_Tx_Number_Digits();
 }
 
-void UART_Tx_Number_Hex32_Raw(uint32_t val){
+void UART_Tx_Number_Hex_Raw(uint64_t val){
   uint16_t hex_digit, index = 0, loop_counter = 0;
   if(val <= 0xFF){
     index = 8;
     loop_counter = 2;
-  }else if(val <= 0xFFFF){
+  }
+	else if(val <= 0xFFFF){
     index = 16;
     loop_counter = 4;     
-  }else{
+  }
+	else if(val <= 0xFFFFFF){
+    index = 24;
+    loop_counter = 6;     
+  }
+	else if(val <= 0xFFFFFFFF){
     index = 32;
-    loop_counter = 8;
+    loop_counter = 8;     
+  }
+	else if(val <= 0xFFFFFFFFFF){
+    index = 40;
+    loop_counter = 10;     
+  }
+	else if(val <= 0xFFFFFFFFFFFF){
+    index = 48;
+    loop_counter = 12;     
+  }
+	else if(val <= 0xFFFFFFFFFFFFFF){
+    index = 56;
+    loop_counter = 14;     
+  }
+	else{
+    index = 64;
+    loop_counter = 16;
   }
   for(uint8_t i = 0; i < loop_counter; i++){
-	index -= 4;
-	hex_digit = (uint8_t)((val>>index) & 0x0F);
-	if(hex_digit > 9){
-	  hex_digit += 55;
-	}
-	else{
-	  hex_digit += 48;
-	}
-	UART_Tx_Byte((uint8_t)hex_digit);
+	  index -= 4;
+	  hex_digit = ((val >> index) & 0x0F);
+	  if(hex_digit > 9){
+	    hex_digit += 55;
+	  }
+	  else{
+	    hex_digit += 48;
+	  }
+	  UART_Tx_Byte((uint8_t)hex_digit);
   }
-}
-
-void UART_Tx_Number_Hex32(uint32_t val){
-  UART_Tx_Byte('0');
-  UART_Tx_Byte('x');
-  UART_Tx_Number_Hex32_Raw(val);
 }
 
 void UART_Tx_Number_Hex(uint64_t val){
-  UART_Tx_Number_Hex32(val >> 32);
-  UART_Tx_Number_Hex32_Raw(val & 0xFFFFFFFF);
+  UART_Tx_Byte('0');
+  UART_Tx_Byte('x');
+  UART_Tx_Number_Hex_Raw(val);
 }
 
-void UART_Tx_Number_Bin32_Raw(uint32_t val){
+
+void UART_Tx_Number_Bin_Raw(uint64_t val){
   uint8_t loop_counter = 0;
   if(val <= 0xFF){
     loop_counter = 7;
@@ -404,6 +422,31 @@ void UART_Tx_Number_Bin32_Raw(uint32_t val){
     loop_counter = 15;     
   }else{
     loop_counter = 31;
+  }
+	
+	if(val <= 0xFF){
+    loop_counter = 7;
+  }
+	else if(val <= 0xFFFF){
+    loop_counter = 15;     
+  }
+	else if(val <= 0xFFFFFF){
+    loop_counter = 23;     
+  }
+	else if(val <= 0xFFFFFFFF){
+    loop_counter = 31;     
+  }
+	else if(val <= 0xFFFFFFFFFF){
+    loop_counter = 39;     
+  }
+	else if(val <= 0xFFFFFFFFFFFF){
+    loop_counter = 47;     
+  }
+	else if(val <= 0xFFFFFFFFFFFFFF){
+    loop_counter = 55;     
+  }
+	else{
+    loop_counter = 63;
   }
   
   for(int i = loop_counter; i >= 0; i--){
@@ -415,16 +458,12 @@ void UART_Tx_Number_Bin32_Raw(uint32_t val){
   }
 }
 
-void UART_Tx_Number_Bin32(uint32_t val){
+void UART_Tx_Number_Bin(uint64_t val){
   UART_Tx_Byte('0');
   UART_Tx_Byte('b');
-  UART_Tx_Number_Bin32_Raw(val);
+  UART_Tx_Number_Bin_Raw(val);
 }
 
-void UART_Tx_Number_Bin(uint64_t val){
-  UART_Tx_Number_Bin32(val >> 32);
-  UART_Tx_Number_Bin32_Raw(val & 0xFFFFFFFF);
-}
 
 /*********************Number Functions End*********************/
 

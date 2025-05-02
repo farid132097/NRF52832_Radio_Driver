@@ -566,6 +566,10 @@ uint8_t Radio_Rx_CRCSts_Get(void){
 	return Radio.RxPacket.CRCSts;
 }
 
+uint8_t Radio_Rx_RetryEn_Get(void){
+	return Radio.RetryEnable;
+}
+
 
 void Radio_Init(void){
 	Radio_Struct_Init();
