@@ -39,6 +39,8 @@ enum{
 
 void     Radio_Struct_Init(void);
 void     Radio_Tx_Set_Dst_Addr(uint64_t dst_addr);
+void     Radio_Tx_Reload_Dst_Addr(void);
+
 void     Radio_Tx_Copy_Dst_Addr(void);
 void     Radio_Tx_Set_Len(uint8_t len);
 void     Radio_Tx_Set_PID(uint8_t pid);
@@ -66,6 +68,8 @@ uint8_t  Radio_Tx(void);
 uint8_t  Radio_Rx(int32_t timeout);
 uint8_t  Radio_Tx_Ack(void);
 uint8_t  Radio_Rx_Ack(int32_t timeout);
+uint8_t  Radio_Tx_Packet(uint8_t *buf, uint8_t len);
+
 void     Radio_Init(void);
 
 
