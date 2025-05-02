@@ -15,6 +15,13 @@
 #include "cdefs.h"
 #include "timeout.h"
 
+//Max retry if tx is failed
+#define  RADIO_TX_FAILED_RETRY       ( 5U)
+
+//Tx retry will be turned off if consecutive
+//attempts are failed (including retry)
+#define  RADIO_TX_RETRY_DIS_FAIL_ATT ( 5U)
+
 #define  RADIO_FRAME_BUF_SIZE        (36U)
 #define  RADIO_FRAME_LEN_POS         ( 0U)
 #define  RADIO_FRAME_LEN_SIZE        ( 1U)
@@ -36,19 +43,23 @@
 typedef struct packet_t{
 	uint8_t  Length;
 	uint8_t  PID;
-	uint8_t  Reserved0[6];
+	uint8_t  LastPID;
+	uint8_t  Reserved0[5];
 	
 	uint64_t SrcAddr;
 	uint64_t DstAddr;
 	
 	uint16_t CRC16;
+	uint8_t  CRCSts;
 	uint8_t  Buf[RADIO_FRAME_BUF_SIZE];
-	uint8_t  Reserved1[2];
+	uint8_t  Reserved1[1];
 }packet_t;
 
 typedef struct radio_t{
 	uint8_t  RegInit;
-	uint8_t  Reserved2[7];
+	uint8_t  RetryEnable;
+	uint8_t  FaildAttempts;
+	uint8_t  Reserved2[5];
 	
 	packet_t TxPacket;
 	packet_t RxPacket;
@@ -59,6 +70,8 @@ static radio_t Radio;
 
 void Radio_Struct_Init(void){
 	Radio.RegInit           = INCOMPLETE;
+	Radio.RetryEnable       = TRUE;
+	Radio.FaildAttempts     = 0;
 	Radio.TxPacket.Length   = 0;
 	Radio.TxPacket.PID      = 0;
 	Radio.TxPacket.SrcAddr  = OWN_DEV_ADDRESS_QWORD_H;
@@ -143,6 +156,11 @@ void Radio_Tx_Set_Len(uint8_t len){
 void Radio_Tx_Set_PID(uint8_t pid){
 	Radio.TxPacket.Buf[1] = pid;
 	Radio.TxPacket.PID    = pid;
+}
+
+void Radio_Len_PID_Update(void){
+	Radio.TxPacket.Buf[0] = Radio.TxPacket.Length;
+	Radio.TxPacket.Buf[1] = Radio.TxPacket.PID;
 }
 
 //Should be used after each data packet reception
@@ -426,7 +444,7 @@ uint8_t Radio_Rx(int32_t timeout){
 uint8_t Radio_Tx_Ack(void){
 	uint8_t  sts = FAILED;
 	if(Radio_Tx() == SUCCESSFUL){
-		sts = Radio_Rx(100);
+		sts = Radio_Rx(150);
     //Ack sent from the destination address to src address
 		if( (sts == SUCCESSFUL) && (Radio.RxPacket.DstAddr == Radio.TxPacket.SrcAddr) ){
 			return SUCCESSFUL;
@@ -438,7 +456,6 @@ uint8_t Radio_Tx_Ack(void){
 	
 
 uint8_t Radio_Rx_Ack(int32_t timeout){
-	uint8_t  sts = TRUE;
 	uint16_t crc = 0;
 	
 	Radio_Rx(timeout);
@@ -459,9 +476,18 @@ uint8_t Radio_Rx_Ack(int32_t timeout){
 		Radio.RxPacket.Buf[RADIO_FRAME_CRC16_POS+1] = 0;
 		crc = Radio_CRC_Calculate_Block(Radio.RxPacket.Buf, 0, RADIO_FRAME_USER_DATA_POS + Radio.RxPacket.Length);
 		if(crc == Radio.RxPacket.CRC16){
+			Radio.RxPacket.CRCSts = TRUE;
 			Radio_Tx_Copy_Dst_Addr();
 	    Radio_Tx();
 		  Radio_Tx_Reload_Dst_Addr();
+			if(Radio.RxPacket.PID == Radio.RxPacket.LastPID){
+				return FALSE;
+			}
+			Radio.RxPacket.LastPID = Radio.RxPacket.PID;
+		}
+		else{
+			Radio.RxPacket.CRCSts = FALSE;
+			return FALSE;
 		}
 	}
 	else{
@@ -471,7 +497,7 @@ uint8_t Radio_Rx_Ack(int32_t timeout){
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
 	}
-	return sts;
+	return TRUE;
 }
 
 uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
@@ -481,7 +507,9 @@ uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
 	if(len > RADIO_FRAME_USER_DATA_SIZE){
 		len = RADIO_FRAME_USER_DATA_SIZE;
 	}
-	
+	Radio.TxPacket.Length = len;
+	Radio.TxPacket.PID++;
+	Radio_Len_PID_Update();
 	for(uint8_t i = RADIO_FRAME_USER_DATA_POS; i < (RADIO_FRAME_USER_DATA_POS + len); i++){
 		Radio.TxPacket.Buf[i] = buf[cnt];
 		cnt++;
@@ -491,7 +519,51 @@ uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
 	crc = Radio_CRC_Calculate_Block(Radio.TxPacket.Buf, 0, RADIO_FRAME_USER_DATA_POS+len);
 	Radio.TxPacket.Buf[RADIO_FRAME_CRC16_POS] = (crc>>8) & 0xFF;
 	Radio.TxPacket.Buf[RADIO_FRAME_CRC16_POS+1] = crc & 0xFF;
-	return Radio_Tx_Ack();
+	
+	if(Radio.RetryEnable == TRUE){
+	  for(cnt = 0; cnt < RADIO_TX_FAILED_RETRY; cnt++){
+		  if(Radio_Tx_Ack() == SUCCESSFUL){
+				Radio.FaildAttempts = 0;
+			  return SUCCESSFUL;
+		  }
+		  else{
+			  Timeout_Delay_us(100);
+		  }
+	  }
+		Radio.FaildAttempts++;
+		if(Radio.FaildAttempts >= RADIO_TX_RETRY_DIS_FAIL_ATT){
+			Radio.FaildAttempts = 0;
+			Radio.RetryEnable = FALSE;
+		}
+  }
+	else{
+		//Transmit packet once
+		if(Radio_Tx_Ack()){
+			//If ack received, enable retry
+			Radio.RetryEnable = TRUE;
+			return TRUE;
+		}
+		return FALSE;
+	}
+	
+	return FAILED;
+}
+
+
+uint64_t Radio_Rx_SrcAddr_Get(void){
+	return Radio.RxPacket.SrcAddr;
+}
+
+uint64_t Radio_Rx_DstAddr_Get(void){
+	return Radio.RxPacket.DstAddr;
+}
+
+uint16_t Radio_Rx_CRC16_Get(void){
+	return Radio.RxPacket.CRC16;
+}
+
+uint8_t Radio_Rx_CRCSts_Get(void){
+	return Radio.RxPacket.CRCSts;
 }
 
 

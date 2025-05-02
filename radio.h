@@ -44,6 +44,7 @@ void     Radio_Tx_Reload_Dst_Addr(void);
 void     Radio_Tx_Copy_Dst_Addr(void);
 void     Radio_Tx_Set_Len(uint8_t len);
 void     Radio_Tx_Set_PID(uint8_t pid);
+void     Radio_Len_PID_Update(void);
 
 void     Radio_Tx_Clear_Data_Buf(void);
 void     Radio_Tx_Set_Data_Buf(uint8_t index, uint8_t data);
@@ -69,6 +70,11 @@ uint8_t  Radio_Rx(int32_t timeout);
 uint8_t  Radio_Tx_Ack(void);
 uint8_t  Radio_Rx_Ack(int32_t timeout);
 uint8_t  Radio_Tx_Packet(uint8_t *buf, uint8_t len);
+
+uint64_t Radio_Rx_SrcAddr_Get(void);
+uint64_t Radio_Rx_DstAddr_Get(void);
+uint16_t Radio_Rx_CRC16_Get(void);
+uint8_t  Radio_Rx_CRCSts_Get(void);
 
 void     Radio_Init(void);
 
