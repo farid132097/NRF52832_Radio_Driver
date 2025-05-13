@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\nrf52832_radio_driver.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\nrf52832_radio_driver.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Fri May  2 10:28:02 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Tue May 13 22:17:16 2025
 <BR><P>
 <H3>Maximum Stack Usage =         88 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -485,8 +485,8 @@ Global Symbols
 <LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Sticky_Error_Get
 <LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Sticky_Error_Clear
 <LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx_SrcAddr_Get
-<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx_Get_Data_Buf
 <LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx_DstAddr_Get
+<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx_Data_Buf_Get
 <LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx_CRC16_Get
 <LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx_Ack
 </UL>
@@ -598,7 +598,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx_Ack
 </UL>
 
-<P><STRONG><a name="[4d]"></a>Radio_Rx_Ack</STRONG> (Thumb, 150 bytes, Stack size 16 bytes, radio.o(.text.Radio_Rx_Ack))
+<P><STRONG><a name="[4d]"></a>Radio_Rx_Ack</STRONG> (Thumb, 174 bytes, Stack size 16 bytes, radio.o(.text.Radio_Rx_Ack))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = Radio_Rx_Ack &rArr; Radio_Rx &rArr; Radio_Mode_Rx &rArr; Radio_Active &rArr; Radio_Power_Enable &rArr; Timeout_Error_Assign &rArr; Timeout_Occured
 </UL>
 <BR>[Calls]<UL><LI><a href="#[6c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Tx_Reload_Dst_Addr
@@ -615,6 +615,10 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Mainloop
 </UL>
 
+<P><STRONG><a name="[52]"></a>Radio_Rx_Data_Buf_Get</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, radio.o(.text.Radio_Rx_Data_Buf_Get))
+<BR><BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Mainloop
+</UL>
+
 <P><STRONG><a name="[50]"></a>Radio_Rx_DstAddr_Get</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, radio.o(.text.Radio_Rx_DstAddr_Get))
 <BR><BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Mainloop
 </UL>
@@ -625,10 +629,6 @@ Global Symbols
 
 <P><STRONG><a name="[68]"></a>Radio_Rx_Extract_SrcAddr</STRONG> (Thumb, 44 bytes, Stack size 0 bytes, radio.o(.text.Radio_Rx_Extract_SrcAddr))
 <BR><BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx
-</UL>
-
-<P><STRONG><a name="[52]"></a>Radio_Rx_Get_Data_Buf</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, radio.o(.text.Radio_Rx_Get_Data_Buf))
-<BR><BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Mainloop
 </UL>
 
 <P><STRONG><a name="[4e]"></a>Radio_Rx_SrcAddr_Get</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, radio.o(.text.Radio_Rx_SrcAddr_Get))
@@ -645,8 +645,8 @@ Global Symbols
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx
 </UL>
 
-<P><STRONG><a name="[61]"></a>Radio_Struct_Init</STRONG> (Thumb, 80 bytes, Stack size 8 bytes, radio.o(.text.Radio_Struct_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8 + Unknown Stack Size
+<P><STRONG><a name="[61]"></a>Radio_Struct_Init</STRONG> (Thumb, 86 bytes, Stack size 16 bytes, radio.o(.text.Radio_Struct_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16 + Unknown Stack Size
 <LI>Call Chain = Radio_Struct_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr

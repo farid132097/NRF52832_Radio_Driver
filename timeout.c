@@ -159,9 +159,9 @@ void Timeout_Arm(void){
 
 
 __WEAK void Timeout_Handler(void){
-	while(1){
+	//while(1){
 		//add function for robust implementation
-	}
+	//}
 }
 
 

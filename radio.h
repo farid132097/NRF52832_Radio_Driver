@@ -1,28 +1,41 @@
 
 
+/*
+ * File:   radio.h
+ * Author: MD. Faridul Islam
+ * faridmdislam@gmail.com
+ * LL Driver : NRF52832 RADIO Library
+ * Created : December 15, 2024, 9:30 PM
+ * Last Modified : 13 May, 2025, Rev2.4
+ */
+
+
 #ifndef  _RADIO_H_
 #define  _RADIO_H_
 #include "nrf.h"
 
+
 /*
  * Device address for this node (TX)
- * Device address must not be 0x0000000000000000 or 0xFFFFFFFFFFFFFFFF
+ * Device address must not be    (0x0000000000000000ULL) or 
+ *                               (0xFFFFFFFFFFFFFFFFULL)
  */
-#define  OWN_DEV_ADDRESS_QWORD_H (0xFFFFFFFFUL)
-#define  OWN_DEV_ADDRESS_QWORD_L (0xFFFFFFFFUL)
+#define  OWN_DEV_ADDRESS_QWORD   (0xFFFFFFFFFFFFFFFFULL)
 
 
 
 /*
  * Receiver address
- * Receiver address must be 0xFFFFFFFFFFFFFFFF
+ * Default Receiver address      (0xFFFFFFFFFFFFFFFFULL)
  */
-#define  REC_DEV_ADDRESS_QWORD_H (0xFFFFFFFFUL)
-#define  REC_DEV_ADDRESS_QWORD_L (0xFFFFFFFFUL)
+#define  REC_DEV_ADDRESS_QWORD   (0xFFFFFFFFFFFFFFFFULL)
 
 
+//Uncomment if any Node can send data to this device
+#define  ALLOW_ANY_SRC_ADDR_TO_SEND_DATA
 
-enum{
+
+enum radio_error_t{
 	       ERROR_RADIO_NO_ERROR                   = 0x00,
 	       ERROR_RADIO_HFCLK_START_FAILED         = 0x01,
 	       ERROR_RADIO_HFCLK_STOP_FAILED          = 0x02,
@@ -50,7 +63,10 @@ void     Radio_Tx_Clear_Data_Buf(void);
 void     Radio_Tx_Set_Data_Buf(uint8_t index, uint8_t data);
 uint64_t Radio_Rx_Extract_SrcAddr(void);
 uint64_t Radio_Rx_Extract_DstAddr(void);
-uint8_t  Radio_Rx_Get_Data_Buf(uint8_t index);
+uint8_t  Radio_Rx_Data_Buf_Get(uint8_t index);
+uint8_t  Radio_Rx_Data_Len_Get(void);
+uint8_t  Radio_Rx_Buf_Get(uint8_t index);
+uint8_t  Radio_Rx_Len_Get(void);
 uint16_t Radio_CRC_Calculate_Byte(uint16_t crc, uint8_t data);
 uint16_t Radio_CRC_Calculate_Block(uint8_t *buf, uint8_t start, uint8_t end);
 
@@ -78,8 +94,6 @@ uint8_t  Radio_Rx_CRCSts_Get(void);
 uint8_t  Radio_Rx_RetryEn_Get(void);
 
 void     Radio_Init(void);
-
-
 
 
 

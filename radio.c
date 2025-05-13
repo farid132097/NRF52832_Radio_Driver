@@ -4,16 +4,34 @@
  * File:   radio.c
  * Author: MD. Faridul Islam
  * faridmdislam@gmail.com
- * LL Driver : RADIO Library
+ * LL Driver : NRF52832 RADIO Library
  * Created : December 15, 2024, 9:30 PM
- * Last Modified : 28 Mar, 2025, Rev2.2
- *
+ * Last Modified : 13 May, 2025, Rev2.4
  */
+ 
 
 #include "nrf.h"
 #include "radio.h"
 #include "cdefs.h"
 #include "timeout.h"
+
+
+#ifndef  ALLOW_ANY_SRC_ADDR_TO_SEND_DATA
+
+//Add number of valid addressess
+#define  ALLOWED_SRC_ADDRESSESS            ( 20U)
+
+//Add Node addresses to be ACKed and Receive Data
+volatile uint64_t allowed_node_addr[ALLOWED_SRC_ADDRESSESS] = {
+	0x0000000000000001, 0x0000000000000002, 0x0000000000000003, 
+	0x0000000000000004, 0x0000000000000005, 0x0000000000000006, 
+	0x0000000000000007, 0x0000000000000008, 0x0000000000000009, 
+	0x000000000000000A, 0x000000000000000B, 0x000000000000000C, 
+	0x000000000000000D, 0x000000000000000E, 0x000000000000000F,
+};
+#endif
+
+
 
 //Max retry if tx is failed
 #define  RADIO_TX_FAILED_RETRY       ( 5U)
@@ -46,6 +64,7 @@ typedef struct packet_t{
 	uint8_t  LastPID;
 	uint8_t  Reserved0[5];
 	
+	uint64_t LastSender;
 	uint64_t SrcAddr;
 	uint64_t DstAddr;
 	
@@ -74,35 +93,31 @@ void Radio_Struct_Init(void){
 	Radio.FaildAttempts     = 0;
 	Radio.TxPacket.Length   = 0;
 	Radio.TxPacket.PID      = 0;
-	Radio.TxPacket.SrcAddr  = OWN_DEV_ADDRESS_QWORD_H;
-	Radio.TxPacket.SrcAddr<<=32;
-	Radio.TxPacket.SrcAddr |= OWN_DEV_ADDRESS_QWORD_L;
-	Radio.TxPacket.DstAddr  = REC_DEV_ADDRESS_QWORD_H;
-	Radio.TxPacket.DstAddr<<= 32;
-	Radio.TxPacket.DstAddr |= REC_DEV_ADDRESS_QWORD_L;
+	Radio.TxPacket.SrcAddr  = OWN_DEV_ADDRESS_QWORD;
+	Radio.TxPacket.DstAddr  = REC_DEV_ADDRESS_QWORD;
 	
-	Radio.TxPacket.Buf[0]  = Radio.TxPacket.Length;
-	Radio.TxPacket.Buf[1]  = Radio.TxPacket.PID;
+	Radio.TxPacket.Buf[0]   = Radio.TxPacket.Length;
+	Radio.TxPacket.Buf[1]   = Radio.TxPacket.PID;
 	
 	//Load 64 Bit Source Address
-	Radio.TxPacket.Buf[2]  = (Radio.TxPacket.SrcAddr >> 56) & 0xFF;
-	Radio.TxPacket.Buf[3]  = (Radio.TxPacket.SrcAddr >> 48) & 0xFF;
-	Radio.TxPacket.Buf[4]  = (Radio.TxPacket.SrcAddr >> 40) & 0xFF;
-	Radio.TxPacket.Buf[5]  = (Radio.TxPacket.SrcAddr >> 32) & 0xFF;
-	Radio.TxPacket.Buf[6]  = (Radio.TxPacket.SrcAddr >> 24) & 0xFF;
-	Radio.TxPacket.Buf[7]  = (Radio.TxPacket.SrcAddr >> 16) & 0xFF;
-	Radio.TxPacket.Buf[8]  = (Radio.TxPacket.SrcAddr >>  8) & 0xFF;
-	Radio.TxPacket.Buf[9]  = (Radio.TxPacket.SrcAddr >>  0) & 0xFF;
+	Radio.TxPacket.Buf[2]   = (Radio.TxPacket.SrcAddr >> 56) & 0xFF;
+	Radio.TxPacket.Buf[3]   = (Radio.TxPacket.SrcAddr >> 48) & 0xFF;
+	Radio.TxPacket.Buf[4]   = (Radio.TxPacket.SrcAddr >> 40) & 0xFF;
+	Radio.TxPacket.Buf[5]   = (Radio.TxPacket.SrcAddr >> 32) & 0xFF;
+	Radio.TxPacket.Buf[6]   = (Radio.TxPacket.SrcAddr >> 24) & 0xFF;
+	Radio.TxPacket.Buf[7]   = (Radio.TxPacket.SrcAddr >> 16) & 0xFF;
+	Radio.TxPacket.Buf[8]   = (Radio.TxPacket.SrcAddr >>  8) & 0xFF;
+	Radio.TxPacket.Buf[9]   = (Radio.TxPacket.SrcAddr >>  0) & 0xFF;
 	
 	//Load 64 Bit Destination Address
-	Radio.TxPacket.Buf[10] = (Radio.TxPacket.DstAddr >> 56) & 0xFF;
-	Radio.TxPacket.Buf[11] = (Radio.TxPacket.DstAddr >> 48) & 0xFF;
-	Radio.TxPacket.Buf[12] = (Radio.TxPacket.DstAddr >> 40) & 0xFF;
-	Radio.TxPacket.Buf[13] = (Radio.TxPacket.DstAddr >> 32) & 0xFF;
-	Radio.TxPacket.Buf[14] = (Radio.TxPacket.DstAddr >> 24) & 0xFF;
-	Radio.TxPacket.Buf[15] = (Radio.TxPacket.DstAddr >> 16) & 0xFF;
-	Radio.TxPacket.Buf[16] = (Radio.TxPacket.DstAddr >>  8) & 0xFF;
-	Radio.TxPacket.Buf[17] = (Radio.TxPacket.DstAddr >>  0) & 0xFF;
+	Radio.TxPacket.Buf[10]  = (Radio.TxPacket.DstAddr >> 56) & 0xFF;
+	Radio.TxPacket.Buf[11]  = (Radio.TxPacket.DstAddr >> 48) & 0xFF;
+	Radio.TxPacket.Buf[12]  = (Radio.TxPacket.DstAddr >> 40) & 0xFF;
+	Radio.TxPacket.Buf[13]  = (Radio.TxPacket.DstAddr >> 32) & 0xFF;
+	Radio.TxPacket.Buf[14]  = (Radio.TxPacket.DstAddr >> 24) & 0xFF;
+	Radio.TxPacket.Buf[15]  = (Radio.TxPacket.DstAddr >> 16) & 0xFF;
+	Radio.TxPacket.Buf[16]  = (Radio.TxPacket.DstAddr >>  8) & 0xFF;
+	Radio.TxPacket.Buf[17]  = (Radio.TxPacket.DstAddr >>  0) & 0xFF;
 	
 	
 	//Clear Only Data Sections of Tx Buf
@@ -114,6 +129,8 @@ void Radio_Struct_Init(void){
 	for(uint8_t i=0; i<RADIO_FRAME_BUF_SIZE; i++){
 		Radio.RxPacket.Buf[i] = 0;
 	}
+	Radio.RxPacket.LastSender = 0x0000000000000000;
+	
 }
 
 void Radio_Tx_Set_Dst_Addr(uint64_t dst_addr){
@@ -201,8 +218,20 @@ uint64_t Radio_Rx_Extract_DstAddr(void){
 }
 
 
-uint8_t Radio_Rx_Get_Data_Buf(uint8_t index){
+uint8_t Radio_Rx_Data_Buf_Get(uint8_t index){
 	return Radio.RxPacket.Buf[index + RADIO_FRAME_USER_DATA_POS];
+}
+
+uint8_t Radio_Rx_Data_Len_Get(void){
+	return Radio.RxPacket.Length;
+}
+
+uint8_t Radio_Rx_Buf_Get(uint8_t index){
+	return Radio.RxPacket.Buf[index];
+}
+
+uint8_t Radio_Rx_Len_Get(void){
+	return Radio.RxPacket.Length + RADIO_FRAME_USER_DATA_POS;
 }
 
 
@@ -456,7 +485,7 @@ uint8_t Radio_Tx_Ack(void){
 	
 
 uint8_t Radio_Rx_Ack(int32_t timeout){
-	uint16_t crc = 0;
+	uint16_t crc = 0, sts = FALSE;
 	
 	Radio_Rx(timeout);
 	if(Timeout_Error_Get() != NULL){
@@ -471,7 +500,19 @@ uint8_t Radio_Rx_Ack(int32_t timeout){
 		NRF_RADIO->EVENTS_PAYLOAD = 0;
 	}
 	
-	if( Radio.RxPacket.DstAddr == Radio.TxPacket.SrcAddr ){
+	//Check Valid Node Address before ack
+	#ifdef ALLOW_ANY_SRC_ADDR_TO_SEND_DATA
+	sts = TRUE;
+	#else
+	for(uint8_t i=0; i<ALLOWED_SRC_ADDRESSESS; i++){
+		if(Radio.RxPacket.SrcAddr == allowed_node_addr[i]){
+			sts = TRUE;
+			break;
+		}
+	}
+	#endif
+	
+	if( (Radio.RxPacket.DstAddr == Radio.TxPacket.SrcAddr) && (sts == TRUE) ){
 		Radio.RxPacket.Buf[RADIO_FRAME_CRC16_POS]   = 0;
 		Radio.RxPacket.Buf[RADIO_FRAME_CRC16_POS+1] = 0;
 		crc = Radio_CRC_Calculate_Block(Radio.RxPacket.Buf, 0, RADIO_FRAME_USER_DATA_POS + Radio.RxPacket.Length);
@@ -480,10 +521,11 @@ uint8_t Radio_Rx_Ack(int32_t timeout){
 			Radio_Tx_Copy_Dst_Addr();
 	    Radio_Tx();
 		  Radio_Tx_Reload_Dst_Addr();
-			if(Radio.RxPacket.PID == Radio.RxPacket.LastPID){
+			if( (Radio.RxPacket.PID == Radio.RxPacket.LastPID) && (Radio.RxPacket.LastSender == Radio.RxPacket.SrcAddr) ){
 				return FALSE;
 			}
 			Radio.RxPacket.LastPID = Radio.RxPacket.PID;
+			Radio.RxPacket.LastSender = Radio.RxPacket.SrcAddr;
 		}
 		else{
 			Radio.RxPacket.CRCSts = FALSE;
@@ -580,9 +622,6 @@ void Radio_Init(void){
 	#warning Radio debug enabled
 	#endif
 }
-
-
-
 
 
 
