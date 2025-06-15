@@ -7,4 +7,4 @@
   C:\Keil\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf51_to_nrf52.h \
   C:\Keil\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h \
   C:\Keil\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h \
-  app.h cdefs.h timeout.h radio.h uart.h
+  app.h cdefs.h timeout.h clocks.h radio.h uart.h

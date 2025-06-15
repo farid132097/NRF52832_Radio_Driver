@@ -569,7 +569,7 @@ uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
 			  return SUCCESSFUL;
 		  }
 		  else{
-			  Timeout_Delay_us(100);
+			  //Timeout_Delay_us(100);
 		  }
 	  }
 		Radio.FaildAttempts++;

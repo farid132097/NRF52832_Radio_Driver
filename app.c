@@ -4,11 +4,13 @@
 #include "app.h"
 #include "cdefs.h"
 #include "timeout.h"
+#include "clocks.h"
 #include "radio.h"
 #include "uart.h"
 
 
 void App_Config(void){
+	Clock_Init();
   Timeout_Init();
 	Radio_Init();
 	UART_Init(UARTE_BAUDRATE_BAUDRATE_Baud38400);

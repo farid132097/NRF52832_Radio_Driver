@@ -17,6 +17,10 @@ void Clock_Struct_Init(void){
 	Clocks.LFCLKSts = STOPPED;
 }
 
+
+
+//////////////////////////////////////HFCLK Related Functions Start/////////////////////////////////////////
+
 void Clock_HFCLK_Start(void){
 	if((NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_RC){
 		NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
@@ -57,9 +61,17 @@ uint8_t Clock_HFCLK_Request_Count_Get(void){
 	return Clocks.HFCLKSts;
 }
 
+///////////////////////////////////////HFCLK Related Functions End//////////////////////////////////////////
 
 
 
+
+
+
+
+
+
+//////////////////////////////////////LFCLK Related Functions Start/////////////////////////////////////////
 
 void Clock_LFCLK_Start(void){
 	if( (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_STATE_Msk) == CLOCK_LFCLKSTAT_STATE_NotRunning ){
@@ -101,6 +113,9 @@ void Clock_LFCLK_Release(void){
 uint8_t Clock_LFCLK_Request_Count_Get(void){
 	return Clocks.LFCLKSts;
 }
+
+///////////////////////////////////////LFCLK Related Functions End//////////////////////////////////////////
+
 
 
 
