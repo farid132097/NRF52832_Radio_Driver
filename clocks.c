@@ -22,7 +22,7 @@ void Clock_Struct_Init(void){
 //////////////////////////////////////HFCLK Related Functions Start/////////////////////////////////////////
 
 void Clock_HFCLK_Start(void){
-	if((NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_RC){
+	if((NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) != CLOCK_HFCLKSTAT_SRC_Xtal){
 		NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
 	  NRF_CLOCK->TASKS_HFCLKSTART = 1;
 	  while(NRF_CLOCK->EVENTS_HFCLKSTARTED == 0);
@@ -32,7 +32,7 @@ void Clock_HFCLK_Start(void){
 void Clock_HFCLK_Stop(void){
 	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_Xtal){
 	  NRF_CLOCK->TASKS_HFCLKSTOP = 1;
-	  while( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_STATE_Msk) != CLOCK_HFCLKSTAT_STATE_NotRunning );
+	  while( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_Xtal );
 	}
 }
 
@@ -75,7 +75,11 @@ uint8_t Clock_HFCLK_Request_Count_Get(void){
 
 void Clock_LFCLK_Start(void){
 	if( (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_STATE_Msk) == CLOCK_LFCLKSTAT_STATE_NotRunning ){
+		//LFCLK source is 32.768kHz crystal, startup time 250ms
 	  NRF_CLOCK->LFCLKSRC = (CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos);
+		
+		//LFCLK source is 32.768kHz RC Oscillator, startup time 0.6ms
+		//NRF_CLOCK->LFCLKSRC = (CLOCK_LFCLKSRC_SRC_RC << CLOCK_LFCLKSRC_SRC_Pos);
 	  NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
 	  NRF_CLOCK->TASKS_LFCLKSTART = 1;
 	  while(NRF_CLOCK->EVENTS_LFCLKSTARTED == 0);

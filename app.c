@@ -9,6 +9,8 @@
 #include "uart.h"
 
 
+uint32_t loop_cnt = 0;
+
 void App_Config(void){
 	
 	//Charge
@@ -33,6 +35,7 @@ void App_Config(void){
 	NRF_GPIO->DIR |= (uint32_t) (1<<9);
 	NRF_GPIO->OUT &= (uint32_t) (~(1<<9));
 	
+	Clock_Init();
 	Timeout_Init();
 	
 	Radio_Init();
@@ -40,11 +43,18 @@ void App_Config(void){
 
 void App_Mainloop(void){
 	
+	loop_cnt++;
+	
+	/*
 	Radio_Tx();
 	Radio_Power_Down();
+	*/
+	
+	Clock_HFCLK_Request();
+	Clock_HFCLK_Release();
 	
 	Timeout_Arm();
-	Timeout_Error_Assign(10000, 10);
+	Timeout_Error_Assign(1000000, 10);
 	
 	
 	NRF_POWER->TASKS_LOWPWR = 1;
