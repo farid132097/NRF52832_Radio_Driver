@@ -6,7 +6,7 @@
 #include "cdefs.h"
 
 typedef struct timeout_t{
-	int16_t          SetStatus;
+	uint8_t          SetStatus;
 	uint8_t          Error;
 	uint8_t          StickyError;
 	volatile uint8_t Occured;
@@ -56,7 +56,7 @@ void RTC0_IRQHandler(void) {
 
 
 
-void Timeout_Set_MicroSeconds(int32_t val){
+void Timeout_Set_MicroSeconds(uint32_t val){
 	if(Timeout.SetStatus == FALSE){
 		uint32_t now = NRF_RTC0->COUNTER;
 		// Unit tick is 30.5 uS
@@ -72,7 +72,7 @@ void Timeout_Set_MicroSeconds(int32_t val){
 	}
 }
 
-uint8_t Timeout_Error_Assign(int32_t val, uint8_t error_code){
+uint8_t Timeout_Error_Assign(uint32_t val, uint8_t error_code){
 	Timeout_Set_MicroSeconds(val);
 	if( Timeout_Occured_Flag_Get() == TRUE ){
 		Timeout.Error = error_code;

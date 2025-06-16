@@ -407,7 +407,7 @@ void Radio_Start_Task(int32_t delay){
 	NRF_RADIO->TASKS_START = 1;
 	Timeout_Arm();
 	while(NRF_RADIO->EVENTS_END == 0){
-	  if(Timeout_Error_Assign((int32_t)delay, ERROR_RADIO_TASK_TIMEOUT_OCCURED)){
+	  if(Timeout_Error_Assign((uint32_t)delay, ERROR_RADIO_TASK_TIMEOUT_OCCURED)){
 			break;
 		}
 	}

@@ -9,7 +9,7 @@ typedef struct clocks_t{
 	uint8_t LFCLKSts;
 }clocks_t;
 
-clocks_t Clocks;
+static clocks_t Clocks;
 
 
 void Clock_Struct_Init(void){
@@ -122,3 +122,5 @@ uint8_t Clock_LFCLK_Request_Count_Get(void){
 void Clock_Init(void){
 	Clock_Struct_Init();
 }
+
+
