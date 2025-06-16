@@ -10,6 +10,7 @@
 
 
 uint32_t loop_cnt = 0;
+uint8_t  buf[40];
 
 void App_Config(void){
 	
@@ -45,13 +46,8 @@ void App_Mainloop(void){
 	
 	loop_cnt++;
 	
-	/*
-	Radio_Tx();
+	Radio_Tx_Packet(buf, 15);
 	Radio_Power_Down();
-	*/
-	
-	Clock_HFCLK_Request();
-	Clock_HFCLK_Release();
 	
 	Timeout_Arm();
 	Timeout_Error_Assign(1000000, 10);

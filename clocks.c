@@ -21,25 +21,50 @@ void Clock_Struct_Init(void){
 
 //////////////////////////////////////HFCLK Related Functions Start/////////////////////////////////////////
 
-void Clock_HFCLK_Start(void){
+void Clock_HFCLK_Start_Request(void){
 	if((NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) != CLOCK_HFCLKSTAT_SRC_Xtal){
 		NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
 	  NRF_CLOCK->TASKS_HFCLKSTART = 1;
-	  while(NRF_CLOCK->EVENTS_HFCLKSTARTED == 0);
   }
 }
 
-void Clock_HFCLK_Stop(void){
+uint8_t Clock_HFCLK_Start_Complete(void){
+	return (uint8_t)NRF_CLOCK->EVENTS_HFCLKSTARTED;
+}
+
+void Clock_HFCLK_Wait_Until_Ready(void){
+	while(Clock_HFCLK_Start_Complete() == 0);
+}
+
+
+
+void Clock_HFCLK_Stop_Request(void){
 	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_Xtal){
 	  NRF_CLOCK->TASKS_HFCLKSTOP = 1;
 	  while( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_Xtal );
 	}
 }
 
+uint8_t Clock_HFCLK_Stop_Complete(void){
+	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_Xtal ){
+		return FALSE;
+	}
+	else{
+		return TRUE;
+	}
+}
+
+void Clock_HFCLK_Wait_Until_Stopped(void){
+	while(Clock_HFCLK_Stop_Complete() == 0);
+}
+
+
+
 void Clock_HFCLK_Request(void){
 	if(Clocks.HFCLKSts == STOPPED){
 		//enable clock module
-		Clock_HFCLK_Start();
+		Clock_HFCLK_Start_Request();
+		Clock_HFCLK_Wait_Until_Ready();
 	  Clocks.HFCLKSts++;
 	}
 	else if(Clocks.HFCLKSts != 0xFF){
@@ -52,7 +77,8 @@ void Clock_HFCLK_Release(void){
 		Clocks.HFCLKSts--;
 		if(Clocks.HFCLKSts == STOP){
 			//disable clock module
-			Clock_HFCLK_Stop();
+			Clock_HFCLK_Stop_Request();
+			Clock_HFCLK_Wait_Until_Stopped();
 	  }
 	}
 }

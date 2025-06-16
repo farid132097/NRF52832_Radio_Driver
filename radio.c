@@ -13,6 +13,7 @@
 #include "nrf.h"
 #include "radio.h"
 #include "cdefs.h"
+#include "clocks.h"
 #include "timeout.h"
 
 
@@ -288,8 +289,9 @@ void Radio_HFCLK_Start(void){
 }
 
 void Radio_HFCLK_Stop(void){
-	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) != CLOCK_HFCLKSTAT_SRC_Xtal){
+	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_Xtal){
 	  NRF_CLOCK->TASKS_HFCLKSTOP = 1;
+	  while( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_Xtal );
 	}
 }
 
@@ -298,7 +300,7 @@ void Radio_Reg_Init(void){
 	if(Radio.RegInit == INCOMPLETE){
 	  NRF_RADIO->TXPOWER   = RADIO_TXPOWER_TXPOWER_Pos4dBm;
 	  NRF_RADIO->FREQUENCY = 10;
-	  NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_2Mbit<<RADIO_MODE_MODE_Pos);
+	  NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_2Mbit << RADIO_MODE_MODE_Pos);
 	  NRF_RADIO->PREFIX0   = 0x11223344;
 	  NRF_RADIO->BASE0     = 0x11111111;
 	  NRF_RADIO->TXADDRESS   = 0;
@@ -309,7 +311,7 @@ void Radio_Reg_Init(void){
 	                        (4  <<RADIO_PCNF1_BALEN_Pos)   |
 	                        (RADIO_PCNF1_ENDIAN_Big<<RADIO_PCNF1_ENDIAN_Pos);
 	  NRF_RADIO->SHORTS   = 0x00000000;
-	  NRF_RADIO->CRCCNF   = RADIO_CRCCNF_LEN_Two<<RADIO_CRCCNF_LEN_Pos;
+	  NRF_RADIO->CRCCNF   = RADIO_CRCCNF_LEN_Two << RADIO_CRCCNF_LEN_Pos;
 	  NRF_RADIO->MODECNF0 = (1<<9)|(1<<0);
 	  NRF_RADIO->CRCINIT  = 0xFFFFFF;
 	  NRF_RADIO->CRCPOLY  = 0x11021;
@@ -351,8 +353,9 @@ void Radio_Power_Disable(void){
 
 void Radio_Active(void){
 	Radio_Power_Enable();
-	Radio_HFCLK_Start();
+	Clock_HFCLK_Start_Request();
 	Radio_Reg_Init();
+	Clock_HFCLK_Wait_Until_Ready();
 }
 
 void Radio_Power_Down(void){
@@ -378,7 +381,6 @@ void Radio_Mode_Disable(void){
 }
 
 void Radio_Mode_Tx(void){
-	Radio_Active();
 	if( ((NRF_RADIO->STATE == RADIO_STATE_STATE_TxIdle) || (NRF_RADIO->STATE == RADIO_STATE_STATE_Tx)) == 0 ){
 	  NRF_RADIO->EVENTS_READY = 0;
 	  NRF_RADIO->TASKS_TXEN = 1;
@@ -395,7 +397,6 @@ void Radio_Mode_Tx(void){
 }
 
 void Radio_Mode_Rx(void){
-	Radio_Active();
 	if( ((NRF_RADIO->STATE == RADIO_STATE_STATE_RxIdle) || (NRF_RADIO->STATE == RADIO_STATE_STATE_Rx)) == 0 ){
 	  NRF_RADIO->EVENTS_READY =0;
 	  NRF_RADIO->TASKS_RXEN = 1;
@@ -430,7 +431,7 @@ void Radio_Start_Task(int32_t delay){
 
 
 uint8_t Radio_Tx(void){
-	uint8_t sts  = TRUE;
+	Radio_Active();
 	Radio_Mode_Tx();
 	if(Timeout_Error_Get() != NULL){
 		Radio_Mode_Disable();
@@ -446,22 +447,37 @@ uint8_t Radio_Tx(void){
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
 	}
-	return sts;
+	return TRUE;
 }
 
+void Radio_Tx_Low_Power(void){
+	Radio_Power_Enable();
+	Clock_HFCLK_Start_Request();
+	Radio_Reg_Init();
+	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
+	Radio_Mode_Tx();
+	Clock_HFCLK_Wait_Until_Ready();
+	Radio_Start_Task(450);
+}
+
+
 uint8_t Radio_Rx(int32_t timeout){
-	uint8_t sts  = SUCCESSFUL;
-	Timeout_Arm();
+	//Radio_Active();
 	Radio_Mode_Rx();
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
 	}
 	
+	
 	NRF_RADIO->PACKETPTR = (uint32_t)Radio.RxPacket.Buf;
+	
 	Radio_Start_Task(timeout);
+	
+	
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
 	}
+	
 	
 	if(NRF_RADIO->EVENTS_CRCOK != 1){
 		Timeout_Error_Force_Assign(ERROR_RADIO_CRC_NOT_OK);
@@ -481,14 +497,15 @@ uint8_t Radio_Rx(int32_t timeout){
 		Radio.RxPacket.CRC16  |= Radio.RxPacket.Buf[RADIO_FRAME_CRC16_POS+1];
 	}
 	
-	return sts;
+	return SUCCESSFUL;
 }
 
 	
 uint8_t Radio_Tx_Ack(void){
 	uint8_t  sts = FAILED;
-	if(Radio_Tx() == SUCCESSFUL){
-		sts = Radio_Rx(150);
+	if( SUCCESSFUL){
+		Radio_Tx_Low_Power();
+		sts = Radio_Rx(200);
     //Ack sent from the destination address to src address
 		if( (sts == SUCCESSFUL) && (Radio.RxPacket.DstAddr == Radio.TxPacket.SrcAddr) ){
 			return SUCCESSFUL;
@@ -561,6 +578,10 @@ uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
 	uint8_t  cnt = 0;
 	uint16_t crc = 0;
 	
+	Radio_Power_Enable();
+	Clock_HFCLK_Start_Request();
+	Radio_Reg_Init();
+	
 	if(len > RADIO_FRAME_USER_DATA_SIZE){
 		len = RADIO_FRAME_USER_DATA_SIZE;
 	}
@@ -577,32 +598,12 @@ uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
 	Radio.TxPacket.Buf[RADIO_FRAME_CRC16_POS] = (crc>>8) & 0xFF;
 	Radio.TxPacket.Buf[RADIO_FRAME_CRC16_POS+1] = crc & 0xFF;
 	
-	if(Radio.RetryEnable == TRUE){
-	  for(cnt = 0; cnt < RADIO_TX_FAILED_RETRY; cnt++){
-		  if(Radio_Tx_Ack() == SUCCESSFUL){
-				Radio.FaildAttempts = 0;
-			  return SUCCESSFUL;
-		  }
-		  else{
-			  //Timeout_Delay_us(100);
-		  }
-	  }
-		Radio.FaildAttempts++;
-		if(Radio.FaildAttempts >= RADIO_TX_RETRY_DIS_FAIL_ATT){
-			Radio.FaildAttempts = 0;
-			Radio.RetryEnable = FALSE;
-		}
-  }
-	else{
-		//Transmit packet once
-		if(Radio_Tx_Ack()){
-			//If ack received, enable retry
-			Radio.RetryEnable = TRUE;
-			return TRUE;
-		}
-		return FALSE;
-	}
+	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
+	Clock_HFCLK_Wait_Until_Ready();
+	Radio_Mode_Tx();
+	Radio_Start_Task(450);
 	
+	Radio_Rx(500000);
 	return FAILED;
 }
 
