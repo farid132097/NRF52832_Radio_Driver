@@ -271,7 +271,8 @@ void Radio_HFCLK_Start(void){
 	  NRF_CLOCK->TASKS_HFCLKSTART = 1;
 		Timeout_Arm();
 	  while(NRF_CLOCK->EVENTS_HFCLKSTARTED == 0){
-		  if(Timeout_Error_Assign(300, ERROR_RADIO_HFCLK_START_FAILED)){
+			//Standard startup time for XTAl is 360uS
+		  if(Timeout_Error_Assign(600, ERROR_RADIO_HFCLK_START_FAILED)){
 			  break;
 		  }
 	  }
@@ -284,14 +285,8 @@ void Radio_HFCLK_Start(void){
 }
 
 void Radio_HFCLK_Stop(void){
-	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_STATE_Msk) != CLOCK_HFCLKSTAT_STATE_NotRunning){
+	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) != CLOCK_HFCLKSTAT_SRC_Xtal){
 	  NRF_CLOCK->TASKS_HFCLKSTOP = 1;
-	  Timeout_Arm();
-	  while( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_STATE_Msk) != CLOCK_HFCLKSTAT_STATE_NotRunning ){
-		  if(Timeout_Error_Assign(300, ERROR_RADIO_HFCLK_STOP_FAILED)){
-			  break;
-		  }
-	  }
 	}
 }
 
@@ -425,7 +420,9 @@ uint8_t Radio_Tx(void){
 	}
 	
 	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
-	Radio_Start_Task(300);
+	//Standard 40 bytes payload + 9 bytes additional = 392bits
+	//For 1Mbps, 392uS
+	Radio_Start_Task(450);
 	
 	Radio_Mode_Rx();
 	if(Timeout_Error_Get() != NULL){
