@@ -22,17 +22,24 @@ Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
 D:\Projects\Embedded Projects\Personal\Keil\NRF52832_Radio_Driver\nrf52832_radio_driver.uvprojx
-Project File Date:  06/16/2025
+Project File Date:  06/17/2025
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.16', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Rebuild target 'NRF52832'
+compiling led.c...
 assembling arm_startup_nrf52.s...
 app.c(12): warning: no previous extern declaration for non-static variable 'loop_cnt' [-Wmissing-variable-declarations]
-uint32_t loop_cnt = 0;
+uint32_t loop_cnt = 0, state = 0;
          ^
 app.c(12): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-uint32_t loop_cnt = 0;
+uint32_t loop_cnt = 0, state = 0;
+^
+app.c(12): warning: no previous extern declaration for non-static variable 'state' [-Wmissing-variable-declarations]
+uint32_t loop_cnt = 0, state = 0;
+                       ^
+app.c(12): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+uint32_t loop_cnt = 0, state = 0;
 ^
 app.c(13): warning: no previous extern declaration for non-static variable 'buf' [-Wmissing-variable-declarations]
 uint8_t  buf[40];
@@ -40,11 +47,13 @@ uint8_t  buf[40];
 app.c(13): note: declare 'static' if the variable is not intended to be used outside of this translation unit
 uint8_t  buf[40];
 ^
-2 warnings generated.
+3 warnings generated.
 compiling app.c...
 compiling main.c...
-compiling clocks.c...
 compiling timeout.c...
+compiling clocks.c...
+compiling radio.c...
+compiling uart.c...
 RTE/Device/nRF52832_xxAA/system_nrf52.c(32): warning: In file included from...
 C:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include\system_nrf52_approtect.h(51): warning: 'nrf52_configuration_249' was marked unused but was used [-Wused-but-marked-unused]
             if (nrf52_configuration_249())
@@ -98,11 +107,9 @@ RTE/Device/nRF52832_xxAA/system_nrf52.c(250): warning: 'nrf52_errata_182' was ma
             ^
 14 warnings generated.
 compiling system_nrf52.c...
-compiling radio.c...
-compiling uart.c...
 linking...
-Program Size: Code=3068 RO-data=544 RW-data=4 ZI-data=8496  
-".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 16 Warning(s).
+Program Size: Code=3096 RO-data=544 RW-data=4 ZI-data=8496  
+".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 17 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -128,11 +135,11 @@ Package Vendor: NordicSemiconductor
    * Component: ARM::CMSIS:CORE:6.1.0
 
    * Component: NordicSemiconductor::Device:Startup:8.44.1
-      Include file:  Device\Include\system_nrf.h
-      Source file:   Device\Source\arm\arm_startup_nrf52.s
-      Source file:   Device\Source\system_nrf52.c
       Include file:  Device\Include\system_nrf52.h
-Build Time Elapsed:  00:00:00
+      Source file:   Device\Source\system_nrf52.c
+      Source file:   Device\Source\arm\arm_startup_nrf52.s
+      Include file:  Device\Include\system_nrf.h
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>

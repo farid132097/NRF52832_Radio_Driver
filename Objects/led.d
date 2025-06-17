@@ -1,4 +1,4 @@
-./objects/app.o: app.c \
+./objects/led.o: led.c \
   C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf.h \
   C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52.h \
   C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\core_cm4.h \
@@ -14,4 +14,4 @@
   C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf51_to_nrf52.h \
   C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h \
   C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h \
-  app.h timeout.h clocks.h radio.h uart.h led.h cdefs.h
+  led.h cdefs.h

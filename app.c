@@ -7,9 +7,9 @@
 #include "clocks.h"
 #include "radio.h"
 #include "uart.h"
+#include "led.h"
 
-
-uint32_t loop_cnt = 0;
+uint32_t loop_cnt = 0, state = 0;
 uint8_t  buf[40];
 
 void App_Config(void){
@@ -38,19 +38,21 @@ void App_Config(void){
 	
 	Clock_Init();
 	Timeout_Init();
-	
+	LED_Init();
 	Radio_Init();
 }
 
 void App_Mainloop(void){
 	
 	loop_cnt++;
+	LED_Toggle();
 	
 	Radio_Tx_Packet(buf, 15);
 	Radio_Power_Down();
 	
-	Timeout_Arm();
-	Timeout_Error_Assign(1000000, 10);
+	
+	
+	Timeout_Set_MicroSeconds(1000000);
 	
 	
 	NRF_POWER->TASKS_LOWPWR = 1;

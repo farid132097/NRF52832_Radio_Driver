@@ -413,6 +413,11 @@
               <FileType>5</FileType>
               <FilePath>.\clocks.h</FilePath>
             </File>
+            <File>
+              <FileName>led.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\led.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -447,6 +452,11 @@
               <FileName>clocks.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\clocks.c</FilePath>
+            </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\led.c</FilePath>
             </File>
           </Files>
         </Group>

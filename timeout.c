@@ -26,7 +26,10 @@ void Timeout_Struct_Init(void){
 void Timeout_Reg_Init(void){
 	// Enable the LFCLK
   Clock_LFCLK_Request();
-  
+	
+  NRF_RTC0->TASKS_STOP = 1;
+  NRF_RTC0->TASKS_CLEAR = 1;
+	
   // No prescaling, 32.768 kHz
   NRF_RTC0->PRESCALER = 0;
   // Disable all events	
@@ -54,34 +57,28 @@ void RTC0_IRQHandler(void) {
 
 void Timeout_Clear_Events(void){
 	if(Timeout.Occured == FALSE){
-	  //NRF_RTC0->EVTENCLR = RTC_EVTENCLR_COMPARE0_Msk;
+		NRF_RTC0->EVENTS_COMPARE[0] = 0;
 	  NRF_RTC0->INTENCLR = RTC_INTENCLR_COMPARE0_Msk;
-	  NRF_RTC0->CC[0] = 0;
+		NRF_RTC0->EVTENCLR = RTC_EVTENCLR_COMPARE0_Msk;
 	}
-	else{
-		
-	}
+	Timeout.Occured = FALSE;
 }
 
 void Timeout_Set_MicroSeconds(uint32_t val){
-	if(Timeout.SetStatus == FALSE){
-		uint32_t now = NRF_RTC0->COUNTER;
-		// Unit tick is 30.5 uS
-		val /= 30;
-		val += now;
-		val &= 0xFFFFFF;
-		// Set compare with wraparound
-    NRF_RTC0->CC[0] = val;
-		// Clear event flag
-    NRF_RTC0->EVENTS_COMPARE[0] = 0;
-    NRF_RTC0->INTENSET = RTC_INTENSET_COMPARE0_Msk;
-		Timeout.Occured = FALSE;
-		Timeout.SetStatus = TRUE;
-	}
+  uint32_t now = NRF_RTC0->COUNTER;
+	// Unit tick is 30.5 uS
+	val /= 30;
+	val += now;
+	val &= 0xFFFFFF;
+	// Set compare with wraparound
+  NRF_RTC0->CC[0] = val;
+	// Clear event flag
+  NRF_RTC0->EVENTS_COMPARE[0] = 0;
+  NRF_RTC0->INTENSET = RTC_INTENSET_COMPARE0_Msk;
+	Timeout.Occured = FALSE;
 }
 
-uint8_t Timeout_Error_Assign(uint32_t val, uint8_t error_code){
-	Timeout_Set_MicroSeconds(val);
+uint8_t Timeout_Error_Assign(uint8_t error_code){
 	if( Timeout_Occured_Flag_Get() == TRUE ){
 		Timeout.Error = error_code;
 		if(Timeout.StickyError == NULL){
