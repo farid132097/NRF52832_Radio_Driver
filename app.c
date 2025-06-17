@@ -54,6 +54,8 @@ void App_Mainloop(void){
 	  Timeout_Set_MicroSeconds(1000000);
 	}
 	
+	Radio_Tx_Complete_Handler();
+	
 	NRF_POWER->TASKS_LOWPWR = 1;
 	__WFE();
 	__SEV();

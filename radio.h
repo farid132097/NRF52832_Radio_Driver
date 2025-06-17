@@ -88,6 +88,9 @@ uint8_t  Radio_Tx_Ack(void);
 uint8_t  Radio_Rx_Ack(int32_t timeout);
 uint8_t  Radio_Tx_Packet(uint8_t *buf, uint8_t len);
 
+void     RADIO_IRQHandler(void);
+void     Radio_Tx_Complete_Handler(void);
+
 uint64_t Radio_Rx_SrcAddr_Get(void);
 uint64_t Radio_Rx_DstAddr_Get(void);
 uint16_t Radio_Rx_CRC16_Get(void);

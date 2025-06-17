@@ -79,7 +79,8 @@ typedef struct radio_t{
 	uint8_t  RegInit;
 	uint8_t  RetryEnable;
 	uint8_t  FaildAttempts;
-	uint8_t  Reserved2[5];
+	volatile uint8_t TxComplete;
+	uint8_t  Reserved2[4];
 	
 	packet_t TxPacket;
 	packet_t RxPacket;
@@ -131,6 +132,9 @@ void Radio_Struct_Init(void){
 		Radio.RxPacket.Buf[i] = 0;
 	}
 	Radio.RxPacket.LastSender = 0x0000000000000000;
+	
+	
+	Radio.TxComplete = FALSE;
 	
 }
 
@@ -602,17 +606,35 @@ uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
 	
 	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
 	Clock_HFCLK_Wait_Until_Ready();
-	//NRF_RADIO->SHORTS = RADIO_SHORTS_READY_START_Msk | RADIO_SHORTS_END_DISABLE_Msk;
-	Radio_Mode_Tx();
-	Radio_Start_Task(1000);
+	//Radio_Mode_Tx();
+	//Radio_Start_Task(1000);
 	
-	Radio_Rx(200);
+	
+	NRF_RADIO->SHORTS = RADIO_SHORTS_READY_START_Msk | RADIO_SHORTS_END_DISABLE_Msk;
+	NRF_RADIO->EVENTS_READY = 0;
+	NRF_RADIO->EVENTS_DISABLED = 0;
+	NRF_RADIO->INTENSET |= RADIO_INTENSET_DISABLED_Msk;
+	NRF_RADIO->TASKS_TXEN = 1;
+	
+	//Radio_Rx(200);
 	return FAILED;
 }
 
+void RADIO_IRQHandler(void){
+	if(NRF_RADIO->EVENTS_DISABLED == 1){
+		NRF_RADIO->EVENTS_DISABLED = 0;
+		NRF_RADIO->INTENCLR |= RADIO_INTENCLR_DISABLED_Msk;
+		NRF_RADIO->SHORTS = 0;
+		Radio.TxComplete = TRUE;
+	}
+}
 
-
-
+void Radio_Tx_Complete_Handler(void){
+	if(Radio.TxComplete == TRUE){
+		Radio.TxComplete = FALSE;
+		Radio_Power_Down();
+	}
+}
 
 uint64_t Radio_Rx_SrcAddr_Get(void){
 	return Radio.RxPacket.SrcAddr;
