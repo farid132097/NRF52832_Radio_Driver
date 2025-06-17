@@ -601,9 +601,9 @@ uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
 	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
 	Clock_HFCLK_Wait_Until_Ready();
 	Radio_Mode_Tx();
-	Radio_Start_Task(450);
+	Radio_Start_Task(100);
 	
-	Radio_Rx(500000);
+	//Radio_Rx(500000);
 	return FAILED;
 }
 

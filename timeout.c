@@ -53,10 +53,14 @@ void RTC0_IRQHandler(void) {
 }
 
 void Timeout_Clear_Events(void){
-	//NRF_RTC0->EVTENCLR = RTC_EVTENCLR_COMPARE0_Msk;
-	NRF_RTC0->INTENCLR = RTC_INTENCLR_COMPARE0_Msk;
-	NRF_RTC0->CC[0] = 0;
-  Timeout.Occured = FALSE;
+	if(Timeout.Occured == FALSE){
+	  //NRF_RTC0->EVTENCLR = RTC_EVTENCLR_COMPARE0_Msk;
+	  NRF_RTC0->INTENCLR = RTC_INTENCLR_COMPARE0_Msk;
+	  NRF_RTC0->CC[0] = 0;
+	}
+	else{
+		
+	}
 }
 
 void Timeout_Set_MicroSeconds(uint32_t val){
@@ -69,8 +73,7 @@ void Timeout_Set_MicroSeconds(uint32_t val){
 		// Set compare with wraparound
     NRF_RTC0->CC[0] = val;
 		// Clear event flag
-    //NRF_RTC0->EVENTS_COMPARE[0] = 0;
-    // Enable interrupt
+    NRF_RTC0->EVENTS_COMPARE[0] = 0;
     NRF_RTC0->INTENSET = RTC_INTENSET_COMPARE0_Msk;
 		Timeout.Occured = FALSE;
 		Timeout.SetStatus = TRUE;
