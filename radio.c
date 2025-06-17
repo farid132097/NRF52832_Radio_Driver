@@ -267,8 +267,7 @@ uint16_t Radio_CRC_Calculate_Block(uint8_t *buf, uint8_t start, uint8_t end){
 
 
 void Radio_HFCLK_Start(void){
-  if((NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) != CLOCK_HFCLKSTAT_SRC_Xtal){
-		
+  if( (NRF_CLOCK->HFCLKSTAT & (CLOCK_HFCLKSTAT_SRC_Xtal << CLOCK_HFCLKSTAT_SRC_Pos)) == 0 ){
 		NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
 	  NRF_CLOCK->TASKS_HFCLKSTART = 1;
 		
@@ -282,47 +281,51 @@ void Radio_HFCLK_Start(void){
 		Timeout_Clear_Events();
 		
 		NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
-		if((NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) != CLOCK_HFCLKSTAT_SRC_Xtal){
+		if( (NRF_CLOCK->HFCLKSTAT & (CLOCK_HFCLKSTAT_SRC_Xtal << CLOCK_HFCLKSTAT_SRC_Pos)) == 0 ){
 			Timeout_Error_Force_Assign(ERROR_RADIO_HFCLK_START_FAILED);
 		}
   }
 }
 
 void Radio_HFCLK_Stop(void){
-	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_Xtal){
+	if( NRF_CLOCK->HFCLKSTAT & (CLOCK_HFCLKSTAT_SRC_Xtal << CLOCK_HFCLKSTAT_SRC_Pos) ){
 	  NRF_CLOCK->TASKS_HFCLKSTOP = 1;
-	  while( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_Xtal );
+	  while( NRF_CLOCK->HFCLKSTAT & (CLOCK_HFCLKSTAT_SRC_Xtal << CLOCK_HFCLKSTAT_SRC_Pos) );
 	}
 }
 
 
 void Radio_Reg_Init(void){
 	if(Radio.RegInit == INCOMPLETE){
-	  NRF_RADIO->TXPOWER   = RADIO_TXPOWER_TXPOWER_Pos4dBm;
-	  NRF_RADIO->FREQUENCY = 10;
-	  NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_2Mbit << RADIO_MODE_MODE_Pos);
-	  NRF_RADIO->PREFIX0   = 0x11223344;
-	  NRF_RADIO->BASE0     = 0x11111111;
+	  NRF_RADIO->TXPOWER     = RADIO_TXPOWER_TXPOWER_Pos4dBm;
+	  NRF_RADIO->FREQUENCY   = 10;
+		NRF_RADIO->MODE        = (RADIO_MODE_MODE_Nrf_2Mbit << RADIO_MODE_MODE_Pos);
+	  //NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_1Mbit << RADIO_MODE_MODE_Pos);
+		//NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_250Kbit << RADIO_MODE_MODE_Pos);
+	  NRF_RADIO->PREFIX0     = 0x11223344;
+	  NRF_RADIO->BASE0       = 0x11111111;
 	  NRF_RADIO->TXADDRESS   = 0;
 	  NRF_RADIO->RXADDRESSES = 1;
-    NRF_RADIO->PCNF0    = 0;
-	  NRF_RADIO->PCNF1    = (36 <<RADIO_PCNF1_MAXLEN_Pos)  |
-	                        (32 <<RADIO_PCNF1_STATLEN_Pos) |
-	                        (4  <<RADIO_PCNF1_BALEN_Pos)   |
-	                        (RADIO_PCNF1_ENDIAN_Big<<RADIO_PCNF1_ENDIAN_Pos);
-	  NRF_RADIO->SHORTS   = 0x00000000;
-	  NRF_RADIO->CRCCNF   = RADIO_CRCCNF_LEN_Two << RADIO_CRCCNF_LEN_Pos;
-	  NRF_RADIO->MODECNF0 = (1<<9)|(1<<0);
-	  NRF_RADIO->CRCINIT  = 0xFFFFFF;
-	  NRF_RADIO->CRCPOLY  = 0x11021;
+    NRF_RADIO->PCNF0       = 0;
+	  NRF_RADIO->PCNF1       = (20 <<RADIO_PCNF1_MAXLEN_Pos)   |
+	                           (1 <<RADIO_PCNF1_STATLEN_Pos)   |
+	                           (1  <<RADIO_PCNF1_BALEN_Pos)    |
+	                           (RADIO_PCNF1_ENDIAN_Big<<RADIO_PCNF1_ENDIAN_Pos);
+	  NRF_RADIO->SHORTS      = 0x00000000;
+	  NRF_RADIO->CRCCNF      = RADIO_CRCCNF_LEN_Two << RADIO_CRCCNF_LEN_Pos;
+	  NRF_RADIO->MODECNF0    = (1<<9)|(1<<0);
+	  NRF_RADIO->CRCINIT     = 0xFFFFFF;
+	  NRF_RADIO->CRCPOLY     = 0x11021;
 	  NRF_RADIO->EVENTS_ADDRESS = 0;
 	  NRF_RADIO->EVENTS_PAYLOAD = 0;
+		NRF_RADIO->INTENCLR       = 0xFFFFFFFF;
+		NVIC_EnableIRQ(RADIO_IRQn);
 		Radio.RegInit = COMPLETE;
 	}
 }
 
 void Radio_Power_Enable(void){
-	if(NRF_RADIO->POWER != RADIO_POWER_POWER_Enabled){
+	if( (NRF_RADIO->POWER & (RADIO_POWER_POWER_Enabled << RADIO_POWER_POWER_Pos)) == 0 ){
 	  NRF_RADIO->POWER = 1;
 		
 		Timeout_Set_MicroSeconds(300);
@@ -337,7 +340,7 @@ void Radio_Power_Enable(void){
 }
 
 void Radio_Power_Disable(void){
-	if(NRF_RADIO->POWER == 1){
+	if( NRF_RADIO->POWER & (RADIO_POWER_POWER_Enabled << RADIO_POWER_POWER_Pos) ){
 	  NRF_RADIO->POWER = 0;
 		
 		Timeout_Set_MicroSeconds(300);
@@ -347,7 +350,6 @@ void Radio_Power_Disable(void){
 		  }
 	  }
 		Timeout_Clear_Events();
-		
   }
 }
 
@@ -366,7 +368,7 @@ void Radio_Power_Down(void){
 
 
 void Radio_Mode_Disable(void){
-	if(NRF_RADIO->STATE != RADIO_STATE_STATE_Disabled){
+	if( (NRF_RADIO->STATE & RADIO_STATE_STATE_Msk) != RADIO_STATE_STATE_Disabled ){
     NRF_RADIO->EVENTS_DISABLED = 0;
 	  NRF_RADIO->TASKS_DISABLE = 1;
 		
@@ -381,7 +383,7 @@ void Radio_Mode_Disable(void){
 }
 
 void Radio_Mode_Tx(void){
-	if( ((NRF_RADIO->STATE == RADIO_STATE_STATE_TxIdle) || (NRF_RADIO->STATE == RADIO_STATE_STATE_Tx)) == 0 ){
+	if( ((NRF_RADIO->STATE & RADIO_STATE_STATE_Msk) != RADIO_STATE_STATE_TxIdle) || ((NRF_RADIO->STATE & RADIO_STATE_STATE_Msk) != RADIO_STATE_STATE_Tx) ){
 	  NRF_RADIO->EVENTS_READY = 0;
 	  NRF_RADIO->TASKS_TXEN = 1;
 		
@@ -397,7 +399,7 @@ void Radio_Mode_Tx(void){
 }
 
 void Radio_Mode_Rx(void){
-	if( ((NRF_RADIO->STATE == RADIO_STATE_STATE_RxIdle) || (NRF_RADIO->STATE == RADIO_STATE_STATE_Rx)) == 0 ){
+	if( ((NRF_RADIO->STATE & RADIO_STATE_STATE_Msk) != RADIO_STATE_STATE_RxIdle) || ((NRF_RADIO->STATE & RADIO_STATE_STATE_Msk) != RADIO_STATE_STATE_Rx) ){
 	  NRF_RADIO->EVENTS_READY =0;
 	  NRF_RADIO->TASKS_RXEN = 1;
 		
@@ -462,12 +464,10 @@ void Radio_Tx_Low_Power(void){
 
 
 uint8_t Radio_Rx(int32_t timeout){
-	//Radio_Active();
 	Radio_Mode_Rx();
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
 	}
-	
 	
 	NRF_RADIO->PACKETPTR = (uint32_t)Radio.RxPacket.Buf;
 	
@@ -578,6 +578,8 @@ uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
 	uint8_t  cnt = 0;
 	uint16_t crc = 0;
 	
+	Timeout_Error_Clear();
+	
 	Radio_Power_Enable();
 	Clock_HFCLK_Start_Request();
 	Radio_Reg_Init();
@@ -600,12 +602,16 @@ uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
 	
 	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
 	Clock_HFCLK_Wait_Until_Ready();
+	//NRF_RADIO->SHORTS = RADIO_SHORTS_READY_START_Msk | RADIO_SHORTS_END_DISABLE_Msk;
 	Radio_Mode_Tx();
 	Radio_Start_Task(1000);
 	
-	//Radio_Rx(500000);
+	Radio_Rx(200);
 	return FAILED;
 }
+
+
+
 
 
 uint64_t Radio_Rx_SrcAddr_Get(void){

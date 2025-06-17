@@ -22,7 +22,7 @@ void Clock_Struct_Init(void){
 //////////////////////////////////////HFCLK Related Functions Start/////////////////////////////////////////
 
 void Clock_HFCLK_Start_Request(void){
-	if((NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) != CLOCK_HFCLKSTAT_SRC_Xtal){
+	if( (NRF_CLOCK->HFCLKSTAT & (CLOCK_HFCLKSTAT_SRC_Xtal << CLOCK_HFCLKSTAT_SRC_Pos)) == 0){
 		NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
 	  NRF_CLOCK->TASKS_HFCLKSTART = 1;
   }
@@ -39,14 +39,14 @@ void Clock_HFCLK_Wait_Until_Ready(void){
 
 
 void Clock_HFCLK_Stop_Request(void){
-	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_Xtal){
+	if( NRF_CLOCK->HFCLKSTAT & (CLOCK_HFCLKSTAT_SRC_Xtal << CLOCK_HFCLKSTAT_SRC_Pos) ){
 	  NRF_CLOCK->TASKS_HFCLKSTOP = 1;
-	  while( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_Xtal );
+	  while( NRF_CLOCK->HFCLKSTAT & (CLOCK_HFCLKSTAT_SRC_Xtal << CLOCK_HFCLKSTAT_SRC_Pos) );
 	}
 }
 
 uint8_t Clock_HFCLK_Stop_Complete(void){
-	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) == CLOCK_HFCLKSTAT_SRC_Xtal ){
+	if( NRF_CLOCK->HFCLKSTAT & (CLOCK_HFCLKSTAT_SRC_Xtal << CLOCK_HFCLKSTAT_SRC_Pos) ){
 		return FALSE;
 	}
 	else{
@@ -100,7 +100,7 @@ uint8_t Clock_HFCLK_Request_Count_Get(void){
 //////////////////////////////////////LFCLK Related Functions Start/////////////////////////////////////////
 
 void Clock_LFCLK_Start(void){
-	if( (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_STATE_Msk) == CLOCK_LFCLKSTAT_STATE_NotRunning ){
+	if( (NRF_CLOCK->LFCLKSTAT & (CLOCK_LFCLKSTAT_SRC_Xtal << CLOCK_LFCLKSTAT_SRC_Pos)) == 0 ){
 		//LFCLK source is 32.768kHz crystal, startup time 250ms
 	  NRF_CLOCK->LFCLKSRC = (CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos);
 		
@@ -113,7 +113,7 @@ void Clock_LFCLK_Start(void){
 }
 
 void Clock_LFCLK_Stop(void){
-	if( (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_STATE_Msk) == (CLOCK_LFCLKSTAT_STATE_Running << CLOCK_LFCLKSTAT_STATE_Pos) ){
+	if( NRF_CLOCK->LFCLKSTAT & (CLOCK_LFCLKSTAT_SRC_Xtal << CLOCK_LFCLKSTAT_SRC_Pos) ){
 		NRF_CLOCK->TASKS_LFCLKSTOP = 1;
 	}
 }

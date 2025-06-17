@@ -20,7 +20,7 @@ void Timeout_Struct_Init(void){
 	Timeout.SetStatus   = FALSE;
 	Timeout.Error       = NULL;
 	Timeout.StickyError = NULL;
-	Timeout.Occured     = FALSE;
+	Timeout.Occured     = TRUE;
 }
 
 void Timeout_Reg_Init(void){
@@ -49,7 +49,8 @@ void RTC0_IRQHandler(void) {
 		// Clear event flag
     NRF_RTC0->EVENTS_COMPARE[0] = 0;
     // Disable interrupt
-    NRF_RTC0->INTENCLR = RTC_INTENCLR_COMPARE0_Msk;
+    NRF_RTC0->INTENCLR |= RTC_INTENCLR_COMPARE0_Msk;
+		NRF_RTC0->EVTENCLR |= RTC_EVTENCLR_COMPARE0_Msk;
 		// Set flag for main loop
     Timeout.Occured = TRUE;
   }
@@ -57,9 +58,9 @@ void RTC0_IRQHandler(void) {
 
 void Timeout_Clear_Events(void){
 	if(Timeout.Occured == FALSE){
+	  NRF_RTC0->INTENCLR |= RTC_INTENCLR_COMPARE0_Msk;
+		NRF_RTC0->EVTENCLR |= RTC_EVTENCLR_COMPARE0_Msk;
 		NRF_RTC0->EVENTS_COMPARE[0] = 0;
-	  NRF_RTC0->INTENCLR = RTC_INTENCLR_COMPARE0_Msk;
-		NRF_RTC0->EVTENCLR = RTC_EVTENCLR_COMPARE0_Msk;
 	}
 	Timeout.Occured = FALSE;
 }

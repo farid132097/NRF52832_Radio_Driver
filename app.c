@@ -44,16 +44,15 @@ void App_Config(void){
 
 void App_Mainloop(void){
 	
-	loop_cnt++;
-	LED_Toggle();
+	if(Timeout_Occured_Flag_Get()){
+		
+	  //LED_Toggle();
 	
-	Radio_Tx_Packet(buf, 15);
-	Radio_Power_Down();
+	  Radio_Tx_Packet(buf, 15);
+	  Radio_Power_Down();
 	
-	
-	
-	Timeout_Set_MicroSeconds(1000000);
-	
+	  Timeout_Set_MicroSeconds(1000000);
+	}
 	
 	NRF_POWER->TASKS_LOWPWR = 1;
 	__WFE();
