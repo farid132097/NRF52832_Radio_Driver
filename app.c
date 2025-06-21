@@ -8,11 +8,13 @@
 #include "radio.h"
 #include "uart.h"
 #include "led.h"
+#include "pwm.h"
 
 uint32_t loop_cnt = 0, state = 0;
 uint8_t  buf[40];
 
 void App_Config(void){
+	
 	
 	//Charge
 	NRF_GPIO->DIR |= (uint32_t) (1<<6);
@@ -40,9 +42,14 @@ void App_Config(void){
 	Timeout_Init();
 	LED_Init();
 	Radio_Init();
+	
+	
+	//PWM_Init();
+	
 }
 
 void App_Mainloop(void){
+	
 	
 	if(Timeout_Occured_Flag_Get()){
 		
@@ -61,4 +68,14 @@ void App_Mainloop(void){
 	__SEV();
 	__WFE();
 	
+	
+	/*
+	PWM_Set_Duty((uint16_t)loop_cnt);
+	Timeout_Set_MicroSeconds(10000);
+	while(Timeout_Occured_Flag_Get() == 0);
+	loop_cnt++;
+	if(loop_cnt > 999){
+		loop_cnt = 0;
+	}
+	*/
 }
