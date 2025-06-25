@@ -10,23 +10,25 @@
 
 void     Clock_Struct_Init(void);
 
-void     Clock_HFCLK_Start_Request(void);
-uint8_t  Clock_HFCLK_Start_Complete(void);
-void     Clock_HFCLK_Wait_Until_Ready(void);
+void     Clock_HFCLK_Xtal_Start_Request(void);
+uint8_t  Clock_HFCLK_Xtal_Started(void);
+void     Clock_HFCLK_Xtal_Wait_Until_Ready(void);
 
-void     Clock_HFCLK_Stop_Request(void);
-uint8_t  Clock_HFCLK_Stop_Complete(void);
-void     Clock_HFCLK_Wait_Until_Stopped(void);
+void     Clock_HFCLK_Xtal_Stop_Request(void);
+uint8_t  Clock_HFCLK_Xtal_Stopped(void);
+void     Clock_HFCLK_Xtal_Wait_Until_Stopped(void);
 
-void     Clock_HFCLK_Request(void);
-void     Clock_HFCLK_Release(void);
-uint8_t  Clock_HFCLK_Request_Count_Get(void);
+void     Clock_HFCLK_Xtal_Request(void);
+void     Clock_HFCLK_Xtal_Release(void);
+uint8_t  Clock_HFCLK_Xtal_Request_Count_Get(void);
 
-void     Clock_LFCLK_Start(void);
-void     Clock_LFCLK_Stop(void);
-void     Clock_LFCLK_Request(void);
-void     Clock_LFCLK_Release(void);
-uint8_t  Clock_LFCLK_Request_Count_Get(void);
+void     Clock_LFCLK_Xtal_Start(void);
+void     Clock_LFCLK_Xtal_Stop(void);
+void     Clock_LFCLK_RC_Start(void);
+void     Clock_LFCLK_RC_Stop(void);
+void     Clock_LFCLK_Xtal_Request(void);
+void     Clock_LFCLK_Xtal_Release(void);
+uint8_t  Clock_LFCLK_Xtal_Request_Count_Get(void);
 
 void     Clock_Init(void);
 

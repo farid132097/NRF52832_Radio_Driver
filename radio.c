@@ -359,9 +359,9 @@ void Radio_Power_Disable(void){
 
 void Radio_Active(void){
 	Radio_Power_Enable();
-	Clock_HFCLK_Start_Request();
+	Clock_HFCLK_Xtal_Start_Request();
 	Radio_Reg_Init();
-	Clock_HFCLK_Wait_Until_Ready();
+	Clock_HFCLK_Xtal_Wait_Until_Ready();
 }
 
 void Radio_Power_Down(void){
@@ -458,11 +458,11 @@ uint8_t Radio_Tx(void){
 
 void Radio_Tx_Low_Power(void){
 	Radio_Power_Enable();
-	Clock_HFCLK_Start_Request();
+	Clock_HFCLK_Xtal_Start_Request();
 	Radio_Reg_Init();
 	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
 	Radio_Mode_Tx();
-	Clock_HFCLK_Wait_Until_Ready();
+	Clock_HFCLK_Xtal_Wait_Until_Ready();
 	Radio_Start_Task(450);
 }
 
@@ -585,7 +585,7 @@ uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
 	Timeout_Error_Clear();
 	
 	Radio_Power_Enable();
-	Clock_HFCLK_Start_Request();
+	Clock_HFCLK_Xtal_Start_Request();
 	Radio_Reg_Init();
 	
 	if(len > RADIO_FRAME_USER_DATA_SIZE){
@@ -605,7 +605,7 @@ uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
 	Radio.TxPacket.Buf[RADIO_FRAME_CRC16_POS+1] = crc & 0xFF;
 	
 	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
-	Clock_HFCLK_Wait_Until_Ready();
+	Clock_HFCLK_Xtal_Wait_Until_Ready();
 	//Radio_Mode_Tx();
 	//Radio_Start_Task(1000);
 	

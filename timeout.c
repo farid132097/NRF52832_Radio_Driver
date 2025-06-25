@@ -25,7 +25,7 @@ void Timeout_Struct_Init(void){
 
 void Timeout_Reg_Init(void){
 	// Enable the LFCLK
-  Clock_LFCLK_Request();
+  Clock_LFCLK_RC_Start();
 	
   NRF_RTC0->TASKS_STOP = 1;
   NRF_RTC0->TASKS_CLEAR = 1;
