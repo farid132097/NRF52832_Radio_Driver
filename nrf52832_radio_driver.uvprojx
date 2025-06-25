@@ -418,6 +418,11 @@
               <FileType>5</FileType>
               <FilePath>.\led.h</FilePath>
             </File>
+            <File>
+              <FileName>pwm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\pwm.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -457,6 +462,11 @@
               <FileName>led.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\led.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\pwm.c</FilePath>
             </File>
           </Files>
         </Group>
