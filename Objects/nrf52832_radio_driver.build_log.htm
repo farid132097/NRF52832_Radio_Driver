@@ -28,7 +28,6 @@ Project File Date:  06/26/2025
 *** Using Compiler 'V6.16', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Rebuild target 'NRF52832'
 compiling main.c...
-compiling led.c...
 pwm.c(12): warning: no previous extern declaration for non-static variable 'pwm_seq' [-Wmissing-variable-declarations]
 uint16_t pwm_seq[4] = {
          ^
@@ -54,6 +53,44 @@ void PWM_Set_Duty(uint16_t val){
 static 
 4 warnings generated.
 compiling pwm.c...
+radio.c(50): warning: padding size of 'struct packet_t' with 1 byte to alignment boundary [-Wpadded]
+typedef struct packet_t{
+               ^
+radio.c(403): error: no member named 'Length' in 'struct packet_t'
+                Radio.RxPacket.Length = Radio.RxPacket.Buf[RADIO_FRAME_LEN_POS];
+                ~~~~~~~~~~~~~~ ^
+radio.c(404): error: no member named 'Length' in 'struct packet_t'
+                if(Radio.RxPacket.Length > RADIO_FRAME_USER_DATA_SIZE){
+                   ~~~~~~~~~~~~~~ ^
+radio.c(405): error: no member named 'Length' in 'struct packet_t'
+                        Radio.RxPacket.Length = RADIO_FRAME_USER_DATA_SIZE;
+                        ~~~~~~~~~~~~~~ ^
+radio.c(407): error: no member named 'PID' in 'struct packet_t'
+                Radio.RxPacket.PID = Radio.RxPacket.Buf[RADIO_FRAME_PID_POS];
+                ~~~~~~~~~~~~~~ ^
+radio.c(465): error: no member named 'Length' in 'struct packet_t'
+                crc = Radio_CRC_Calculate_Block(Radio.RxPacket.Buf, 0, RADIO_FRAME_USER_DATA_POS + Radio.RxPacket.Length);
+                                                                                                   ~~~~~~~~~~~~~~ ^
+radio.c(471): error: no member named 'PID' in 'struct packet_t'
+                        if( (Radio.RxPacket.PID == Radio.RxPacket.LastPID) && (Radio.RxPacket.LastSender == Radio.RxPacket.SrcAddr) ){
+                             ~~~~~~~~~~~~~~ ^
+radio.c(471): error: no member named 'LastPID' in 'struct packet_t'
+                        if( (Radio.RxPacket.PID == Radio.RxPacket.LastPID) && (Radio.RxPacket.LastSender == Radio.RxPacket.SrcAddr) ){
+                                                   ~~~~~~~~~~~~~~ ^
+radio.c(474): error: no member named 'LastPID' in 'struct packet_t'
+                        Radio.RxPacket.LastPID = Radio.RxPacket.PID;
+                        ~~~~~~~~~~~~~~ ^
+radio.c(474): error: no member named 'PID' in 'struct packet_t'
+                        Radio.RxPacket.LastPID = Radio.RxPacket.PID;
+                                                 ~~~~~~~~~~~~~~ ^
+radio.c(529): error: no member named 'TxComplete' in 'struct radio_t'
+        if(Radio.TxComplete == TRUE){
+           ~~~~~ ^
+radio.c(530): error: no member named 'TxComplete' in 'struct radio_t'
+                Radio.TxComplete = FALSE;
+                ~~~~~ ^
+1 warning and 11 errors generated.
+compiling radio.c...
 app.c(13): warning: no previous extern declaration for non-static variable 'loop_cnt' [-Wmissing-variable-declarations]
 uint32_t loop_cnt = 0, state = 0;
          ^
@@ -74,79 +111,9 @@ uint8_t  buf[40] = "Hello";
 ^
 3 warnings generated.
 compiling app.c...
+compiling led.c...
 compiling clocks.c...
 compiling timeout.c...
-radio.c(103): warning: implicit conversion from 'unsigned long long' to 'uint32_t' (aka 'unsigned int') changes value from 18446744073709551615 to 4294967295 [-Wconstant-conversion]
-        Radio.TxPacket.SrcAddr  = OWN_DEV_ADDRESS_QWORD;
-                                ~ ^~~~~~~~~~~~~~~~~~~~~
-./radio.h(23): note: expanded from macro 'OWN_DEV_ADDRESS_QWORD'
-#define  OWN_DEV_ADDRESS_QWORD   (0xFFFFFFFFFFFFFFFFULL)
-                                  ^~~~~~~~~~~~~~~~~~~~~
-radio.c(104): warning: implicit conversion from 'unsigned long long' to 'uint32_t' (aka 'unsigned int') changes value from 18446744073709551615 to 4294967295 [-Wconstant-conversion]
-        Radio.TxPacket.DstAddr  = REC_DEV_ADDRESS_QWORD;
-                                ~ ^~~~~~~~~~~~~~~~~~~~~
-./radio.h(31): note: expanded from macro 'REC_DEV_ADDRESS_QWORD'
-#define  REC_DEV_ADDRESS_QWORD   (0xFFFFFFFFFFFFFFFFULL)
-                                  ^~~~~~~~~~~~~~~~~~~~~
-radio.c(110): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[2]   = (Radio.TxPacket.SrcAddr >> 56) & 0xFF;
-                                                          ^  ~~
-radio.c(111): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[3]   = (Radio.TxPacket.SrcAddr >> 48) & 0xFF;
-                                                          ^  ~~
-radio.c(112): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[4]   = (Radio.TxPacket.SrcAddr >> 40) & 0xFF;
-                                                          ^  ~~
-radio.c(113): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[5]   = (Radio.TxPacket.SrcAddr >> 32) & 0xFF;
-                                                          ^  ~~
-radio.c(120): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[10]  = (Radio.TxPacket.DstAddr >> 56) & 0xFF;
-                                                          ^  ~~
-radio.c(121): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[11]  = (Radio.TxPacket.DstAddr >> 48) & 0xFF;
-                                                          ^  ~~
-radio.c(122): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[12]  = (Radio.TxPacket.DstAddr >> 40) & 0xFF;
-                                                          ^  ~~
-radio.c(123): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[13]  = (Radio.TxPacket.DstAddr >> 32) & 0xFF;
-                                                          ^  ~~
-radio.c(148): warning: implicit conversion loses integer precision: 'uint64_t' (aka 'unsigned long long') to 'uint32_t' (aka 'unsigned int') [-Wshorten-64-to-32]
-        Radio.TxPacket.DstAddr = dst_addr;
-                               ~ ^~~~~~~~
-radio.c(149): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[10] = (Radio.TxPacket.DstAddr >> 56) & 0xFF;
-                                                         ^  ~~
-radio.c(150): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[11] = (Radio.TxPacket.DstAddr >> 48) & 0xFF;
-                                                         ^  ~~
-radio.c(151): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[12] = (Radio.TxPacket.DstAddr >> 40) & 0xFF;
-                                                         ^  ~~
-radio.c(152): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[13] = (Radio.TxPacket.DstAddr >> 32) & 0xFF;
-                                                         ^  ~~
-radio.c(160): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[10] = (Radio.TxPacket.DstAddr >> 56) & 0xFF;
-                                                         ^  ~~
-radio.c(161): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[11] = (Radio.TxPacket.DstAddr >> 48) & 0xFF;
-                                                         ^  ~~
-radio.c(162): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[12] = (Radio.TxPacket.DstAddr >> 40) & 0xFF;
-                                                         ^  ~~
-radio.c(163): warning: shift count >= width of type [-Wshift-count-overflow]
-        Radio.TxPacket.Buf[13] = (Radio.TxPacket.DstAddr >> 32) & 0xFF;
-                                                         ^  ~~
-radio.c(214): warning: implicit conversion loses integer precision: 'uint64_t' (aka 'unsigned long long') to 'uint32_t' (aka 'unsigned int') [-Wshorten-64-to-32]
-        Radio.RxPacket.SrcAddr = temp;
-                               ~ ^~~~
-radio.c(226): warning: implicit conversion loses integer precision: 'uint64_t' (aka 'unsigned long long') to 'uint32_t' (aka 'unsigned int') [-Wshorten-64-to-32]
-        Radio.RxPacket.DstAddr = temp;
-                               ~ ^~~~
-21 warnings generated.
-compiling radio.c...
 assembling arm_startup_nrf52.s...
 compiling uart.c...
 RTE/Device/nRF52832_xxAA/system_nrf52.c(32): warning: In file included from...
@@ -202,9 +169,7 @@ RTE/Device/nRF52832_xxAA/system_nrf52.c(250): warning: 'nrf52_errata_182' was ma
             ^
 14 warnings generated.
 compiling system_nrf52.c...
-linking...
-Program Size: Code=2932 RO-data=544 RW-data=44 ZI-data=8392  
-".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 42 Warning(s).
+".\Objects\nrf52832_radio_driver.axf" - 11 Error(s), 22 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -234,7 +199,8 @@ Package Vendor: NordicSemiconductor
       Source file:   Device\Source\arm\arm_startup_nrf52.s
       Include file:  Device\Include\system_nrf52.h
       Include file:  Device\Include\system_nrf.h
-Build Time Elapsed:  00:00:00
+Target not created.
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>

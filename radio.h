@@ -15,20 +15,8 @@
 #include "nrf.h"
 
 
-/*
- * Device address for this node (TX)
- * Device address must not be    (0x0000000000000000ULL) or 
- *                               (0xFFFFFFFFFFFFFFFFULL)
- */
-#define  OWN_DEV_ADDRESS_QWORD   (0xFFFFFFFFFFFFFFFFULL)
-
-
-
-/*
- * Receiver address
- * Default Receiver address      (0xFFFFFFFFFFFFFFFFULL)
- */
-#define  REC_DEV_ADDRESS_QWORD   (0xFFFFFFFFFFFFFFFFULL)
+#define  OWN_DEV_ADDRESS_DWORD   (0xFFFFFFFFUL)
+#define  REC_DEV_ADDRESS_DWORD   (0xFFFFFFFFUL)
 
 
 //Uncomment if any Node can send data to this device
@@ -51,7 +39,7 @@ enum radio_error_t{
 };
 
 void     Radio_Struct_Init(void);
-void     Radio_Tx_Set_Dst_Addr(uint64_t dst_addr);
+void     Radio_Tx_Set_Dst_Addr(uint32_t dst_addr);
 void     Radio_Tx_Reload_Dst_Addr(void);
 
 void     Radio_Tx_Copy_Dst_Addr(void);
@@ -61,8 +49,8 @@ void     Radio_Len_PID_Update(void);
 
 void     Radio_Tx_Clear_Data_Buf(void);
 void     Radio_Tx_Set_Data_Buf(uint8_t index, uint8_t data);
-uint64_t Radio_Rx_Extract_SrcAddr(void);
-uint64_t Radio_Rx_Extract_DstAddr(void);
+uint32_t Radio_Rx_Extract_SrcAddr(void);
+uint32_t Radio_Rx_Extract_DstAddr(void);
 uint8_t  Radio_Rx_Data_Buf_Get(uint8_t index);
 uint8_t  Radio_Rx_Data_Len_Get(void);
 uint8_t  Radio_Rx_Buf_Get(uint8_t index);
