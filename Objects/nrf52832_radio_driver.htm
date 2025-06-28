@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\nrf52832_radio_driver.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\nrf52832_radio_driver.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Thu Jun 26 01:52:20 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Sat Jun 28 22:15:55 2025
 <BR><P>
 <H3>Maximum Stack Usage =         40 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -81,8 +81,8 @@ Function Pointers
 Global Symbols
 </H3>
 <P><STRONG><a name="[30]"></a>__main</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, __main.o(!!!main))
-<BR><BR>[Calls]<UL><LI><a href="#[32]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
-<LI><a href="#[33]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
+<BR><BR>[Calls]<UL><LI><a href="#[33]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
+<LI><a href="#[32]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> arm_startup_nrf52.o(.text)
 </UL>
@@ -173,8 +173,8 @@ Global Symbols
 <P><STRONG><a name="[93]"></a>__rt_lib_shutdown_user_alloc_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$0000000C))
 
 <P><STRONG><a name="[33]"></a>__rt_entry</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry.o(.ARM.Collect$$rtentry$$00000000))
-<BR><BR>[Called By]<UL><LI><a href="#[34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_rt2
-<LI><a href="#[30]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+<BR><BR>[Called By]<UL><LI><a href="#[30]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+<LI><a href="#[34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_rt2
 </UL>
 
 <P><STRONG><a name="[94]"></a>__rt_entry_presh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000002))
@@ -509,7 +509,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Reg_Init
 </UL>
 
-<P><STRONG><a name="[54]"></a>Clock_Struct_Init</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, clocks.o(.text.Clock_Struct_Init))
+<P><STRONG><a name="[54]"></a>Clock_Struct_Init</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, clocks.o(.text.Clock_Struct_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[48]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Clock_Init
 </UL>
 

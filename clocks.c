@@ -5,21 +5,23 @@
 #include "cdefs.h"
 
 typedef struct clocks_t{
-	uint8_t HFCLKSts;
-	uint8_t LFCLKSts;
+	uint8_t HFXTALCLKSts;
+	uint8_t LFRCCLKSts;
+	uint8_t LFXTALCLKSts;
 }clocks_t;
 
 static clocks_t Clocks;
 
 
 void Clock_Struct_Init(void){
-	Clocks.HFCLKSts = STOPPED;
-	Clocks.LFCLKSts = STOPPED;
+	Clocks.HFXTALCLKSts = STOPPED;
+	Clocks.LFRCCLKSts   = STOPPED;
+	Clocks.LFXTALCLKSts = STOPPED;
 }
 
 
 
-//////////////////////////////////////HFCLK Related Functions Start/////////////////////////////////////////
+////////////////////////////////////HFXTALCLK Related Functions Start///////////////////////////////////////
 
 void Clock_HFCLK_Xtal_Start_Request(void){
 	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_STATE_Msk) != (CLOCK_HFCLKSTAT_STATE_Running << CLOCK_HFCLKSTAT_STATE_Pos) || 
@@ -62,21 +64,21 @@ void Clock_HFCLK_Xtal_Wait_Until_Stopped(void){
 
 
 void Clock_HFCLK_Xtal_Request(void){
-	if(Clocks.HFCLKSts == STOPPED){
+	if(Clocks.HFXTALCLKSts == STOPPED){
 		//enable clock module
 		Clock_HFCLK_Xtal_Start_Request();
 		Clock_HFCLK_Xtal_Wait_Until_Ready();
-	  Clocks.HFCLKSts++;
+	  Clocks.HFXTALCLKSts++;
 	}
-	else if(Clocks.HFCLKSts != 0xFF){
-    Clocks.HFCLKSts++;
+	else if(Clocks.HFXTALCLKSts != 0xFF){
+    Clocks.HFXTALCLKSts++;
 	}
 }
 
 void Clock_HFCLK_Xtal_Release(void){
-	if(Clocks.HFCLKSts > 0){
-		Clocks.HFCLKSts--;
-		if(Clocks.HFCLKSts == STOP){
+	if(Clocks.HFXTALCLKSts > 0){
+		Clocks.HFXTALCLKSts--;
+		if(Clocks.HFXTALCLKSts == STOP){
 			//disable clock module
 			Clock_HFCLK_Xtal_Stop_Request();
 			Clock_HFCLK_Xtal_Wait_Until_Stopped();
@@ -85,10 +87,10 @@ void Clock_HFCLK_Xtal_Release(void){
 }
 
 uint8_t Clock_HFCLK_Xtal_Request_Count_Get(void){
-	return Clocks.HFCLKSts;
+	return Clocks.HFXTALCLKSts;
 }
 
-///////////////////////////////////////HFCLK Related Functions End//////////////////////////////////////////
+/////////////////////////////////////HFXTALCLK Related Functions End////////////////////////////////////////
 
 
 
@@ -98,24 +100,7 @@ uint8_t Clock_HFCLK_Xtal_Request_Count_Get(void){
 
 
 
-//////////////////////////////////////LFCLK Related Functions Start/////////////////////////////////////////
-
-void Clock_LFCLK_Xtal_Start(void){
-	if( (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_STATE_Msk) != (CLOCK_LFCLKSTAT_STATE_Running<<CLOCK_LFCLKSTAT_STATE_Pos) || 
-		  (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSRC_SRC_Msk)    != (CLOCK_LFCLKSTAT_SRC_Xtal << CLOCK_LFCLKSTAT_SRC_Pos)    ){
-		//LFCLK source is 32.768kHz crystal, startup time 250ms
-	  NRF_CLOCK->LFCLKSRC = (CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos);
-	  NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
-	  NRF_CLOCK->TASKS_LFCLKSTART = 1;
-	  while(NRF_CLOCK->EVENTS_LFCLKSTARTED == 0);
-	}
-}
-
-void Clock_LFCLK_Xtal_Stop(void){
-	if( (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_STATE_Msk) == (CLOCK_LFCLKSTAT_STATE_Running<<CLOCK_LFCLKSTAT_STATE_Pos) ){
-		NRF_CLOCK->TASKS_LFCLKSTOP = 1;
-	}
-}
+/////////////////////////////////////LFRCCLK Related Functions Start////////////////////////////////////////
 
 void Clock_LFCLK_RC_Start(void){
 	if( (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_STATE_Msk) != (CLOCK_LFCLKSTAT_STATE_Running<<CLOCK_LFCLKSTAT_STATE_Pos) || 
@@ -134,21 +119,75 @@ void Clock_LFCLK_RC_Stop(void){
 	}
 }
 
+void Clock_LFCLK_RC_Request(void){
+	if(Clocks.LFRCCLKSts == STOPPED){
+		//enable clock module
+		Clock_LFCLK_RC_Start();
+		Clocks.LFRCCLKSts++;
+	}
+	else if(Clocks.LFRCCLKSts != 0xFF){
+    Clocks.LFRCCLKSts++;
+	}
+}
+
+void Clock_LFCLK_RC_Release(void){
+	if(Clocks.LFRCCLKSts > 0){
+		Clocks.LFRCCLKSts--;
+		if(Clocks.LFRCCLKSts == STOP){
+			//disable clock module
+			Clock_LFCLK_RC_Stop();
+		}
+	}
+}
+
+uint8_t Clock_LFCLK_RC_Request_Count_Get(void){
+	return Clocks.LFRCCLKSts;
+}
+
+/////////////////////////////////////LFRCCLK Related Functions End////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+////////////////////////////////////LFXTALCLK Related Functions Start///////////////////////////////////////
+
+void Clock_LFCLK_Xtal_Start(void){
+	if( (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_STATE_Msk) != (CLOCK_LFCLKSTAT_STATE_Running<<CLOCK_LFCLKSTAT_STATE_Pos) || 
+		  (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSRC_SRC_Msk)    != (CLOCK_LFCLKSTAT_SRC_Xtal << CLOCK_LFCLKSTAT_SRC_Pos)    ){
+		//LFCLK source is 32.768kHz crystal, startup time 250ms
+	  NRF_CLOCK->LFCLKSRC = (CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos);
+	  NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
+	  NRF_CLOCK->TASKS_LFCLKSTART = 1;
+	  while(NRF_CLOCK->EVENTS_LFCLKSTARTED == 0);
+	}
+}
+
+void Clock_LFCLK_Xtal_Stop(void){
+	if( (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_STATE_Msk) == (CLOCK_LFCLKSTAT_STATE_Running<<CLOCK_LFCLKSTAT_STATE_Pos) ){
+		NRF_CLOCK->TASKS_LFCLKSTOP = 1;
+	}
+}
+
 void Clock_LFCLK_Xtal_Request(void){
-	if(Clocks.LFCLKSts == STOPPED){
+	if(Clocks.LFXTALCLKSts == STOPPED){
 		//enable clock module
 		Clock_LFCLK_Xtal_Start();
-		Clocks.LFCLKSts++;
+		Clocks.LFXTALCLKSts++;
 	}
-	else if(Clocks.LFCLKSts != 0xFF){
-    Clocks.LFCLKSts++;
+	else if(Clocks.LFXTALCLKSts != 0xFF){
+    Clocks.LFXTALCLKSts++;
 	}
 }
 
 void Clock_LFCLK_Xtal_Release(void){
-	if(Clocks.LFCLKSts > 0){
-		Clocks.LFCLKSts--;
-		if(Clocks.LFCLKSts == STOP){
+	if(Clocks.LFXTALCLKSts > 0){
+		Clocks.LFXTALCLKSts--;
+		if(Clocks.LFXTALCLKSts == STOP){
 			//disable clock module
 			Clock_LFCLK_Xtal_Stop();
 		}
@@ -156,10 +195,11 @@ void Clock_LFCLK_Xtal_Release(void){
 }
 
 uint8_t Clock_LFCLK_Xtal_Request_Count_Get(void){
-	return Clocks.LFCLKSts;
+	return Clocks.LFXTALCLKSts;
 }
 
-///////////////////////////////////////LFCLK Related Functions End//////////////////////////////////////////
+/////////////////////////////////////LFXTALCLK Related Functions End////////////////////////////////////////
+
 
 
 
