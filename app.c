@@ -11,7 +11,7 @@
 #include "pwm.h"
 
 uint32_t loop_cnt = 0, state = 0;
-uint8_t  buf[40];
+uint8_t  buf[40] = "Hello";
 
 void App_Config(void){
 	
@@ -55,7 +55,7 @@ void App_Mainloop(void){
 		
 	  //LED_Toggle();
 	
-	  Radio_Tx_Packet(buf, 15);
+	  Radio_Tx_Packet(buf, 5);
 	  Radio_Power_Down();
 	
 	  Timeout_Set_MicroSeconds(1000000);
@@ -78,4 +78,5 @@ void App_Mainloop(void){
 		loop_cnt = 0;
 	}
 	*/
+	
 }

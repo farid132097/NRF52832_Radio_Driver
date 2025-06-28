@@ -24,7 +24,7 @@ void Clock_Struct_Init(void){
 ////////////////////////////////////HFXTALCLK Related Functions Start///////////////////////////////////////
 
 void Clock_HFCLK_Xtal_Start_Request(void){
-	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_STATE_Msk) != (CLOCK_HFCLKSTAT_STATE_Running << CLOCK_HFCLKSTAT_STATE_Pos) || 
+	if( (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_STATE_Msk) != (CLOCK_HFCLKSTAT_STATE_Running << CLOCK_HFCLKSTAT_STATE_Pos) ||
 		  (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk)   != (CLOCK_HFCLKSTAT_SRC_Xtal << CLOCK_HFCLKSTAT_SRC_Pos)      ){
 		NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
 	  NRF_CLOCK->TASKS_HFCLKSTART = 1;

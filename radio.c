@@ -41,22 +41,27 @@ volatile uint64_t allowed_node_addr[ALLOWED_SRC_ADDRESSESS] = {
 //attempts are failed (including retry)
 #define  RADIO_TX_RETRY_DIS_FAIL_ATT ( 5U)
 
-#define  RADIO_FRAME_BUF_SIZE        (36U)
+
+
 #define  RADIO_FRAME_LEN_POS         ( 0U)
-#define  RADIO_FRAME_LEN_SIZE        ( 1U)
 #define  RADIO_FRAME_PID_POS         ( 1U)
-#define  RADIO_FRAME_PID_SIZE        ( 1U)
 #define  RADIO_FRAME_SRC_ADDR_POS    ( 2U)
-#define  RADIO_FRAME_SRC_ADDR_SIZE   ( 8U)
-#define  RADIO_FRAME_DST_ADDR_POS    (10U)
-#define  RADIO_FRAME_DST_ADDR_SIZE   ( 8U)
-#define  RADIO_FRAME_CRC16_POS       (18U)
+#define  RADIO_FRAME_DST_ADDR_POS    ( 6U)
+#define  RADIO_FRAME_CRC16_POS       (10U)
+
+#define  RADIO_FRAME_LEN_SIZE        ( 1U)
+#define  RADIO_FRAME_PID_SIZE        ( 1U)
+#define  RADIO_FRAME_SRC_ADDR_SIZE   ( 4U)
+#define  RADIO_FRAME_DST_ADDR_SIZE   ( 4U)
 #define  RADIO_FRAME_CRC16_SIZE      ( 2U)
-#define  RADIO_FRAME_USER_DATA_POS   (20U)
-#define  RADIO_FRAME_USER_DATA_SIZE  (16U)
+
+#define  RADIO_FRAME_BUF_SIZE        (20U)
+
+#define  RADIO_FRAME_USER_DATA_POS   (12U)
+#define  RADIO_FRAME_USER_DATA_SIZE  ( 8U)
 
 //Frame Format:
-//Len(1 Byte) + PID(1 Byte) + SrcAddr(8 Byte) + DstAddr(8 Byte) + CRC16(2 Byte) + Data(16 Byte)
+//Len(1 Byte) + PID(1 Byte) + SrcAddr(4 Byte) + DstAddr(4 Byte) + CRC16(2 Byte) + Data(16 Byte)
 //CRC16 Includes all bytes including CrcL and CrcH bytes considering 0x00
 
 typedef struct packet_t{
@@ -65,9 +70,9 @@ typedef struct packet_t{
 	uint8_t  LastPID;
 	uint8_t  Reserved0[5];
 	
-	uint64_t LastSender;
-	uint64_t SrcAddr;
-	uint64_t DstAddr;
+	uint32_t LastSender;
+	uint32_t SrcAddr;
+	uint32_t DstAddr;
 	
 	uint16_t CRC16;
 	uint8_t  CRCSts;
@@ -303,8 +308,8 @@ void Radio_Reg_Init(void){
 	if(Radio.RegInit == INCOMPLETE){
 	  NRF_RADIO->TXPOWER     = RADIO_TXPOWER_TXPOWER_Pos4dBm;
 	  NRF_RADIO->FREQUENCY   = 10;
-		NRF_RADIO->MODE        = (RADIO_MODE_MODE_Nrf_2Mbit << RADIO_MODE_MODE_Pos);
-	  //NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_1Mbit << RADIO_MODE_MODE_Pos);
+		//NRF_RADIO->MODE        = (RADIO_MODE_MODE_Nrf_2Mbit << RADIO_MODE_MODE_Pos);
+	  NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_1Mbit << RADIO_MODE_MODE_Pos);
 		//NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_250Kbit << RADIO_MODE_MODE_Pos);
 	  NRF_RADIO->PREFIX0     = 0x11223344;
 	  NRF_RADIO->BASE0       = 0x11111111;
@@ -339,7 +344,6 @@ void Radio_Power_Enable(void){
 		  }
 	  }
 		Timeout_Clear_Events();
-		
   }
 }
 
@@ -398,7 +402,6 @@ void Radio_Mode_Tx(void){
 		  }
     }
 		Timeout_Clear_Events();
-		
   }
 }
 
@@ -591,43 +594,28 @@ uint8_t Radio_Tx_Packet(uint8_t *buf, uint8_t len){
 	if(len > RADIO_FRAME_USER_DATA_SIZE){
 		len = RADIO_FRAME_USER_DATA_SIZE;
 	}
-	Radio.TxPacket.Length = len;
-	Radio.TxPacket.PID++;
-	Radio_Len_PID_Update();
+	Radio.TxPacket.Buf[RADIO_FRAME_LEN_POS] = len;
+	Radio.TxPacket.Buf[RADIO_FRAME_PID_POS]++;
+	
 	for(uint8_t i = RADIO_FRAME_USER_DATA_POS; i < (RADIO_FRAME_USER_DATA_POS + len); i++){
 		Radio.TxPacket.Buf[i] = buf[cnt];
 		cnt++;
 	}
 	Radio.TxPacket.Buf[RADIO_FRAME_CRC16_POS] = 0;
 	Radio.TxPacket.Buf[RADIO_FRAME_CRC16_POS+1] = 0;
-	crc = Radio_CRC_Calculate_Block(Radio.TxPacket.Buf, 0, RADIO_FRAME_USER_DATA_POS+len);
+	crc = Radio_CRC_Calculate_Block(Radio.TxPacket.Buf, 0, RADIO_FRAME_USER_DATA_POS + len);
 	Radio.TxPacket.Buf[RADIO_FRAME_CRC16_POS] = (crc>>8) & 0xFF;
 	Radio.TxPacket.Buf[RADIO_FRAME_CRC16_POS+1] = crc & 0xFF;
 	
 	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
 	Clock_HFCLK_Xtal_Wait_Until_Ready();
-	//Radio_Mode_Tx();
-	//Radio_Start_Task(1000);
-	
-	
-	NRF_RADIO->SHORTS = RADIO_SHORTS_READY_START_Msk | RADIO_SHORTS_END_DISABLE_Msk;
-	NRF_RADIO->EVENTS_READY = 0;
-	NRF_RADIO->EVENTS_DISABLED = 0;
-	NRF_RADIO->INTENSET |= RADIO_INTENSET_DISABLED_Msk;
-	NRF_RADIO->TASKS_TXEN = 1;
+	Radio_Mode_Tx();
+	Radio_Start_Task(1000);
 	
 	//Radio_Rx(200);
 	return FAILED;
 }
 
-void RADIO_IRQHandler(void){
-	if(NRF_RADIO->EVENTS_DISABLED == 1){
-		NRF_RADIO->EVENTS_DISABLED = 0;
-		NRF_RADIO->INTENCLR |= RADIO_INTENCLR_DISABLED_Msk;
-		NRF_RADIO->SHORTS = 0;
-		Radio.TxComplete = TRUE;
-	}
-}
 
 void Radio_Tx_Complete_Handler(void){
 	if(Radio.TxComplete == TRUE){
