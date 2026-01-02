@@ -423,6 +423,26 @@
               <FileType>5</FileType>
               <FilePath>.\pwm.h</FilePath>
             </File>
+            <File>
+              <FileName>datahandler.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\datahandler.h</FilePath>
+            </File>
+            <File>
+              <FileName>config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\config.h</FilePath>
+            </File>
+            <File>
+              <FileName>crc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\crc.h</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\rtc.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -467,6 +487,21 @@
               <FileName>pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>datahandler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\datahandler.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\crc.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\rtc.c</FilePath>
             </File>
           </Files>
         </Group>

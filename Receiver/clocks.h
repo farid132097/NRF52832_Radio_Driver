@@ -7,38 +7,36 @@
 #include "nrf.h"
 
 
-void     Clock_Struct_Init(void);
+void     Clocks_Struct_Init(void);
 
 //HFXTALCLK Related Functions
-void     Clock_HFCLK_Xtal_Start_Request(void);
-uint8_t  Clock_HFCLK_Xtal_Started(void);
-void     Clock_HFCLK_Xtal_Wait_Until_Ready(void);
-
-void     Clock_HFCLK_Xtal_Stop_Request(void);
-uint8_t  Clock_HFCLK_Xtal_Stopped(void);
-void     Clock_HFCLK_Xtal_Wait_Until_Stopped(void);
-
-void     Clock_HFCLK_Xtal_Request(void);
-void     Clock_HFCLK_Xtal_Release(void);
-uint8_t  Clock_HFCLK_Xtal_Request_Count_Get(void);
+void     Clocks_HFCLK_Xtal_Start(void);
+uint8_t  Clocks_HFCLK_Xtal_Started(void);
+void     Clocks_HFCLK_Xtal_Wait_Until_Ready(void);
+void     Clocks_HFCLK_Xtal_Stop(void);
+uint8_t  Clocks_HFCLK_Xtal_Stopped(void);
+void     Clocks_HFCLK_Xtal_Wait_Until_Stopped(void);
+void     Clocks_HFCLK_Xtal_Start_Request(void);
+void     Clocks_HFCLK_Xtal_Stop_Request(void);
+uint8_t  Clocks_HFCLK_Xtal_Request_Count_Get(void);
 
 
 //LFRCCLK Related Functions
-void     Clock_LFCLK_RC_Start(void);
-void     Clock_LFCLK_RC_Stop(void);
-void     Clock_LFCLK_RC_Request(void);
-void     Clock_LFCLK_RC_Release(void);
-uint8_t  Clock_LFCLK_RC_Request_Count_Get(void);
+void     Clocks_LFCLK_RC_Start(void);
+void     Clocks_LFCLK_RC_Stop(void);
+void     Clocks_LFCLK_RC_Start_Request(void);
+void     Clocks_LFCLK_RC_Stop_Request(void);
+uint8_t  Clocks_LFCLK_RC_Request_Count_Get(void);
 
 
 //LFXTALCLK Related Functions
-void     Clock_LFCLK_Xtal_Start(void);
-void     Clock_LFCLK_Xtal_Stop(void);
-void     Clock_LFCLK_Xtal_Request(void);
-void     Clock_LFCLK_Xtal_Release(void);
-uint8_t  Clock_LFCLK_Xtal_Request_Count_Get(void);
+void     Clocks_LFCLK_Xtal_Start(void);
+void     Clocks_LFCLK_Xtal_Stop(void);
+void     Clocks_LFCLK_Xtal_Start_Request(void);
+void     Clocks_LFCLK_Xtal_Stop_Request(void);
+uint8_t  Clocks_LFCLK_Xtal_Request_Count_Get(void);
 
-void     Clock_Init(void);
+void     Clocks_Init(void);
 
 
 

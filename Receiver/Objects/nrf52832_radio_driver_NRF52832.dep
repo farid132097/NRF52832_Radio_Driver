@@ -2,13 +2,17 @@ Dependencies for Project 'nrf52832_radio_driver', Target 'NRF52832': (DO NOT MOD
 CompilerVersion: 6160000::V6.16::ARMCLANG
 F (.\cdefs.h)(0x684FA671)()
 F (.\app.h)(0x67E3CA9D)()
-F (.\timeout.h)(0x685C5372)()
-F (.\radio.h)(0x686034E4)()
+F (.\timeout.h)(0x69580014)()
+F (.\radio.h)(0x695801DA)()
 F (.\uart.h)(0x681449D0)()
-F (.\clocks.h)(0x68601543)()
-F (.\led.h)(0x68519076)()
+F (.\clocks.h)(0x6957FEAB)()
+F (.\led.h)(0x69580971)()
 F (.\pwm.h)(0x685C52CB)()
-F (.\app.c)(0x68602166)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/app.o -MD)
+F (.\datahandler.h)(0x6957F5AA)()
+F (.\config.h)(0x6957F3BC)()
+F (.\crc.h)(0x6957F8AF)()
+F (.\rtc.h)(0x6957FB28)()
+F (.\app.c)(0x69580938)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/app.o -MD)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\core_cm4.h)(0x664BF4A8)
@@ -25,11 +29,11 @@ I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPa
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h)(0x61974800)
 I (app.h)(0x67E3CA9D)
-I (timeout.h)(0x685C5372)
-I (clocks.h)(0x68601543)
-I (radio.h)(0x686034E4)
+I (timeout.h)(0x69580014)
+I (clocks.h)(0x6957FEAB)
+I (radio.h)(0x695801DA)
 I (uart.h)(0x681449D0)
-I (led.h)(0x68519076)
+I (led.h)(0x69580971)
 I (cdefs.h)(0x684FA671)
 I (pwm.h)(0x685C52CB)
 F (.\main.c)(0x67E3CB22)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/main.o -MD)
@@ -49,7 +53,7 @@ I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPa
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h)(0x61974800)
 I (app.h)(0x67E3CA9D)
-F (.\timeout.c)(0x686FEDB1)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/timeout.o -MD)
+F (.\timeout.c)(0x6958000A)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/timeout.o -MD)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\core_cm4.h)(0x664BF4A8)
@@ -65,10 +69,11 @@ I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPa
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf51_to_nrf52.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h)(0x61974800)
-I (timeout.h)(0x685C5372)
-I (clocks.h)(0x68601543)
+I (timeout.h)(0x69580014)
+I (clocks.h)(0x6957FEAB)
 I (cdefs.h)(0x684FA671)
-F (.\radio.c)(0x68603663)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/radio.o -MD)
+I (rtc.h)(0x6957FB28)
+F (.\radio.c)(0x69580898)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/radio.o -MD)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\core_cm4.h)(0x664BF4A8)
@@ -84,10 +89,13 @@ I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPa
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf51_to_nrf52.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h)(0x61974800)
-I (radio.h)(0x686034E4)
+I (radio.h)(0x695801DA)
 I (cdefs.h)(0x684FA671)
-I (clocks.h)(0x68601543)
-I (timeout.h)(0x685C5372)
+I (timeout.h)(0x69580014)
+I (datahandler.h)(0x6957F5AA)
+I (clocks.h)(0x6957FEAB)
+I (config.h)(0x6957F3BC)
+I (crc.h)(0x6957F8AF)
 F (.\uart.c)(0x681449C6)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/uart.o -MD)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52.h)(0x61974800)
@@ -105,7 +113,7 @@ I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPa
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h)(0x61974800)
 I (uart.h)(0x681449D0)
-F (.\clocks.c)(0x68602D64)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/clocks.o -MD)
+F (.\clocks.c)(0x6957FE8F)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/clocks.o -MD)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\core_cm4.h)(0x664BF4A8)
@@ -121,7 +129,7 @@ I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPa
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf51_to_nrf52.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h)(0x61974800)
-I (clocks.h)(0x68601543)
+I (clocks.h)(0x6957FEAB)
 I (cdefs.h)(0x684FA671)
 F (.\led.c)(0x68519061)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/led.o -MD)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf.h)(0x61974800)
@@ -139,7 +147,7 @@ I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPa
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf51_to_nrf52.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h)(0x61974800)
-I (led.h)(0x68519076)
+I (led.h)(0x69580971)
 I (cdefs.h)(0x684FA671)
 F (.\pwm.c)(0x685C52CB)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/pwm.o -MD)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf.h)(0x61974800)
@@ -157,6 +165,44 @@ I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPa
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf51_to_nrf52.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h)(0x61974800)
 I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h)(0x61974800)
+F (.\datahandler.c)(0x6957F5AA)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/datahandler.o -MD)
+F (.\crc.c)(0x6957F8E9)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/crc.o -MD)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf.h)(0x61974800)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52.h)(0x61974800)
+I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\core_cm4.h)(0x664BF4A8)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x6035E8D0)
+I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\cmsis_version.h)(0x664BF4A8)
+I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\cmsis_compiler.h)(0x664BF4A8)
+I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\cmsis_armclang.h)(0x664BF4A8)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x6035E8C4)
+I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\m-profile\cmsis_armclang_m.h)(0x664BF4A8)
+I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\m-profile\armv7m_mpu.h)(0x664BF4A8)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\system_nrf52.h)(0x61974800)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_bitfields.h)(0x61974800)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf51_to_nrf52.h)(0x61974800)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h)(0x61974800)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h)(0x61974800)
+I (cdefs.h)(0x684FA671)
+I (crc.h)(0x6957F8AF)
+F (.\rtc.c)(0x695807ED)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/rtc.o -MD)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf.h)(0x61974800)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52.h)(0x61974800)
+I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\core_cm4.h)(0x664BF4A8)
+I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x6035E8D0)
+I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\cmsis_version.h)(0x664BF4A8)
+I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\cmsis_compiler.h)(0x664BF4A8)
+I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\cmsis_armclang.h)(0x664BF4A8)
+I (C:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x6035E8C4)
+I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\m-profile\cmsis_armclang_m.h)(0x664BF4A8)
+I (C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include\m-profile\armv7m_mpu.h)(0x664BF4A8)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\system_nrf52.h)(0x61974800)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_bitfields.h)(0x61974800)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf51_to_nrf52.h)(0x61974800)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h)(0x61974800)
+I (C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h)(0x61974800)
+I (rtc.h)(0x6957FB28)
+I (clocks.h)(0x6957FEAB)
+I (cdefs.h)(0x684FA671)
 F (RTE\Device\nRF52832_xxAA\arm_startup_nrf52.s)(0x61974800)(--target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -masm=auto -c-gdwarf-4 -Wa,armasm,--pd,"__EVAL SETA 1"-I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-Wa,armasm,--pd,"__UVISION_VERSION SETA 536" -Wa,armasm,--pd,"_RTE_ SETA 1" -Wa,armasm,--pd,"NRF52832_XXAA SETA 1" -Wa,armasm,--pd,"_RTE_ SETA 1"-o ./objects/arm_startup_nrf52.o)
 F (RTE\Device\nRF52832_xxAA\system_nrf52.c)(0x61974800)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O1 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I./RTE/_NRF52832-IC:/Users/farid/AppData/Local/Arm/Packs/ARM/CMSIS/6.1.0/CMSIS/Core/Include-IC:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include-D__UVISION_VERSION="536" -D_RTE_ -DNRF52832_XXAA -D_RTE_-o ./objects/system_nrf52.o -MD)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x6035E8D0)

@@ -17,32 +17,16 @@ Library Manager: ArmAr.exe V6.16
 Hex Converter:   FromElf.exe V6.16
 CPU DLL:         SARMCM3.DLL V5.36.0.0
 Dialog DLL:      DCM.DLL V1.17.3.0
-Target DLL:      Segger\JL2CM3.dll V2.99.40.0
+Target DLL:      CMSIS_AGDI.dll V1.33.0.0
 Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
 D:\Projects\Embedded Projects\Personal\Keil\NRF52832_Radio_Driver\Transmitter\nrf52832_radio_driver.uvprojx
-Project File Date:  06/26/2025
+Project File Date:  01/02/2026
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.16', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Rebuild target 'NRF52832'
-compiling led.c...
-compiling main.c...
-app.c(13): warning: no previous extern declaration for non-static variable 'x' [-Wmissing-variable-declarations]
-uint8_t  x = 0 ;
-         ^
-app.c(13): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-uint8_t  x = 0 ;
-^
-app.c(14): warning: no previous extern declaration for non-static variable 'crc' [-Wmissing-variable-declarations]
-uint16_t crc = 0;
-         ^
-app.c(14): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-uint16_t crc = 0;
-^
-2 warnings generated.
-compiling app.c...
 pwm.c(12): warning: no previous extern declaration for non-static variable 'pwm_seq' [-Wmissing-variable-declarations]
 uint16_t pwm_seq[4] = {
          ^
@@ -68,11 +52,19 @@ void PWM_Set_Duty(uint16_t val){
 static 
 4 warnings generated.
 compiling pwm.c...
+compiling main.c...
 compiling timeout.c...
+compiling app.c...
+compiling led.c...
 compiling clocks.c...
 compiling radio.c...
 compiling uart.c...
+datahandler.c(1): warning: ISO C requires a translation unit to contain at least one declaration [-Wempty-translation-unit]
+1 warning generated.
+compiling datahandler.c...
 assembling arm_startup_nrf52.s...
+compiling crc.c...
+compiling rtc.c...
 RTE/Device/nRF52832_xxAA/system_nrf52.c(32): warning: In file included from...
 C:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include\system_nrf52_approtect.h(51): warning: 'nrf52_configuration_249' was marked unused but was used [-Wused-but-marked-unused]
             if (nrf52_configuration_249())
@@ -127,8 +119,8 @@ RTE/Device/nRF52832_xxAA/system_nrf52.c(250): warning: 'nrf52_errata_182' was ma
 14 warnings generated.
 compiling system_nrf52.c...
 linking...
-Program Size: Code=2540 RO-data=544 RW-data=4 ZI-data=8336  
-".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 20 Warning(s).
+Program Size: Code=2996 RO-data=544 RW-data=4 ZI-data=8464  
+".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 19 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -154,11 +146,11 @@ Package Vendor: NordicSemiconductor
    * Component: ARM::CMSIS:CORE:6.1.0
 
    * Component: NordicSemiconductor::Device:Startup:8.44.1
+      Source file:   Device\Source\system_nrf52.c
       Include file:  Device\Include\system_nrf.h
       Include file:  Device\Include\system_nrf52.h
       Source file:   Device\Source\arm\arm_startup_nrf52.s
-      Source file:   Device\Source\system_nrf52.c
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
