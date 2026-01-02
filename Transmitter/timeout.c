@@ -7,10 +7,8 @@
 #include "rtc.h"
 
 typedef struct timeout_t{
-	uint8_t          SetStatus;
 	uint8_t          Error;
 	uint8_t          StickyError;
-	volatile uint8_t Occured;
 }timeout_t;
 
 static timeout_t Timeout;
@@ -18,10 +16,8 @@ static timeout_t Timeout;
 
 
 void Timeout_Struct_Init(void){
-	Timeout.SetStatus   = FALSE;
 	Timeout.Error       = NULL;
 	Timeout.StickyError = NULL;
-	Timeout.Occured     = TRUE;
 }
 
 void Timeout_Reg_Init(void){

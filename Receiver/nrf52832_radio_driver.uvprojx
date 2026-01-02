@@ -434,14 +434,14 @@
               <FilePath>.\config.h</FilePath>
             </File>
             <File>
-              <FileName>crc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\crc.h</FilePath>
-            </File>
-            <File>
               <FileName>rtc.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\rtc.h</FilePath>
+            </File>
+            <File>
+              <FileName>arq.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\arq.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -494,14 +494,14 @@
               <FilePath>.\datahandler.c</FilePath>
             </File>
             <File>
-              <FileName>crc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\crc.c</FilePath>
-            </File>
-            <File>
               <FileName>rtc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>arq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\arq.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -44,3 +44,4 @@ void PWM_Set_Duty(uint16_t val){
 	pwm_seq[0] = val|(1<<15);
 	NRF_PWM0->TASKS_SEQSTART[0] = 1;
 }
+

@@ -14,4 +14,4 @@
   C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf51_to_nrf52.h \
   C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\nrf52_name_change.h \
   C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include\compiler_abstraction.h \
-  radio.h cdefs.h timeout.h datahandler.h clocks.h config.h crc.h
+  radio.h cdefs.h timeout.h datahandler.h clocks.h config.h arq.h

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\nrf52832_radio_driver.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\nrf52832_radio_driver.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Sat Jan  3 00:08:10 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Sat Jan  3 02:12:22 2026
 <BR><P>
 <H3>Maximum Stack Usage =         64 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -448,7 +448,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[4a]"></a>App_Mainloop</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, app.o(.text.App_Mainloop))
+<P><STRONG><a name="[4a]"></a>App_Mainloop</STRONG> (Thumb, 50 bytes, Stack size 8 bytes, app.o(.text.App_Mainloop))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = App_Mainloop &rArr; Radio_Rx &rArr; Radio_Mode_Rx &rArr; Radio_Active &rArr; Clocks_HFCLK_Xtal_Start_Request &rArr; Clocks_HFCLK_Xtal_Wait_Until_Ready
 </UL>
 <BR>[Calls]<UL><LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Set_MicroSeconds
@@ -615,7 +615,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[45]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Config
 </UL>
 
-<P><STRONG><a name="[68]"></a>Radio_Mode_Rx</STRONG> (Thumb, 82 bytes, Stack size 8 bytes, radio.o(.text.Radio_Mode_Rx))
+<P><STRONG><a name="[68]"></a>Radio_Mode_Rx</STRONG> (Thumb, 90 bytes, Stack size 8 bytes, radio.o(.text.Radio_Mode_Rx))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = Radio_Mode_Rx &rArr; Radio_Active &rArr; Clocks_HFCLK_Xtal_Start_Request &rArr; Clocks_HFCLK_Xtal_Wait_Until_Ready
 </UL>
 <BR>[Calls]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Active
@@ -649,7 +649,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Active
 </UL>
 
-<P><STRONG><a name="[4b]"></a>Radio_Rx</STRONG> (Thumb, 164 bytes, Stack size 16 bytes, radio.o(.text.Radio_Rx))
+<P><STRONG><a name="[4b]"></a>Radio_Rx</STRONG> (Thumb, 130 bytes, Stack size 16 bytes, radio.o(.text.Radio_Rx))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = Radio_Rx &rArr; Radio_Mode_Rx &rArr; Radio_Active &rArr; Clocks_HFCLK_Xtal_Start_Request &rArr; Clocks_HFCLK_Xtal_Wait_Until_Ready
 </UL>
 <BR>[Calls]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Mode_Rx
@@ -701,7 +701,7 @@ Global Symbols
 <LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Mainloop
 </UL>
 
-<P><STRONG><a name="[4e]"></a>Timeout_Error_Assign</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, timeout.o(.text.Timeout_Error_Assign))
+<P><STRONG><a name="[4e]"></a>Timeout_Error_Assign</STRONG> (Thumb, 50 bytes, Stack size 8 bytes, timeout.o(.text.Timeout_Error_Assign))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = Timeout_Error_Assign
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_RTC1_Timeout_Event_Clear
@@ -716,7 +716,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx
 </UL>
 
-<P><STRONG><a name="[6c]"></a>Timeout_Error_Force_Assign</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, timeout.o(.text.Timeout_Error_Force_Assign))
+<P><STRONG><a name="[6c]"></a>Timeout_Error_Force_Assign</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, timeout.o(.text.Timeout_Error_Force_Assign))
 <BR><BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx
 </UL>
 
@@ -751,7 +751,7 @@ Global Symbols
 <LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Mainloop
 </UL>
 
-<P><STRONG><a name="[7c]"></a>Timeout_Struct_Init</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, timeout.o(.text.Timeout_Struct_Init))
+<P><STRONG><a name="[7c]"></a>Timeout_Struct_Init</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, timeout.o(.text.Timeout_Struct_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[47]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Init
 </UL>
 

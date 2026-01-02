@@ -17,28 +17,34 @@
 #include "datahandler.h"
 #include "clocks.h"
 #include "config.h"
-#include "crc.h"
+#include "arq.h"
 
-//Max retry if tx is failed
-#define  RADIO_TX_FAILED_RETRY       ( 5U)
+#define  RADIO_PACKET_LEN          (32U)
+#define  RADIO_CRC_CALC_LEN        (RADIO_PACKET_LEN- 2)
+#define  RADIO_CRC16H_POS          (RADIO_PACKET_LEN- 1)
+#define  RADIO_CRC16L_POS          (RADIO_PACKET_LEN- 2)
+#define  RADIO_CHECKSUM_POS        (RADIO_PACKET_LEN- 3)
+#define  RADIO_DATA_LEN_POS        (RADIO_PACKET_LEN- 4)
+#define  RADIO_PACKET_TYPE_POS     (RADIO_PACKET_LEN- 5)
+#define  RADIO_DST_ADDR3_POS       (RADIO_PACKET_LEN- 6)
+#define  RADIO_DST_ADDR2_POS       (RADIO_PACKET_LEN- 7)
+#define  RADIO_DST_ADDR1_POS       (RADIO_PACKET_LEN- 8)
+#define  RADIO_DST_ADDR0_POS       (RADIO_PACKET_LEN- 9)
+#define  RADIO_SRC_ADDR3_POS       (RADIO_PACKET_LEN-10)
+#define  RADIO_SRC_ADDR2_POS       (RADIO_PACKET_LEN-11)
+#define  RADIO_SRC_ADDR1_POS       (RADIO_PACKET_LEN-12)
+#define  RADIO_SRC_ADDR0_POS       (RADIO_PACKET_LEN-13)
 
-//Tx retry will be turned off if consecutive
-//attempts are failed (including retry)
-#define  RADIO_TX_RETRY_DIS_FAIL_ATT ( 5U)
+#define  OWN_DEVICE_ADDRESS0       ((OWN_DEVICE_ADDRESS>> 0) & 0xFF)
+#define  OWN_DEVICE_ADDRESS1       ((OWN_DEVICE_ADDRESS>> 8) & 0xFF)
+#define  OWN_DEVICE_ADDRESS2       ((OWN_DEVICE_ADDRESS>>16) & 0xFF)
+#define  OWN_DEVICE_ADDRESS3       ((OWN_DEVICE_ADDRESS>>24) & 0xFF)
 
-#define  RADIO_FRAME_BUF_SIZE        (36U)
-#define  RADIO_FRAME_LEN_POS         ( 0U)
-#define  RADIO_FRAME_LEN_SIZE        ( 1U)
-#define  RADIO_FRAME_PID_POS         ( 1U)
-#define  RADIO_FRAME_PID_SIZE        ( 1U)
-#define  RADIO_FRAME_SRC_ADDR_POS    ( 2U)
-#define  RADIO_FRAME_SRC_ADDR_SIZE   ( 8U)
-#define  RADIO_FRAME_DST_ADDR_POS    (10U)
-#define  RADIO_FRAME_DST_ADDR_SIZE   ( 8U)
-#define  RADIO_FRAME_CRC16_POS       (18U)
-#define  RADIO_FRAME_CRC16_SIZE      ( 2U)
-#define  RADIO_FRAME_USER_DATA_POS   (20U)
-#define  RADIO_FRAME_USER_DATA_SIZE  (16U)
+#define  DST_DEVICE_ADDRESS0       ((DST_DEVICE_ADDRESS>> 0) & 0xFF)
+#define  DST_DEVICE_ADDRESS1       ((DST_DEVICE_ADDRESS>> 8) & 0xFF)
+#define  DST_DEVICE_ADDRESS2       ((DST_DEVICE_ADDRESS>>16) & 0xFF)
+#define  DST_DEVICE_ADDRESS3       ((DST_DEVICE_ADDRESS>>24) & 0xFF)
+
 
 //Frame Format:
 //Len(1 Byte) + PID(1 Byte) + SrcAddr(8 Byte) + DstAddr(8 Byte) + CRC16(2 Byte) + Data(16 Byte)
@@ -50,14 +56,10 @@ typedef struct packet_t{
 	uint8_t  LastPID;
 	uint8_t  Reserved0[5];
 	
-	uint64_t LastSender;
-	uint64_t SrcAddr;
-	uint64_t DstAddr;
-	
 	uint16_t CRC16;
+	uint8_t  Checksum8;
 	uint8_t  CRCSts;
-	uint8_t  Buf[RADIO_FRAME_BUF_SIZE];
-	uint8_t  Reserved1[1];
+	uint8_t  Buf[RADIO_PACKET_LEN];
 }packet_t;
 
 typedef struct radio_t{
@@ -98,7 +100,7 @@ void Radio_Reg_Init(void){
 	  NRF_RADIO->TXADDRESS   = 0;
 	  NRF_RADIO->RXADDRESSES = 1;
     NRF_RADIO->PCNF0       = 0;
-	  NRF_RADIO->PCNF1       = (36 <<RADIO_PCNF1_MAXLEN_Pos)  |
+	  NRF_RADIO->PCNF1       = (32 <<RADIO_PCNF1_MAXLEN_Pos)  |
 	                           (32 <<RADIO_PCNF1_STATLEN_Pos) |
 	                           (4  <<RADIO_PCNF1_BALEN_Pos)   |
 	                           (RADIO_PCNF1_ENDIAN_Big<<RADIO_PCNF1_ENDIAN_Pos);
@@ -149,7 +151,7 @@ void Radio_Mode_Disable(void){
 	if(NRF_RADIO->STATE != RADIO_STATE_STATE_Disabled){
     NRF_RADIO->EVENTS_DISABLED = 0;
 	  NRF_RADIO->TASKS_DISABLE = 1;
-		Timeout_Set_MicroSeconds(500);
+		Timeout_Set_MicroSeconds(1000);
 	  while(NRF_RADIO->EVENTS_DISABLED == 0){
 	    if(Timeout_Error_Assign( ERROR_RADIO_MODE_SWITCH_DISABLE_FAILED )){
 			  break;
@@ -161,10 +163,11 @@ void Radio_Mode_Disable(void){
 
 void Radio_Mode_Tx(void){
 	Radio_Active();
-	if( ((NRF_RADIO->STATE == RADIO_STATE_STATE_TxIdle) || (NRF_RADIO->STATE == RADIO_STATE_STATE_Tx)) == 0 ){
+	if( ((NRF_RADIO->STATE & RADIO_STATE_STATE_Msk) != RADIO_STATE_STATE_TxIdle) && 
+		  ((NRF_RADIO->STATE & RADIO_STATE_STATE_Msk) != RADIO_STATE_STATE_Tx)   )  {
 	  NRF_RADIO->EVENTS_READY = 0;
 	  NRF_RADIO->TASKS_TXEN = 1;
-		Timeout_Set_MicroSeconds(500);
+		Timeout_Set_MicroSeconds(1000);
 	  while(NRF_RADIO->EVENTS_READY == 0){
 		  if(Timeout_Error_Assign( ERROR_RADIO_MODE_SWITCH_TX_FAILED )){
 			  break;
@@ -176,10 +179,11 @@ void Radio_Mode_Tx(void){
 
 void Radio_Mode_Rx(void){
 	Radio_Active();
-	if( ((NRF_RADIO->STATE == RADIO_STATE_STATE_RxIdle) || (NRF_RADIO->STATE == RADIO_STATE_STATE_Rx)) == 0 ){
+	if( ((NRF_RADIO->STATE & RADIO_STATE_STATE_Msk) != RADIO_STATE_STATE_RxIdle) &&
+  		((NRF_RADIO->STATE & RADIO_STATE_STATE_Msk) != RADIO_STATE_STATE_Rx)   )  {
 	  NRF_RADIO->EVENTS_READY =0;
 	  NRF_RADIO->TASKS_RXEN = 1;
-		Timeout_Set_MicroSeconds(500);
+		Timeout_Set_MicroSeconds(1000);
 	  while(NRF_RADIO->EVENTS_READY == 0){
 		  if(Timeout_Error_Assign( ERROR_RADIO_MODE_SWITCH_RX_FAILED )){
 			  break;
@@ -191,14 +195,35 @@ void Radio_Mode_Rx(void){
 	}
 }
 
-uint8_t Radio_Tx(void){
+uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
 	uint8_t sts  = TRUE;
 	Timeout_Error_Clear();
 	Radio_Mode_Tx();
 	if(Timeout_Error_Get() != NULL){
-		Radio_Mode_Disable();
+		//Radio_Mode_Disable();
 		return FALSE;
 	}
+	
+	
+	for(uint8_t i=0; i<len; i++){
+		Radio.TxPacket.Buf[i] = buf[i];
+	}
+	Radio.TxPacket.Buf[RADIO_SRC_ADDR0_POS]   = OWN_DEVICE_ADDRESS0;
+	Radio.TxPacket.Buf[RADIO_SRC_ADDR1_POS]   = OWN_DEVICE_ADDRESS1;
+	Radio.TxPacket.Buf[RADIO_SRC_ADDR2_POS]   = OWN_DEVICE_ADDRESS2;
+	Radio.TxPacket.Buf[RADIO_SRC_ADDR3_POS]   = OWN_DEVICE_ADDRESS3;
+	Radio.TxPacket.Buf[RADIO_DST_ADDR0_POS]   = DST_DEVICE_ADDRESS0;
+	Radio.TxPacket.Buf[RADIO_DST_ADDR1_POS]   = DST_DEVICE_ADDRESS1;
+	Radio.TxPacket.Buf[RADIO_DST_ADDR2_POS]   = DST_DEVICE_ADDRESS2;
+	Radio.TxPacket.Buf[RADIO_DST_ADDR3_POS]   = DST_DEVICE_ADDRESS3;
+	Radio.TxPacket.Buf[RADIO_PACKET_TYPE_POS] = 0x00;
+	Radio.TxPacket.Buf[RADIO_DATA_LEN_POS]    = len;
+	Radio.TxPacket.Buf[RADIO_CHECKSUM_POS]    = 0x00;
+	Radio.TxPacket.CRC16 = ARQ_CRC16_Calculate_Block(Radio.TxPacket.Buf, 0, RADIO_CRC_CALC_LEN);
+	Radio.TxPacket.Buf[RADIO_CRC16L_POS] = Radio.TxPacket.CRC16 & 0xFF;
+	Radio.TxPacket.Buf[RADIO_CRC16H_POS] = Radio.TxPacket.CRC16 >> 8;
+	Radio.TxPacket.Checksum8 = ARQ_Checksum8_Calculate_Block(Radio.TxPacket.Buf, 0, RADIO_PACKET_LEN);
+	Radio.TxPacket.Buf[RADIO_CHECKSUM_POS]    = Radio.TxPacket.Checksum8;
 	
 	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
 	NRF_RADIO->EVENTS_END = 0;
@@ -245,14 +270,6 @@ uint8_t Radio_Rx(uint32_t timeout){
 	}
 	else{
 		NRF_RADIO->EVENTS_CRCOK = 0;
-		Radio.RxPacket.Length = Radio.RxPacket.Buf[RADIO_FRAME_LEN_POS];
-		if(Radio.RxPacket.Length > RADIO_FRAME_USER_DATA_SIZE){
-			Radio.RxPacket.Length = RADIO_FRAME_USER_DATA_SIZE;
-		}
-		Radio.RxPacket.PID = Radio.RxPacket.Buf[RADIO_FRAME_PID_POS];
-		Radio.RxPacket.CRC16   = Radio.RxPacket.Buf[RADIO_FRAME_CRC16_POS];
-		Radio.RxPacket.CRC16 <<= 8;
-		Radio.RxPacket.CRC16  |= Radio.RxPacket.Buf[RADIO_FRAME_CRC16_POS+1];
 	}
 	
 	return sts;

@@ -10,6 +10,7 @@
 #include "led.h"
 #include "pwm.h"
 
+static uint8_t buf[32] = "Hello";
 
 void App_Config(void){
 	
@@ -22,7 +23,7 @@ void App_Config(void){
 void App_Mainloop(void){
 	
 	LED_Set_State(ON);
-	Radio_Tx();
+	Radio_Tx(buf, 5);
 	LED_Set_State(OFF);
 	Timeout_Set_MicroSeconds(1000000);
 	while(Timeout_Error_Assign(0) == FALSE);

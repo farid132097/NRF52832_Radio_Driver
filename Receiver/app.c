@@ -21,7 +21,7 @@ void App_Config(void){
 
 void App_Mainloop(void){
 	
-	if(Radio_Rx(2000)){
+	if(Radio_Rx(200)){
 		LED_Set_State(ON);
 		Timeout_Set_MicroSeconds( 500 );
 		while( Timeout_Error_Assign(0) == FALSE);

@@ -9,6 +9,7 @@
 typedef struct rtc_t{
 	volatile uint32_t UpTime;
 	volatile uint32_t IntervalTime;
+	volatile uint32_t RTC1Val;
 	uint8_t           RTC0Configured;
 	uint8_t           RTC1Configured;
 	uint8_t           RTC1Event;
@@ -20,6 +21,7 @@ static rtc_t RTC;
 void RTC_Struct_Init(void){
 	RTC.UpTime = 0;
 	RTC.IntervalTime = 0;
+	RTC.RTC1Val = 0;
 	RTC.RTC0Configured = FALSE;
 	RTC.RTC1Configured = FALSE;
 	RTC.RTC1Event = FALSE;
@@ -84,6 +86,8 @@ void RTC_RTC1_Set_Timeout(uint32_t val){
 void RTC_RTC1_Clear_Timeout(void){
 	if(RTC.RTC1Configured == TRUE){
 		NRF_RTC1->TASKS_STOP = 1;
+		RTC.RTC1Val = NRF_RTC1->COUNTER;
+		RTC_RTC1_Clear_Timeout(); 
     NRF_RTC1->EVTENCLR = RTC_EVTENCLR_COMPARE0_Clear << RTC_EVTENCLR_COMPARE0_Pos;
 		NRF_RTC1->INTENCLR = RTC_INTENCLR_COMPARE0_Clear << RTC_INTENCLR_COMPARE0_Pos;
     NVIC_DisableIRQ(RTC1_IRQn);
@@ -135,9 +139,10 @@ void RTC0_IRQHandler(void){
 void RTC1_IRQHandler(void){
 	if(NRF_RTC1->EVENTS_COMPARE[0] == 1){
 	  NRF_RTC1->EVENTS_COMPARE[0] = 0;
+		RTC_RTC1_Clear_Timeout();
 	  NRF_RTC1->TASKS_CLEAR = 1;
 		RTC.RTC1Event = TRUE;
-		RTC_RTC1_Clear_Timeout();
+		
 	}
 }
 

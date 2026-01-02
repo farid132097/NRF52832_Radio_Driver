@@ -95,7 +95,7 @@ void     Radio_Mode_Disable(void);
 void     Radio_Mode_Tx(void);
 void     Radio_Mode_Rx(void);
 void     Radio_Start_Task(int32_t delay);
-uint8_t  Radio_Tx(void);
+uint8_t  Radio_Tx(uint8_t *buf, uint8_t len);
 uint8_t  Radio_Rx(uint32_t timeout);
 uint8_t  Radio_Tx_Ack(void);
 uint8_t  Radio_Rx_Ack(int32_t timeout);
