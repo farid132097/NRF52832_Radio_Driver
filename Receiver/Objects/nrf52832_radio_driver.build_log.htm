@@ -1,0 +1,206 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.36.0.0
+Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Faridul Islam, NA, LIC=----
+ 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.36.0.0
+Toolchain Path:  C:\Keil_v5\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.16
+Assembler:       Armasm.exe V6.16
+Linker/Locator:  ArmLink.exe V6.16
+Library Manager: ArmAr.exe V6.16
+Hex Converter:   FromElf.exe V6.16
+CPU DLL:         SARMCM3.DLL V5.36.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      Segger\JL2CM3.dll V2.99.40.0
+Dialog DLL:      TCM.DLL V1.53.0.0
+ 
+<h2>Project:</h2>
+D:\Projects\Embedded Projects\Personal\Keil\NRF52832_Radio_Driver\Receiver\nrf52832_radio_driver.uvprojx
+Project File Date:  06/26/2025
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.16', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
+Rebuild target 'NRF52832'
+pwm.c(12): warning: no previous extern declaration for non-static variable 'pwm_seq' [-Wmissing-variable-declarations]
+uint16_t pwm_seq[4] = {
+         ^
+pwm.c(12): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+uint16_t pwm_seq[4] = {
+^
+pwm.c(16): warning: no previous prototype for function 'PWM_Init' [-Wmissing-prototypes]
+void PWM_Init(void){
+     ^
+pwm.c(16): note: declare 'static' if the function is not intended to be used outside of this translation unit
+void PWM_Init(void){
+^
+static 
+pwm.c(46): warning: no newline at end of file [-Wnewline-eof]
+}
+ ^
+pwm.c(43): warning: no previous prototype for function 'PWM_Set_Duty' [-Wmissing-prototypes]
+void PWM_Set_Duty(uint16_t val){
+     ^
+pwm.c(43): note: declare 'static' if the function is not intended to be used outside of this translation unit
+void PWM_Set_Duty(uint16_t val){
+^
+static 
+4 warnings generated.
+compiling pwm.c...
+radio.c(50): warning: padding size of 'struct packet_t' with 1 byte to alignment boundary [-Wpadded]
+typedef struct packet_t{
+               ^
+radio.c(403): error: no member named 'Length' in 'struct packet_t'
+                Radio.RxPacket.Length = Radio.RxPacket.Buf[RADIO_FRAME_LEN_POS];
+                ~~~~~~~~~~~~~~ ^
+radio.c(404): error: no member named 'Length' in 'struct packet_t'
+                if(Radio.RxPacket.Length > RADIO_FRAME_USER_DATA_SIZE){
+                   ~~~~~~~~~~~~~~ ^
+radio.c(405): error: no member named 'Length' in 'struct packet_t'
+                        Radio.RxPacket.Length = RADIO_FRAME_USER_DATA_SIZE;
+                        ~~~~~~~~~~~~~~ ^
+radio.c(407): error: no member named 'PID' in 'struct packet_t'
+                Radio.RxPacket.PID = Radio.RxPacket.Buf[RADIO_FRAME_PID_POS];
+                ~~~~~~~~~~~~~~ ^
+radio.c(465): error: no member named 'Length' in 'struct packet_t'
+                crc = Radio_CRC_Calculate_Block(Radio.RxPacket.Buf, 0, RADIO_FRAME_USER_DATA_POS + Radio.RxPacket.Length);
+                                                                                                   ~~~~~~~~~~~~~~ ^
+radio.c(471): error: no member named 'PID' in 'struct packet_t'
+                        if( (Radio.RxPacket.PID == Radio.RxPacket.LastPID) && (Radio.RxPacket.LastSender == Radio.RxPacket.SrcAddr) ){
+                             ~~~~~~~~~~~~~~ ^
+radio.c(471): error: no member named 'LastPID' in 'struct packet_t'
+                        if( (Radio.RxPacket.PID == Radio.RxPacket.LastPID) && (Radio.RxPacket.LastSender == Radio.RxPacket.SrcAddr) ){
+                                                   ~~~~~~~~~~~~~~ ^
+radio.c(474): error: no member named 'LastPID' in 'struct packet_t'
+                        Radio.RxPacket.LastPID = Radio.RxPacket.PID;
+                        ~~~~~~~~~~~~~~ ^
+radio.c(474): error: no member named 'PID' in 'struct packet_t'
+                        Radio.RxPacket.LastPID = Radio.RxPacket.PID;
+                                                 ~~~~~~~~~~~~~~ ^
+radio.c(529): error: no member named 'TxComplete' in 'struct radio_t'
+        if(Radio.TxComplete == TRUE){
+           ~~~~~ ^
+radio.c(530): error: no member named 'TxComplete' in 'struct radio_t'
+                Radio.TxComplete = FALSE;
+                ~~~~~ ^
+1 warning and 11 errors generated.
+compiling radio.c...
+app.c(13): warning: no previous extern declaration for non-static variable 'loop_cnt' [-Wmissing-variable-declarations]
+uint32_t loop_cnt = 0, state = 0;
+         ^
+app.c(13): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+uint32_t loop_cnt = 0, state = 0;
+^
+app.c(13): warning: no previous extern declaration for non-static variable 'state' [-Wmissing-variable-declarations]
+uint32_t loop_cnt = 0, state = 0;
+                       ^
+app.c(13): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+uint32_t loop_cnt = 0, state = 0;
+^
+app.c(14): warning: no previous extern declaration for non-static variable 'buf' [-Wmissing-variable-declarations]
+uint8_t  buf[40] = "Hello";
+         ^
+app.c(14): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+uint8_t  buf[40] = "Hello";
+^
+3 warnings generated.
+compiling app.c...
+compiling main.c...
+compiling clocks.c...
+compiling led.c...
+compiling timeout.c...
+compiling uart.c...
+assembling arm_startup_nrf52.s...
+RTE/Device/nRF52832_xxAA/system_nrf52.c(32): warning: In file included from...
+C:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include\system_nrf52_approtect.h(51): warning: 'nrf52_configuration_249' was marked unused but was used [-Wused-but-marked-unused]
+            if (nrf52_configuration_249())
+                ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(72): warning: no previous prototype for function 'nvmc_wait' [-Wmissing-prototypes]
+void nvmc_wait(void)
+     ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(72): note: declare 'static' if the function is not intended to be used outside of this translation unit
+void nvmc_wait(void)
+^
+static 
+RTE/Device/nRF52832_xxAA/system_nrf52.c(79): warning: no previous prototype for function 'nvmc_config' [-Wmissing-prototypes]
+void nvmc_config(uint32_t mode)
+     ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(79): note: declare 'static' if the function is not intended to be used outside of this translation unit
+void nvmc_config(uint32_t mode)
+^
+static 
+RTE/Device/nRF52832_xxAA/system_nrf52.c(115): warning: 'nrf52_errata_12' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_12()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(123): warning: 'nrf52_errata_16' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_16()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(131): warning: 'nrf52_errata_31' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_31()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(139): warning: 'nrf52_errata_32' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_32()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(147): warning: 'nrf52_errata_36' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_36()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(157): warning: 'nrf52_errata_37' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_37()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(165): warning: 'nrf52_errata_57' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_57()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(176): warning: 'nrf52_errata_66' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_66()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(216): warning: 'nrf52_errata_108' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_108()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(240): warning: 'nrf52_errata_136' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_136()){
+            ^
+RTE/Device/nRF52832_xxAA/system_nrf52.c(250): warning: 'nrf52_errata_182' was marked unused but was used [-Wused-but-marked-unused]
+        if (nrf52_errata_182()){
+            ^
+14 warnings generated.
+compiling system_nrf52.c...
+".\Objects\nrf52832_radio_driver.axf" - 11 Error(s), 22 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                https://www.keil.com/pack/ARM.CMSIS.6.1.0.pack
+                ARM.CMSIS.6.1.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 6.1.0
+
+Package Vendor: NordicSemiconductor
+                http://developer.nordicsemi.com/nRF5_SDK/pieces/nRF_DeviceFamilyPack/NordicSemiconductor.nRF_DeviceFamilyPack.8.44.1.pack
+                NordicSemiconductor.nRF_DeviceFamilyPack.8.44.1
+                Nordic Semiconductor nRF ARM devices Device Family Pack with BSD license.
+   * Component: Startup Version: 8.44.1
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_NRF52832
+  C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include
+  C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:6.1.0
+
+   * Component: NordicSemiconductor::Device:Startup:8.44.1
+      Source file:   Device\Source\arm\arm_startup_nrf52.s
+      Include file:  Device\Include\system_nrf.h
+      Source file:   Device\Source\system_nrf52.c
+      Include file:  Device\Include\system_nrf52.h
+Target not created.
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>

@@ -58,7 +58,7 @@ void RTC0_IRQHandler(void) {
 
 void Timeout_Clear_Events(void){
 	if(Timeout.Occured == FALSE){
-	  NRF_RTC0->INTENCLR |= RTC_INTENCLR_COMPARE0_Msk;
+	    NRF_RTC0->INTENCLR |= RTC_INTENCLR_COMPARE0_Msk;
 		NRF_RTC0->EVTENCLR |= RTC_EVTENCLR_COMPARE0_Msk;
 		NRF_RTC0->EVENTS_COMPARE[0] = 0;
 	}
