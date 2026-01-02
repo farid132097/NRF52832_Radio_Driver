@@ -10,73 +10,59 @@
 #include "led.h"
 #include "pwm.h"
 
-uint32_t loop_cnt = 0, state = 0;
-uint8_t  buf[40] = "Hello";
+uint8_t  x = 0 ;
+uint16_t crc = 0;
 
 void App_Config(void){
-	
-	
-	//Charge
-	NRF_GPIO->DIR |= (uint32_t) (1<<6);
-	NRF_GPIO->OUT |= (uint32_t) (1<<6);
-	
-	//Button
-	NRF_GPIO->DIR &= (uint32_t) (~(1<<25));
-	
-	//Power
-	NRF_GPIO->DIR |= (uint32_t) (1<<8);
-	NRF_GPIO->OUT &= (uint32_t) (~(1<<8));
-	
-	//Cap
-	if((NRF_UICR->NFCPINS & UICR_NFCPINS_PROTECT_Msk) == 1){
-		NRF_NVMC->CONFIG |= NVMC_CONFIG_WEN_Wen;
-		while (NRF_NVMC->READY == NVMC_READY_READY_Busy){
-			//
-		}
-	  NRF_UICR->NFCPINS = UICR_NFCPINS_PROTECT_Disabled;
-	}
-	NRF_GPIO->DIR |= (uint32_t) (1<<9);
-	NRF_GPIO->OUT &= (uint32_t) (~(1<<9));
 	
 	Clock_Init();
 	Timeout_Init();
 	LED_Init();
-	Radio_Init();
+	Radio_Active();
 	
-	
-	//PWM_Init();
 	
 }
 
 void App_Mainloop(void){
 	
-	
-	if(Timeout_Occured_Flag_Get()){
-		
-	  //LED_Toggle();
-	
-	  Radio_Tx_Packet(buf, 5);
-	  Radio_Power_Down();
-	
-	  Timeout_Set_MicroSeconds(1000000);
+	for(uint8_t i=0; i<32; i++){
+		Radio_Tx_Packet_Set(0, i);
 	}
 	
-	Radio_Tx_Complete_Handler();
+	Radio_Tx_Packet_Set(17, 0);
 	
-	NRF_POWER->TASKS_LOWPWR = 1;
-	__WFE();
-	__SEV();
-	__WFE();
+	Radio_Tx_Packet_Set(0, 1);
+	Radio_Tx_Packet_Set(0, 2);
+	Radio_Tx_Packet_Set(0, 3);
+	Radio_Tx_Packet_Set(x++, 4);
+	
+	Radio_Tx_Packet_Set(0, 5);
+	Radio_Tx_Packet_Set(0, 6);
+	
+	Radio_Tx_Packet_Set(0, 7);
+	Radio_Tx_Packet_Set(0, 8);
+	
+	Radio_Tx_Packet_Set(0, 9);
+	Radio_Tx_Packet_Set(0, 10);
+	
+	Radio_Tx_Packet_Set(0, 11);
+	
+	crc = Radio_CRC_Calculate_Tx_Buf(0, 12);
+	
+	Radio_Tx_Packet_Set(crc >> 8, 12);
+	Radio_Tx_Packet_Set(crc & 0xFF, 13);
+	
+	Radio_Tx_Packet_Set(14, 29);
+	
+	crc = Radio_CRC_Calculate_Tx_Buf(0, 30);
+	Radio_Tx_Packet_Set(crc >> 8, 30);
+	Radio_Tx_Packet_Set(crc & 0xFF, 31);
+	Radio_Tx();
 	
 	
-	/*
-	PWM_Set_Duty((uint16_t)loop_cnt);
-	Timeout_Set_MicroSeconds(10000);
-	while(Timeout_Occured_Flag_Get() == 0);
-	loop_cnt++;
-	if(loop_cnt > 999){
-		loop_cnt = 0;
-	}
-	*/
+	Timeout_Set_MicroSeconds(1000000);
+	while(Timeout_Error_Assign(0) == FALSE);
+	Timeout_Clear_Events();
+	
 	
 }

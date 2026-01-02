@@ -38,6 +38,7 @@ enum radio_error_t{
 	       ERROR_RADIO_TX_SUCCESS_NO_ACK          = 0x0B
 };
 
+
 void     Radio_Struct_Init(void);
 void     Radio_Tx_Set_Dst_Addr(uint32_t dst_addr);
 void     Radio_Tx_Reload_Dst_Addr(void);
@@ -57,6 +58,7 @@ uint8_t  Radio_Rx_Buf_Get(uint8_t index);
 uint8_t  Radio_Rx_Len_Get(void);
 uint16_t Radio_CRC_Calculate_Byte(uint16_t crc, uint8_t data);
 uint16_t Radio_CRC_Calculate_Block(uint8_t *buf, uint8_t start, uint8_t end);
+uint16_t Radio_CRC_Calculate_Tx_Buf(uint8_t start, uint8_t end);
 
 void     Radio_HFCLK_Start(void);
 void     Radio_HFCLK_Stop(void);
@@ -69,12 +71,15 @@ void     Radio_Mode_Disable(void);
 void     Radio_Mode_Tx(void);
 void     Radio_Mode_Rx(void);
 void     Radio_Start_Task(int32_t delay);
-uint8_t  Radio_Tx(void);
+void     Radio_Tx(void);
 void     Radio_Tx_Low_Power(void);
 uint8_t  Radio_Rx(int32_t timeout);
 uint8_t  Radio_Tx_Ack(void);
 uint8_t  Radio_Rx_Ack(int32_t timeout);
 uint8_t  Radio_Tx_Packet(uint8_t *buf, uint8_t len);
+
+void     Radio_Tx_Packet_Set(uint8_t val, uint8_t index);
+uint8_t  Radio_Tx_Packet_Get(uint8_t index);
 
 void     RADIO_IRQHandler(void);
 void     Radio_Tx_Complete_Handler(void);
