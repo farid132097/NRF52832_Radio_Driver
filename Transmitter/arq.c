@@ -5,6 +5,8 @@
 #include "cdefs.h"
 #include "arq.h"
 
+//Automatic Repeat Request (ARQ)
+//For data integrity check
 
 
 uint16_t ARQ_CRC16_Calculate_Byte(uint16_t crc, uint8_t data){

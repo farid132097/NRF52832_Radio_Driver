@@ -25,7 +25,7 @@
 #define  RADIO_CRC16L_POS          (RADIO_PACKET_LEN- 2)
 #define  RADIO_CHECKSUM_POS        (RADIO_PACKET_LEN- 3)
 #define  RADIO_DATA_LEN_POS        (RADIO_PACKET_LEN- 4)
-#define  RADIO_PACKET_TYPE_POS     (RADIO_PACKET_LEN- 5)
+#define  RADIO_PACKET_INFO_POS     (RADIO_PACKET_LEN- 5)
 #define  RADIO_DST_ADDR3_POS       (RADIO_PACKET_LEN- 6)
 #define  RADIO_DST_ADDR2_POS       (RADIO_PACKET_LEN- 7)
 #define  RADIO_DST_ADDR1_POS       (RADIO_PACKET_LEN- 8)
@@ -54,11 +54,14 @@ typedef struct packet_t{
 	uint8_t  Length;
 	uint8_t  PID;
 	uint8_t  LastPID;
-	uint8_t  Reserved0[5];
+	uint8_t  PacketInfo;
+	uint32_t SrcAddr;
+	uint32_t DstAddr;
 	
 	uint16_t CRC16;
 	uint8_t  Checksum8;
 	uint8_t  CRCSts;
+	uint8_t  ChksmSts;
 	uint8_t  Buf[RADIO_PACKET_LEN];
 }packet_t;
 
@@ -148,7 +151,7 @@ void Radio_Power_Down(void){
 
 
 void Radio_Mode_Disable(void){
-	if(NRF_RADIO->STATE != RADIO_STATE_STATE_Disabled){
+	if((NRF_RADIO->STATE & RADIO_STATE_STATE_Msk) != RADIO_STATE_STATE_Disabled){
     NRF_RADIO->EVENTS_DISABLED = 0;
 	  NRF_RADIO->TASKS_DISABLE = 1;
 		Timeout_Set_MicroSeconds(1000);
@@ -200,10 +203,9 @@ uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
 	Timeout_Error_Clear();
 	Radio_Mode_Tx();
 	if(Timeout_Error_Get() != NULL){
-		//Radio_Mode_Disable();
+		Radio_Mode_Disable();
 		return FALSE;
 	}
-	
 	
 	for(uint8_t i=0; i<len; i++){
 		Radio.TxPacket.Buf[i] = buf[i];
@@ -216,12 +218,12 @@ uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
 	Radio.TxPacket.Buf[RADIO_DST_ADDR1_POS]   = DST_DEVICE_ADDRESS1;
 	Radio.TxPacket.Buf[RADIO_DST_ADDR2_POS]   = DST_DEVICE_ADDRESS2;
 	Radio.TxPacket.Buf[RADIO_DST_ADDR3_POS]   = DST_DEVICE_ADDRESS3;
-	Radio.TxPacket.Buf[RADIO_PACKET_TYPE_POS] = 0x00;
+	Radio.TxPacket.Buf[RADIO_PACKET_INFO_POS] = 0x00;
 	Radio.TxPacket.Buf[RADIO_DATA_LEN_POS]    = len;
 	Radio.TxPacket.Buf[RADIO_CHECKSUM_POS]    = 0x00;
 	Radio.TxPacket.CRC16 = ARQ_CRC16_Calculate_Block(Radio.TxPacket.Buf, 0, RADIO_CRC_CALC_LEN);
-	Radio.TxPacket.Buf[RADIO_CRC16L_POS] = Radio.TxPacket.CRC16 & 0xFF;
-	Radio.TxPacket.Buf[RADIO_CRC16H_POS] = Radio.TxPacket.CRC16 >> 8;
+	Radio.TxPacket.Buf[RADIO_CRC16L_POS]      = Radio.TxPacket.CRC16 & 0xFF;
+	Radio.TxPacket.Buf[RADIO_CRC16H_POS]      = Radio.TxPacket.CRC16 >> 8;
 	Radio.TxPacket.Checksum8 = ARQ_Checksum8_Calculate_Block(Radio.TxPacket.Buf, 0, RADIO_PACKET_LEN);
 	Radio.TxPacket.Buf[RADIO_CHECKSUM_POS]    = Radio.TxPacket.Checksum8;
 	
@@ -243,7 +245,10 @@ uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
 }
 
 uint8_t Radio_Rx(uint32_t timeout){
-	uint8_t sts  = SUCCESSFUL;
+	uint8_t  chksm = 0xFF, sts  = SUCCESSFUL;
+	uint16_t crc = 0;
+	Radio.RxPacket.ChksmSts = FALSE;
+	Radio.RxPacket.CRCSts = FALSE;
 	Timeout_Error_Clear();
 	Radio_Mode_Rx();
 	if(Timeout_Error_Get() != NULL){
@@ -269,12 +274,114 @@ uint8_t Radio_Rx(uint32_t timeout){
 		return FALSE;
 	}
 	else{
+		//clear crc event
 		NRF_RADIO->EVENTS_CRCOK = 0;
+		
+		//extract source address
+		Radio.RxPacket.SrcAddr   = Radio.RxPacket.Buf[RADIO_SRC_ADDR3_POS];
+		Radio.RxPacket.SrcAddr <<= 8;
+		Radio.RxPacket.SrcAddr  |= Radio.RxPacket.Buf[RADIO_SRC_ADDR2_POS];
+		Radio.RxPacket.SrcAddr <<= 8;
+		Radio.RxPacket.SrcAddr  |= Radio.RxPacket.Buf[RADIO_SRC_ADDR1_POS];
+		Radio.RxPacket.SrcAddr <<= 8;
+		Radio.RxPacket.SrcAddr  |= Radio.RxPacket.Buf[RADIO_SRC_ADDR0_POS];
+		
+		//extract destination address
+		Radio.RxPacket.DstAddr   = Radio.RxPacket.Buf[RADIO_DST_ADDR3_POS];
+		Radio.RxPacket.DstAddr <<= 8;
+		Radio.RxPacket.DstAddr  |= Radio.RxPacket.Buf[RADIO_DST_ADDR2_POS];
+		Radio.RxPacket.DstAddr <<= 8;
+		Radio.RxPacket.DstAddr  |= Radio.RxPacket.Buf[RADIO_DST_ADDR1_POS];
+		Radio.RxPacket.DstAddr <<= 8;
+		Radio.RxPacket.DstAddr  |= Radio.RxPacket.Buf[RADIO_DST_ADDR0_POS];
+		
+		//extract packet info
+		Radio.RxPacket.PacketInfo = Radio.RxPacket.Buf[RADIO_PACKET_INFO_POS];
+		
+		//extract data len
+		Radio.RxPacket.Length = Radio.RxPacket.Buf[RADIO_DATA_LEN_POS];
+		
+		//extract checksum
+		Radio.RxPacket.Checksum8 = Radio.RxPacket.Buf[RADIO_CHECKSUM_POS];
+		
+		//extract crc
+		Radio.RxPacket.CRC16  = Radio.RxPacket.Buf[RADIO_CRC16H_POS];
+		Radio.RxPacket.CRC16<<= 8;
+		Radio.RxPacket.CRC16 |= Radio.RxPacket.Buf[RADIO_CRC16L_POS];
+		
+		chksm = ARQ_Checksum8_Calculate_Block(Radio.RxPacket.Buf, 0, RADIO_PACKET_LEN);
+		if(chksm == 0){
+			Radio.RxPacket.ChksmSts = TRUE;
+		}
+		
+		Radio.RxPacket.Buf[RADIO_CHECKSUM_POS] = 0;
+		crc = ARQ_CRC16_Calculate_Block(Radio.RxPacket.Buf, 0, RADIO_CRC_CALC_LEN);
+		if(crc == Radio.RxPacket.CRC16){
+			Radio.RxPacket.CRCSts = TRUE;
+		}
 	}
-	
 	return sts;
 }
 
+uint8_t Radio_Tx_Get_Ack(uint8_t *buf, uint8_t len){
+	uint8_t  sts = FAILED;
+	if(Radio_Tx(buf, len) == SUCCESSFUL){
+		sts = Radio_Rx(500);
+		if( (sts == SUCCESSFUL) && (Radio.RxPacket.DstAddr == Radio.TxPacket.SrcAddr) ){
+			return SUCCESSFUL;
+		}
+		return FAILED;
+	}
+	return sts;
+}
+	
+
+uint8_t Radio_Rx_Send_Ack(int32_t timeout){
+	uint16_t crc = 0, chksm = 0, sts = FALSE;
+	
+	Radio_Rx(timeout);
+	if(Timeout_Error_Get() != NULL){
+		return FALSE;
+	}
+	if(NRF_RADIO->CRCSTATUS != 1){
+		return FALSE;
+	}
+	else{
+		NRF_RADIO->EVENTS_CRCOK = 0;
+		NRF_RADIO->EVENTS_ADDRESS = 0;
+		NRF_RADIO->EVENTS_PAYLOAD = 0;
+	}
+	
+	sts = TRUE;
+	
+	if( (Radio.RxPacket.DstAddr == Radio.TxPacket.SrcAddr) && (sts == TRUE) ){
+		crc = ARQ_CRC16_Calculate_Block(Radio.RxPacket.Buf, 0, RADIO_CRC_CALC_LEN);
+		if(crc == Radio.RxPacket.CRC16){
+			Radio.RxPacket.CRCSts = TRUE;
+			chksm = ARQ_Checksum8_Calculate_Block(Radio.RxPacket.Buf, 0, RADIO_PACKET_LEN);
+			//Radio_Tx_Copy_Dst_Addr();
+	    //Radio_Tx();
+		  //Radio_Tx_Reload_Dst_Addr();
+			//if( (Radio.RxPacket.PID == Radio.RxPacket.LastPID) && (Radio.RxPacket.LastSender == Radio.RxPacket.SrcAddr) ){
+			//	return FALSE;
+			//}
+			//Radio.RxPacket.LastPID = Radio.RxPacket.PID;
+			//Radio.RxPacket.LastSender = Radio.RxPacket.SrcAddr;
+		}
+		else{
+			Radio.RxPacket.CRCSts = FALSE;
+			return FALSE;
+		}
+	}
+	else{
+		return FALSE;
+	}
+		
+	if(Timeout_Error_Get() != NULL){
+		return FALSE;
+	}
+	return TRUE;
+}
 
 
 void Radio_Init(void){

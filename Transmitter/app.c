@@ -2,7 +2,7 @@
 
 #include "nrf.h"
 #include "app.h"
-//#include "cdefs.h"
+#include "cdefs.h"
 #include "timeout.h"
 #include "clocks.h"
 #include "radio.h"
@@ -22,10 +22,14 @@ void App_Config(void){
 
 void App_Mainloop(void){
 	
-	LED_Set_State(ON);
-	Radio_Tx(buf, 5);
-	LED_Set_State(OFF);
-	Timeout_Set_MicroSeconds(1000000);
-	while(Timeout_Error_Assign(0) == FALSE);
+	
+	if(Radio_Tx(buf, 5) == SUCCESSFUL){
+		LED_Set_State(ON);
+		Timeout_Delay(400);
+		LED_Set_State(OFF);
+	}
+	
+	
+	Timeout_Delay(1000000);
 	
 }

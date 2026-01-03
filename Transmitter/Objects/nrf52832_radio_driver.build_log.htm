@@ -3,151 +3,83 @@
 <pre>
 <h1>µVision Build Log</h1>
 <h2>Tool Versions:</h2>
-IDE-Version: µVision V5.36.0.0
-Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: Faridul Islam, NA, LIC=----
+IDE-Version: µVision V5.41.0.0
+Copyright (C) 2024 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: faridul islam
+NA
+User-based license: Keil MDK Community (non-commercial free of charge)
+Valid until: Jun 1 2033. Cached until: Jan 4 2026
  
 Tool Versions:
-Toolchain:       MDK-Lite  Version: 5.36.0.0
-Toolchain Path:  C:\Keil_v5\ARM\ARMCLANG\Bin
-C Compiler:      ArmClang.exe V6.16
-Assembler:       Armasm.exe V6.16
-Linker/Locator:  ArmLink.exe V6.16
-Library Manager: ArmAr.exe V6.16
-Hex Converter:   FromElf.exe V6.16
-CPU DLL:         SARMCM3.DLL V5.36.0.0
-Dialog DLL:      DCM.DLL V1.17.3.0
-Target DLL:      CMSIS_AGDI.dll V1.33.0.0
-Dialog DLL:      TCM.DLL V1.53.0.0
+Toolchain:       Keil MDK Community (non-commercial free of charge  Version: 5.41.0.0
+Toolchain Path:  C:\Keil\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.22
+Assembler:       Armasm.exe V6.22
+Linker/Locator:  ArmLink.exe V6.22
+Library Manager: ArmAr.exe V6.22
+Hex Converter:   FromElf.exe V6.22
+CPU DLL:         SARMCM3.DLL V5.41.0.0
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      CMSIS_AGDI.dll V1.33.21.0
+Dialog DLL:      TCM.DLL V1.56.4.0
  
 <h2>Project:</h2>
-D:\Projects\Embedded Projects\Personal\Keil\NRF52832_Radio_Driver\Transmitter\nrf52832_radio_driver.uvprojx
+E:\Embedded Projects\Running\Keil Projects\NRF52832_Radio_Driver\Transmitter\nrf52832_radio_driver.uvprojx
 Project File Date:  01/03/2026
 
 <h2>Output:</h2>
-*** Using Compiler 'V6.16', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
+*** Using Compiler 'V6.22', folder: 'C:\Keil\ARM\ARMCLANG\Bin'
 Rebuild target 'NRF52832'
 compiling main.c...
-pwm.c(12): warning: no previous extern declaration for non-static variable 'pwm_seq' [-Wmissing-variable-declarations]
-uint16_t pwm_seq[4] = {
-         ^
-pwm.c(12): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-uint16_t pwm_seq[4] = {
-^
-pwm.c(16): warning: no previous prototype for function 'PWM_Init' [-Wmissing-prototypes]
-void PWM_Init(void){
-     ^
-pwm.c(16): note: declare 'static' if the function is not intended to be used outside of this translation unit
-void PWM_Init(void){
-^
-static 
-pwm.c(43): warning: no previous prototype for function 'PWM_Set_Duty' [-Wmissing-prototypes]
-void PWM_Set_Duty(uint16_t val){
-     ^
-pwm.c(43): note: declare 'static' if the function is not intended to be used outside of this translation unit
-void PWM_Set_Duty(uint16_t val){
-^
-static 
-3 warnings generated.
-compiling pwm.c...
-compiling app.c...
-compiling led.c...
-compiling timeout.c...
-compiling clocks.c...
-compiling radio.c...
-datahandler.c(1): warning: ISO C requires a translation unit to contain at least one declaration [-Wempty-translation-unit]
-1 warning generated.
-compiling datahandler.c...
-compiling uart.c...
-assembling arm_startup_nrf52.s...
-compiling arq.c...
-compiling rtc.c...
-RTE/Device/nRF52832_xxAA/system_nrf52.c(32): warning: In file included from...
-C:/Users/farid/AppData/Local/Arm/Packs/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include\system_nrf52_approtect.h(51): warning: 'nrf52_configuration_249' was marked unused but was used [-Wused-but-marked-unused]
-            if (nrf52_configuration_249())
-                ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(72): warning: no previous prototype for function 'nvmc_wait' [-Wmissing-prototypes]
-void nvmc_wait(void)
-     ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(72): note: declare 'static' if the function is not intended to be used outside of this translation unit
-void nvmc_wait(void)
-^
-static 
-RTE/Device/nRF52832_xxAA/system_nrf52.c(79): warning: no previous prototype for function 'nvmc_config' [-Wmissing-prototypes]
-void nvmc_config(uint32_t mode)
-     ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(79): note: declare 'static' if the function is not intended to be used outside of this translation unit
-void nvmc_config(uint32_t mode)
-^
-static 
-RTE/Device/nRF52832_xxAA/system_nrf52.c(115): warning: 'nrf52_errata_12' was marked unused but was used [-Wused-but-marked-unused]
-        if (nrf52_errata_12()){
-            ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(123): warning: 'nrf52_errata_16' was marked unused but was used [-Wused-but-marked-unused]
-        if (nrf52_errata_16()){
-            ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(131): warning: 'nrf52_errata_31' was marked unused but was used [-Wused-but-marked-unused]
-        if (nrf52_errata_31()){
-            ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(139): warning: 'nrf52_errata_32' was marked unused but was used [-Wused-but-marked-unused]
-        if (nrf52_errata_32()){
-            ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(147): warning: 'nrf52_errata_36' was marked unused but was used [-Wused-but-marked-unused]
-        if (nrf52_errata_36()){
-            ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(157): warning: 'nrf52_errata_37' was marked unused but was used [-Wused-but-marked-unused]
-        if (nrf52_errata_37()){
-            ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(165): warning: 'nrf52_errata_57' was marked unused but was used [-Wused-but-marked-unused]
-        if (nrf52_errata_57()){
-            ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(176): warning: 'nrf52_errata_66' was marked unused but was used [-Wused-but-marked-unused]
-        if (nrf52_errata_66()){
-            ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(216): warning: 'nrf52_errata_108' was marked unused but was used [-Wused-but-marked-unused]
-        if (nrf52_errata_108()){
-            ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(240): warning: 'nrf52_errata_136' was marked unused but was used [-Wused-but-marked-unused]
-        if (nrf52_errata_136()){
-            ^
-RTE/Device/nRF52832_xxAA/system_nrf52.c(250): warning: 'nrf52_errata_182' was marked unused but was used [-Wused-but-marked-unused]
-        if (nrf52_errata_182()){
-            ^
-14 warnings generated.
 compiling system_nrf52.c...
+compiling datahandler.c...
+compiling led.c...
+compiling app.c...
+assembling arm_startup_nrf52.s...
+compiling clocks.c...
+compiling arq.c...
+compiling timeout.c...
+compiling pwm.c...
+compiling rtc.c...
+radio.c(340): warning: variable 'chksm' set but not used [-Wunused-but-set-variable]
+  340 |         uint16_t crc = 0, chksm = 0, sts = FALSE;
+      |                           ^
+1 warning generated.
+compiling radio.c...
+compiling uart.c...
 linking...
-Program Size: Code=3196 RO-data=544 RW-data=36 ZI-data=8408  
-".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 18 Warning(s).
+Program Size: Code=3000 RO-data=544 RW-data=36 ZI-data=8424  
+".\Objects\nrf52832_radio_driver.axf" - 0 Error(s), 1 Warning(s).
 
 <h2>Software Packages used:</h2>
 
 Package Vendor: ARM
-                https://www.keil.com/pack/ARM.CMSIS.6.1.0.pack
-                ARM.CMSIS.6.1.0
+                https://www.keil.com/pack/ARM.CMSIS.6.2.0.pack
+                ARM::CMSIS@6.2.0
                 CMSIS (Common Microcontroller Software Interface Standard)
-   * Component: CORE Version: 6.1.0
+   * Component: CORE Version: 6.1.1
 
 Package Vendor: NordicSemiconductor
                 http://developer.nordicsemi.com/nRF5_SDK/pieces/nRF_DeviceFamilyPack/NordicSemiconductor.nRF_DeviceFamilyPack.8.44.1.pack
-                NordicSemiconductor.nRF_DeviceFamilyPack.8.44.1
+                NordicSemiconductor::nRF_DeviceFamilyPack@8.44.1
                 Nordic Semiconductor nRF ARM devices Device Family Pack with BSD license.
    * Component: Startup Version: 8.44.1
 
 <h2>Collection of Component include folders:</h2>
-  .\RTE\_NRF52832
-  C:\Users\farid\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSIS\Core\Include
-  C:\Users\farid\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.44.1\Device\Include
+  ./RTE/_NRF52832
+  C:/Keil/ARM/CMSIS/6.2.0/CMSIS/Core/Include
+  C:/Keil/NordicSemiconductor/nRF_DeviceFamilyPack/8.44.1/Device/Include
 
 <h2>Collection of Component Files used:</h2>
 
-   * Component: ARM::CMSIS:CORE:6.1.0
+   * Component: ARM::CMSIS:CORE@6.1.1
 
-   * Component: NordicSemiconductor::Device:Startup:8.44.1
-      Source file:   Device\Source\arm\arm_startup_nrf52.s
-      Include file:  Device\Include\system_nrf52.h
-      Include file:  Device\Include\system_nrf.h
-      Source file:   Device\Source\system_nrf52.c
-Build Time Elapsed:  00:00:01
+   * Component: NordicSemiconductor::Device:Startup@8.44.1
+      Source file:   Device/Source/arm/arm_startup_nrf52.s
+      Include file:  Device/Include/system_nrf52.h
+      Source file:   Device/Source/system_nrf52.c
+      Include file:  Device/Include/system_nrf.h
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>

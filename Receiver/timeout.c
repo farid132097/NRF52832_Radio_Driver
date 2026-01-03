@@ -56,6 +56,12 @@ void Timeout_Clear_Assignment(void){
 	RTC_RTC1_Timeout_Event_Clear();
 }
 
+void Timeout_Delay(uint32_t val){
+	Timeout_Set_MicroSeconds(val);
+	while(Timeout_Error_Assign(0) == FALSE);
+	Timeout_Clear_Assignment();
+}
+
 uint8_t Timeout_Error_Get(void){
 	return Timeout.Error;
 }

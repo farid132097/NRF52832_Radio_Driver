@@ -5,7 +5,7 @@
 #include "nrf.h"
 #include "cdefs.h"
 
-#define   NRF_DK_BOARD
+//#define   NRF_DK_BOARD
 
 #ifdef   NRF_DK_BOARD
 #define  LED_PIN  (17U)
