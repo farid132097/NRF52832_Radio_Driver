@@ -35,16 +35,6 @@
 #define  RADIO_SRC_ADDR1_POS       (RADIO_PACKET_LEN-12)
 #define  RADIO_SRC_ADDR0_POS       (RADIO_PACKET_LEN-13)
 
-#define  OWN_DEVICE_ADDRESS0       ((OWN_DEVICE_ADDRESS>> 0) & 0xFF)
-#define  OWN_DEVICE_ADDRESS1       ((OWN_DEVICE_ADDRESS>> 8) & 0xFF)
-#define  OWN_DEVICE_ADDRESS2       ((OWN_DEVICE_ADDRESS>>16) & 0xFF)
-#define  OWN_DEVICE_ADDRESS3       ((OWN_DEVICE_ADDRESS>>24) & 0xFF)
-
-#define  DST_DEVICE_ADDRESS0       ((DST_DEVICE_ADDRESS>> 0) & 0xFF)
-#define  DST_DEVICE_ADDRESS1       ((DST_DEVICE_ADDRESS>> 8) & 0xFF)
-#define  DST_DEVICE_ADDRESS2       ((DST_DEVICE_ADDRESS>>16) & 0xFF)
-#define  DST_DEVICE_ADDRESS3       ((DST_DEVICE_ADDRESS>>24) & 0xFF)
-
 
 //Frame Format:
 //Len(1 Byte) + PID(1 Byte) + SrcAddr(8 Byte) + DstAddr(8 Byte) + CRC16(2 Byte) + Data(16 Byte)
@@ -57,6 +47,7 @@ typedef struct packet_t{
 	uint8_t  PacketInfo;
 	uint32_t SrcAddr;
 	uint32_t DstAddr;
+	uint32_t LastSender;
 	
 	uint16_t CRC16;
 	uint8_t  Checksum8;
@@ -72,11 +63,12 @@ typedef struct radio_t{
 	uint8_t  FaildAttempts;
 	uint8_t  LastPktSts;
 	uint8_t  PowerDown;
-	uint8_t  Reserved2[2];
+	uint16_t AckTime;
 	
 	packet_t TxPacket;
 	packet_t RxPacket;
 }radio_t;
+
 
 static radio_t Radio;
 	
@@ -90,6 +82,8 @@ void Radio_Struct_Init(void){
 	Radio.PowerDown         = TRUE;
 	Radio.TxPacket.Length   = 0;
 	Radio.TxPacket.PID      = 0;
+	Radio.TxPacket.SrcAddr  = OWN_DEVICE_ADDRESS;
+	Radio.TxPacket.DstAddr  = DST_DEVICE_ADDRESS;
 }
 
 
@@ -198,7 +192,7 @@ void Radio_Mode_Rx(void){
 	}
 }
 
-uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
+uint8_t Radio_Tx_Basic(uint8_t *buf, uint8_t len){
 	uint8_t sts  = TRUE;
 	Timeout_Error_Clear();
 	Radio_Mode_Tx();
@@ -210,15 +204,16 @@ uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
 	for(uint8_t i=0; i<len; i++){
 		Radio.TxPacket.Buf[i] = buf[i];
 	}
-	Radio.TxPacket.Buf[RADIO_SRC_ADDR0_POS]   = OWN_DEVICE_ADDRESS0;
-	Radio.TxPacket.Buf[RADIO_SRC_ADDR1_POS]   = OWN_DEVICE_ADDRESS1;
-	Radio.TxPacket.Buf[RADIO_SRC_ADDR2_POS]   = OWN_DEVICE_ADDRESS2;
-	Radio.TxPacket.Buf[RADIO_SRC_ADDR3_POS]   = OWN_DEVICE_ADDRESS3;
-	Radio.TxPacket.Buf[RADIO_DST_ADDR0_POS]   = DST_DEVICE_ADDRESS0;
-	Radio.TxPacket.Buf[RADIO_DST_ADDR1_POS]   = DST_DEVICE_ADDRESS1;
-	Radio.TxPacket.Buf[RADIO_DST_ADDR2_POS]   = DST_DEVICE_ADDRESS2;
-	Radio.TxPacket.Buf[RADIO_DST_ADDR3_POS]   = DST_DEVICE_ADDRESS3;
-	Radio.TxPacket.Buf[RADIO_PACKET_INFO_POS] = 0x00;
+	
+	Radio.TxPacket.Buf[RADIO_SRC_ADDR0_POS]   = (Radio.TxPacket.SrcAddr>> 0) & 0xFF;
+	Radio.TxPacket.Buf[RADIO_SRC_ADDR1_POS]   = (Radio.TxPacket.SrcAddr>> 8) & 0xFF;
+	Radio.TxPacket.Buf[RADIO_SRC_ADDR2_POS]   = (Radio.TxPacket.SrcAddr>>16) & 0xFF;
+	Radio.TxPacket.Buf[RADIO_SRC_ADDR3_POS]   = (Radio.TxPacket.SrcAddr>>24) & 0xFF;
+	Radio.TxPacket.Buf[RADIO_DST_ADDR0_POS]   = (Radio.TxPacket.DstAddr>> 0) & 0xFF;
+	Radio.TxPacket.Buf[RADIO_DST_ADDR1_POS]   = (Radio.TxPacket.DstAddr>> 8) & 0xFF;
+	Radio.TxPacket.Buf[RADIO_DST_ADDR2_POS]   = (Radio.TxPacket.DstAddr>>16) & 0xFF;
+	Radio.TxPacket.Buf[RADIO_DST_ADDR3_POS]   = (Radio.TxPacket.DstAddr>>24) & 0xFF;
+	Radio.TxPacket.Buf[RADIO_PACKET_INFO_POS] = Radio.TxPacket.PID;
 	Radio.TxPacket.Buf[RADIO_DATA_LEN_POS]    = len;
 	Radio.TxPacket.Buf[RADIO_CHECKSUM_POS]    = 0x00;
 	Radio.TxPacket.CRC16 = ARQ_CRC16_Calculate_Block(Radio.TxPacket.Buf, 0, RADIO_CRC_CALC_LEN);
@@ -226,6 +221,7 @@ uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
 	Radio.TxPacket.Buf[RADIO_CRC16H_POS]      = Radio.TxPacket.CRC16 >> 8;
 	Radio.TxPacket.Checksum8 = ARQ_Checksum8_Calculate_Block(Radio.TxPacket.Buf, 0, RADIO_PACKET_LEN);
 	Radio.TxPacket.Buf[RADIO_CHECKSUM_POS]    = Radio.TxPacket.Checksum8;
+	
 	
 	NRF_RADIO->PACKETPTR = (uint32_t)Radio.TxPacket.Buf;
 	NRF_RADIO->EVENTS_END = 0;
@@ -244,7 +240,7 @@ uint8_t Radio_Tx(uint8_t *buf, uint8_t len){
 	return sts;
 }
 
-uint8_t Radio_Rx(uint32_t timeout){
+uint8_t Radio_Rx_Basic(uint32_t timeout){
 	uint8_t  chksm = 0xFF, sts  = SUCCESSFUL;
 	uint16_t crc = 0;
 	Radio.RxPacket.ChksmSts = FALSE;
@@ -297,6 +293,7 @@ uint8_t Radio_Rx(uint32_t timeout){
 		
 		//extract packet info
 		Radio.RxPacket.PacketInfo = Radio.RxPacket.Buf[RADIO_PACKET_INFO_POS];
+		Radio.RxPacket.PID        = Radio.RxPacket.PacketInfo & 0x0F;
 		
 		//extract data len
 		Radio.RxPacket.Length = Radio.RxPacket.Buf[RADIO_DATA_LEN_POS];
@@ -325,9 +322,16 @@ uint8_t Radio_Rx(uint32_t timeout){
 
 uint8_t Radio_Tx_Get_Ack(uint8_t *buf, uint8_t len){
 	uint8_t  sts = FAILED;
-	if(Radio_Tx(buf, len) == SUCCESSFUL){
-		sts = Radio_Rx(500);
-		if( (sts == SUCCESSFUL) && (Radio.RxPacket.DstAddr == Radio.TxPacket.SrcAddr) ){
+	Radio.TxPacket.PID++;
+	if(Radio.TxPacket.PID > 0x0F){
+		Radio.TxPacket.PID = 0;
+	}
+	if(Radio_Tx_Basic(buf, len) == SUCCESSFUL){
+		sts = Radio_Rx_Basic(600);
+		if( (sts == SUCCESSFUL) && (Radio.RxPacket.DstAddr == Radio.TxPacket.SrcAddr) &&
+ 			(Radio.TxPacket.PID == Radio.RxPacket.PID) ){
+			Radio.AckTime = Timeout_Elapsed_Time_Get();
+			Radio.LastPktSts = SUCCESSFUL;
 			return SUCCESSFUL;
 		}
 		return FAILED;
@@ -336,10 +340,11 @@ uint8_t Radio_Tx_Get_Ack(uint8_t *buf, uint8_t len){
 }
 	
 
-uint8_t Radio_Rx_Send_Ack(int32_t timeout){
-	uint16_t crc = 0, chksm = 0, sts = FALSE;
+uint8_t Radio_Rx_Send_Ack(uint8_t *buf, uint8_t len, uint32_t timeout){
+	uint16_t sts = FALSE;
+	uint32_t tmp;
 	
-	Radio_Rx(timeout);
+	Radio_Rx_Basic(timeout);
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
 	}
@@ -354,29 +359,24 @@ uint8_t Radio_Rx_Send_Ack(int32_t timeout){
 	
 	sts = TRUE;
 	
-	if( (Radio.RxPacket.DstAddr == Radio.TxPacket.SrcAddr) && (sts == TRUE) ){
-		crc = ARQ_CRC16_Calculate_Block(Radio.RxPacket.Buf, 0, RADIO_CRC_CALC_LEN);
-		if(crc == Radio.RxPacket.CRC16){
-			Radio.RxPacket.CRCSts = TRUE;
-			chksm = ARQ_Checksum8_Calculate_Block(Radio.RxPacket.Buf, 0, RADIO_PACKET_LEN);
-			//Radio_Tx_Copy_Dst_Addr();
-	    //Radio_Tx();
-		  //Radio_Tx_Reload_Dst_Addr();
-			//if( (Radio.RxPacket.PID == Radio.RxPacket.LastPID) && (Radio.RxPacket.LastSender == Radio.RxPacket.SrcAddr) ){
-			//	return FALSE;
-			//}
-			//Radio.RxPacket.LastPID = Radio.RxPacket.PID;
-			//Radio.RxPacket.LastSender = Radio.RxPacket.SrcAddr;
-		}
-		else{
-			Radio.RxPacket.CRCSts = FALSE;
+	if( (Radio.RxPacket.DstAddr == Radio.TxPacket.SrcAddr) && (sts == TRUE) &&
+   		(Radio.RxPacket.ChksmSts == TRUE) && (Radio.RxPacket.CRCSts == TRUE)){
+		tmp = Radio.TxPacket.DstAddr;
+		Radio.TxPacket.DstAddr = Radio.RxPacket.SrcAddr;
+		Radio.TxPacket.PID = Radio.RxPacket.PID;
+	  Radio_Tx_Basic(buf, len);
+		Radio.TxPacket.DstAddr = tmp;
+		if( (Radio.RxPacket.PID == Radio.RxPacket.LastPID) && 
+			  (Radio.RxPacket.LastSender == Radio.RxPacket.SrcAddr) ){
 			return FALSE;
 		}
+		Radio.RxPacket.LastPID = Radio.RxPacket.PID;
+		Radio.RxPacket.LastSender = Radio.RxPacket.SrcAddr;
 	}
 	else{
 		return FALSE;
 	}
-		
+	
 	if(Timeout_Error_Get() != NULL){
 		return FALSE;
 	}
@@ -399,6 +399,9 @@ uint32_t Radio_Rx_Packet_Dst_Addr(void){
 	return Radio.RxPacket.DstAddr;
 }
 
+uint16_t Radio_Ack_Time_Get(void){
+	return Radio.AckTime;
+}
 
 
 void Radio_Init(void){

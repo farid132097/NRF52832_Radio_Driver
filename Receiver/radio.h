@@ -37,18 +37,18 @@ void     Radio_Mode_Disable(void);
 void     Radio_Mode_Tx(void);
 void     Radio_Mode_Rx(void);
 
-uint8_t  Radio_Tx(uint8_t *buf, uint8_t len);
-uint8_t  Radio_Rx(uint32_t timeout);
-
+uint8_t  Radio_Tx_Basic(uint8_t *buf, uint8_t len);
+uint8_t  Radio_Rx_Basic(uint32_t timeout);
 
 uint8_t  Radio_Tx_Get_Ack(uint8_t *buf, uint8_t len);
-uint8_t  Radio_Rx_Send_Ack(int32_t timeout);
+uint8_t  Radio_Rx_Send_Ack(uint8_t *buf, uint8_t len, uint32_t timeout);
 
 uint8_t  Radio_Rx_Crc_Sts(void);
 uint8_t  Radio_Rx_Checksum_Sts(void);
 uint32_t Radio_Rx_Packet_Src_Addr(void);
 uint32_t Radio_Rx_Packet_Dst_Addr(void);
 
+uint16_t Radio_Ack_Time_Get(void);
 
 void     Radio_Init(void);
 

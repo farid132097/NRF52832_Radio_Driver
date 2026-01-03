@@ -18,6 +18,7 @@ uint8_t  Timeout_Error_Get(void);
 void     Timeout_Error_Clear(void);
 uint8_t  Timeout_Sticky_Error_Get(void);
 void     Timeout_Sticky_Error_Clear(void);
+uint16_t Timeout_Elapsed_Time_Get(void);
 
 void     Timeout_Init(void);
 

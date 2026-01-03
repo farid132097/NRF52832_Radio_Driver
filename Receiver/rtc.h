@@ -13,6 +13,7 @@ void     RTC_RTC1_Set_Timeout(uint32_t val);
 void     RTC_RTC1_Clear_Timeout(void);
 uint8_t  RTC_RTC1_Timeout_Event(void);
 void     RTC_RTC1_Timeout_Event_Clear(void);
+uint16_t RTC_RTC1_Elapsed_Time_Get(void);
 
 uint32_t RTC_UpTime_Get(void);
 uint32_t RTC_Interval_Time_Get(void);

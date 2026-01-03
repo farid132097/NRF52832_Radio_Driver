@@ -104,7 +104,9 @@ void RTC_RTC1_Timeout_Event_Clear(void){
 	RTC.RTC1Event = FALSE;
 }
 
-
+uint16_t RTC_RTC1_Elapsed_Time_Get(void){
+	return RTC.RTC1Val;
+}
 
 uint32_t RTC_UpTime_Get(void){
 	return RTC.UpTime;

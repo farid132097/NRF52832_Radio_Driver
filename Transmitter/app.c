@@ -23,7 +23,7 @@ void App_Config(void){
 void App_Mainloop(void){
 	
 	
-	if(Radio_Tx(buf, 5) == SUCCESSFUL){
+	if(Radio_Tx_Get_Ack(buf, 5) == SUCCESSFUL){
 		LED_Set_State(ON);
 		Timeout_Delay(400);
 		LED_Set_State(OFF);

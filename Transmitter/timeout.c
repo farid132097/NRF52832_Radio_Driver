@@ -78,7 +78,9 @@ void Timeout_Sticky_Error_Clear(void){
 	Timeout.StickyError = NULL;
 }
 
-
+uint16_t Timeout_Elapsed_Time_Get(void){
+	return RTC_RTC1_Elapsed_Time_Get();
+}
 
 void Timeout_Init(void){
 	Timeout_Struct_Init();
