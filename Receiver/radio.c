@@ -64,6 +64,7 @@ typedef struct radio_t{
 	uint8_t  LastPktSts;
 	uint8_t  PowerDown;
 	uint16_t AckTime;
+	uint8_t  AckDataLen;
 	
 	packet_t TxPacket;
 	packet_t RxPacket;
@@ -328,9 +329,14 @@ uint8_t Radio_Tx_Get_Ack(uint8_t *buf, uint8_t len){
 	}
 	if(Radio_Tx_Basic(buf, len) == SUCCESSFUL){
 		sts = Radio_Rx_Basic(600);
-		if( (sts == SUCCESSFUL) && (Radio.RxPacket.DstAddr == Radio.TxPacket.SrcAddr) &&
- 			(Radio.TxPacket.PID == Radio.RxPacket.PID) ){
+		if( (Radio.RxPacket.ChksmSts == TRUE) && (Radio.RxPacket.CRCSts == TRUE) &&
+			  (Radio.RxPacket.DstAddr == Radio.TxPacket.SrcAddr) && 
+			  (Radio.TxPacket.PID == Radio.RxPacket.PID)){
 			Radio.AckTime = Timeout_Elapsed_Time_Get();
+			Radio.AckDataLen = Radio.RxPacket.Length;
+			for(uint8_t i = 0; i < Radio.AckDataLen; i++){
+				buf[i] = Radio.RxPacket.Buf[i];
+			}
 			Radio.LastPktSts = SUCCESSFUL;
 			return SUCCESSFUL;
 		}
@@ -399,8 +405,13 @@ uint32_t Radio_Rx_Packet_Dst_Addr(void){
 	return Radio.RxPacket.DstAddr;
 }
 
+uint8_t Radio_Ack_Data_Len(void){
+	return Radio.AckDataLen;
+}
+
 uint16_t Radio_Ack_Time_Get(void){
-	return Radio.AckTime;
+	//RTC tick is 30.5uS
+	return Radio.AckTime*31;
 }
 
 

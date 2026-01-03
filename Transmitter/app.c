@@ -10,7 +10,7 @@
 #include "led.h"
 #include "pwm.h"
 
-static uint8_t buf[32] = "Hello";
+static uint8_t buf[32];
 
 void App_Config(void){
 	
@@ -22,6 +22,12 @@ void App_Config(void){
 
 void App_Mainloop(void){
 	
+	
+	buf[0] = 'H';
+	buf[1] = 'e';
+	buf[2] = 'l';
+	buf[3] = 'l';
+	buf[4] = 'o';
 	
 	if(Radio_Tx_Get_Ack(buf, 5) == SUCCESSFUL){
 		LED_Set_State(ON);

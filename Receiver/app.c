@@ -10,7 +10,7 @@
 #include "led.h"
 #include "pwm.h"
 
-uint8_t buf[32];
+uint8_t buf[32] = "123456789ABCDEFGH";
 
 void App_Config(void){
 	
@@ -24,7 +24,7 @@ void App_Config(void){
 
 void App_Mainloop(void){
 	
-	if(Radio_Rx_Send_Ack(buf, 5, 10000)){
+	if(Radio_Rx_Send_Ack(buf, 18, 10000)){
 		LED_Set_State(ON);
 		Timeout_Set_MicroSeconds( 500 );
 		while( Timeout_Error_Assign(0) == FALSE);
@@ -34,8 +34,6 @@ void App_Mainloop(void){
 		UART_Tx_Parameter_Hex_NL("ChksmSts", Radio_Rx_Checksum_Sts());
 		UART_Tx_Parameter_Hex_NL("Src", Radio_Rx_Packet_Src_Addr());
 		UART_Tx_Parameter_Hex_NL("Dst", Radio_Rx_Packet_Dst_Addr());
-		
-		
 		
 		LED_Set_State(OFF);
 	}

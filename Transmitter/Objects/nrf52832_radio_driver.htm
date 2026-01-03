@@ -3,9 +3,9 @@
 <title>Static Call Graph - [.\Objects\nrf52832_radio_driver.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\nrf52832_radio_driver.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6220000: Last Updated: Sat Jan  3 18:41:33 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6220000: Last Updated: Sat Jan  3 19:04:12 2026
 <BR><P>
-<H3>Maximum Stack Usage =         64 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =         72 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 __rt_entry_main &rArr; main &rArr; App_Mainloop &rArr; Radio_Tx_Get_Ack &rArr; Radio_Rx_Basic &rArr; Radio_Mode_Rx &rArr; Timeout_Clear_Assignment
 <P>
@@ -197,7 +197,7 @@ Global Symbols
 <P><STRONG><a name="[84]"></a>__rt_entry_postsh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000009))
 
 <P><STRONG><a name="[3c]"></a>__rt_entry_main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$0000000D))
-<BR><BR>[Stack]<UL><LI>Max Depth = 64 + Unknown Stack Size
+<BR><BR>[Stack]<UL><LI>Max Depth = 72 + Unknown Stack Size
 <LI>Call Chain = __rt_entry_main &rArr; main &rArr; App_Mainloop &rArr; Radio_Tx_Get_Ack &rArr; Radio_Rx_Basic &rArr; Radio_Mode_Rx &rArr; Timeout_Clear_Assignment
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exit
@@ -464,8 +464,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[4a]"></a>App_Mainloop</STRONG> (Thumb, 56 bytes, Stack size 8 bytes, app.o(.text.App_Mainloop))
-<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = App_Mainloop &rArr; Radio_Tx_Get_Ack &rArr; Radio_Rx_Basic &rArr; Radio_Mode_Rx &rArr; Timeout_Clear_Assignment
+<P><STRONG><a name="[4a]"></a>App_Mainloop</STRONG> (Thumb, 70 bytes, Stack size 8 bytes, app.o(.text.App_Mainloop))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = App_Mainloop &rArr; Radio_Tx_Get_Ack &rArr; Radio_Rx_Basic &rArr; Radio_Mode_Rx &rArr; Timeout_Clear_Assignment
 </UL>
 <BR>[Calls]<UL><LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Delay
 <LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LED_Set_State
@@ -597,8 +597,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Tx_Get_Ack
 </UL>
 
-<P><STRONG><a name="[4b]"></a>Radio_Tx_Get_Ack</STRONG> (Thumb, 74 bytes, Stack size 8 bytes, radio.o(.text.Radio_Tx_Get_Ack))
-<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = Radio_Tx_Get_Ack &rArr; Radio_Rx_Basic &rArr; Radio_Mode_Rx &rArr; Timeout_Clear_Assignment
+<P><STRONG><a name="[4b]"></a>Radio_Tx_Get_Ack</STRONG> (Thumb, 130 bytes, Stack size 16 bytes, radio.o(.text.Radio_Tx_Get_Ack))
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = Radio_Tx_Get_Ack &rArr; Radio_Rx_Basic &rArr; Radio_Mode_Rx &rArr; Timeout_Clear_Assignment
 </UL>
 <BR>[Calls]<UL><LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx_Basic
 <LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Tx_Basic
@@ -685,7 +685,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[3d]"></a>main</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, main.o(.text.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = main &rArr; App_Mainloop &rArr; Radio_Tx_Get_Ack &rArr; Radio_Rx_Basic &rArr; Radio_Mode_Rx &rArr; Timeout_Clear_Assignment
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = main &rArr; App_Mainloop &rArr; Radio_Tx_Get_Ack &rArr; Radio_Rx_Basic &rArr; Radio_Mode_Rx &rArr; Timeout_Clear_Assignment
 </UL>
 <BR>[Calls]<UL><LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Mainloop
 <LI><a href="#[45]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Config

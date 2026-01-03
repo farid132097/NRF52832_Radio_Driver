@@ -48,6 +48,7 @@ uint8_t  Radio_Rx_Checksum_Sts(void);
 uint32_t Radio_Rx_Packet_Src_Addr(void);
 uint32_t Radio_Rx_Packet_Dst_Addr(void);
 
+uint8_t  Radio_Ack_Data_Len(void);
 uint16_t Radio_Ack_Time_Get(void);
 
 void     Radio_Init(void);
