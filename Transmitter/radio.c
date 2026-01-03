@@ -383,6 +383,23 @@ uint8_t Radio_Rx_Send_Ack(int32_t timeout){
 	return TRUE;
 }
 
+uint8_t  Radio_Rx_Crc_Sts(void){
+	return Radio.RxPacket.CRCSts;
+}
+
+uint8_t  Radio_Rx_Checksum_Sts(void){
+	return Radio.RxPacket.ChksmSts;
+}
+
+uint32_t Radio_Rx_Packet_Src_Addr(void){
+	return Radio.RxPacket.SrcAddr;
+}
+
+uint32_t Radio_Rx_Packet_Dst_Addr(void){
+	return Radio.RxPacket.DstAddr;
+}
+
+
 
 void Radio_Init(void){
 	Radio_Struct_Init();
