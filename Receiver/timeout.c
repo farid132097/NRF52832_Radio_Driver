@@ -31,12 +31,12 @@ void Timeout_Set_MicroSeconds(uint32_t val){
 }
 
 uint8_t Timeout_Error_Assign(uint8_t error_code){
-	if( RTC_RTC1_Timeout_Event() == TRUE ){
+	if( RTC_RTC1_Event() == TRUE ){
 		Timeout.Error = error_code;
 		if(Timeout.StickyError == NULL){
 			Timeout.StickyError = error_code;
 		}
-		RTC_RTC1_Timeout_Event_Clear();
+		RTC_RTC1_Event_Clear();
 		return TRUE;
 	}
 	else{
@@ -53,7 +53,7 @@ void Timeout_Error_Force_Assign(uint8_t error_code){
 
 void Timeout_Clear_Assignment(void){
 	RTC_RTC1_Clear_Timeout();
-	RTC_RTC1_Timeout_Event_Clear();
+	RTC_RTC1_Event_Clear();
 }
 
 void Timeout_Delay(uint32_t val){

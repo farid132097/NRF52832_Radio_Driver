@@ -12,8 +12,8 @@ typedef struct rtc_t{
 	volatile uint32_t RTC1Val;
 	uint8_t           RTC0Configured;
 	uint8_t           RTC1Configured;
+	uint8_t           RTC0Event;
 	uint8_t           RTC1Event;
-	uint8_t           Reserved1;
 }rtc_t;
 
 static rtc_t RTC;
@@ -24,6 +24,7 @@ void RTC_Struct_Init(void){
 	RTC.RTC1Val = 0;
 	RTC.RTC0Configured = FALSE;
 	RTC.RTC1Configured = FALSE;
+	RTC.RTC0Event = FALSE;
 	RTC.RTC1Event = FALSE;
 }
 
@@ -96,11 +97,19 @@ void RTC_RTC1_Clear_Timeout(void){
 }
 
 
-uint8_t RTC_RTC1_Timeout_Event(void){
+uint8_t RTC_RTC0_Event(void){
+	return RTC.RTC0Event;
+}
+
+void RTC_RTC0_Event_Clear(void){
+	RTC.RTC0Event = FALSE;
+}
+
+uint8_t RTC_RTC1_Event(void){
 	return RTC.RTC1Event;
 }
 
-void RTC_RTC1_Timeout_Event_Clear(void){
+void RTC_RTC1_Event_Clear(void){
 	RTC.RTC1Event = FALSE;
 }
 
@@ -113,26 +122,12 @@ uint32_t RTC_UpTime_Get(void){
 }
 
 
-uint32_t RTC_Interval_Time_Get(void){
-	return RTC.IntervalTime;
-}
-
-
-void RTC_Interval_Time_Clear(void){
-	RTC.IntervalTime = 0;
-}
-
-
-
-
-
-
 void RTC0_IRQHandler(void){
 	if(NRF_RTC0->EVENTS_COMPARE[0] == 1){
 		NRF_RTC0->EVENTS_COMPARE[0] = 0;
 	  NRF_RTC0->TASKS_CLEAR = 1;
+		RTC.RTC0Event = TRUE;
 	  RTC.UpTime++;
-	  RTC.IntervalTime++;
 	}
 }
 
@@ -143,7 +138,6 @@ void RTC1_IRQHandler(void){
 		RTC_RTC1_Clear_Timeout();
 	  NRF_RTC1->TASKS_CLEAR = 1;
 		RTC.RTC1Event = TRUE;
-		
 	}
 }
 

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\nrf52832_radio_driver.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\nrf52832_radio_driver.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6220000: Last Updated: Sun Jan  4 17:08:33 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6220000: Last Updated: Sun Jan  4 17:31:23 2026
 <BR><P>
 <H3>Maximum Stack Usage =         96 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -495,7 +495,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;App_Mainloop
 </UL>
 
-<P><STRONG><a name="[15]"></a>RTC0_IRQHandler</STRONG> (Thumb, 54 bytes, Stack size 0 bytes, rtc.o(.text.RTC0_IRQHandler))
+<P><STRONG><a name="[15]"></a>RTC0_IRQHandler</STRONG> (Thumb, 50 bytes, Stack size 0 bytes, rtc.o(.text.RTC0_IRQHandler))
 <BR>[Address Reference Count : 1]<UL><LI> arm_startup_nrf52.o(RESET)
 </UL>
 <P><STRONG><a name="[1b]"></a>RTC1_IRQHandler</STRONG> (Thumb, 112 bytes, Stack size 0 bytes, rtc.o(.text.RTC1_IRQHandler))
@@ -505,19 +505,19 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Clear_Assignment
 </UL>
 
+<P><STRONG><a name="[63]"></a>RTC_RTC1_Event</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, rtc.o(.text.RTC_RTC1_Event))
+<BR><BR>[Called By]<UL><LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Error_Assign
+</UL>
+
+<P><STRONG><a name="[62]"></a>RTC_RTC1_Event_Clear</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, rtc.o(.text.RTC_RTC1_Event_Clear))
+<BR><BR>[Called By]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Clear_Assignment
+<LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Error_Assign
+</UL>
+
 <P><STRONG><a name="[65]"></a>RTC_RTC1_Set_Timeout</STRONG> (Thumb, 132 bytes, Stack size 8 bytes, rtc.o(.text.RTC_RTC1_Set_Timeout))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = RTC_RTC1_Set_Timeout
 </UL>
 <BR>[Called By]<UL><LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Set_MicroSeconds
-</UL>
-
-<P><STRONG><a name="[63]"></a>RTC_RTC1_Timeout_Event</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, rtc.o(.text.RTC_RTC1_Timeout_Event))
-<BR><BR>[Called By]<UL><LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Error_Assign
-</UL>
-
-<P><STRONG><a name="[62]"></a>RTC_RTC1_Timeout_Event_Clear</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, rtc.o(.text.RTC_RTC1_Timeout_Event_Clear))
-<BR><BR>[Called By]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Clear_Assignment
-<LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timeout_Error_Assign
 </UL>
 
 <P><STRONG><a name="[4e]"></a>Radio_Buf_Get</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, radio.o(.text.Radio_Buf_Get))
@@ -617,7 +617,7 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = Timeout_Clear_Assignment
 </UL>
 <BR>[Calls]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_RTC1_Clear_Timeout
-<LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_RTC1_Timeout_Event_Clear
+<LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_RTC1_Event_Clear
 </UL>
 <BR>[Called By]<UL><LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx_Basic
 <LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Tx_Basic
@@ -628,8 +628,8 @@ Global Symbols
 <P><STRONG><a name="[56]"></a>Timeout_Error_Assign</STRONG> (Thumb, 50 bytes, Stack size 8 bytes, timeout.o(.text.Timeout_Error_Assign))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = Timeout_Error_Assign
 </UL>
-<BR>[Calls]<UL><LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_RTC1_Timeout_Event_Clear
-<LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_RTC1_Timeout_Event
+<BR>[Calls]<UL><LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_RTC1_Event_Clear
+<LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_RTC1_Event
 </UL>
 <BR>[Called By]<UL><LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Rx_Basic
 <LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Radio_Tx_Basic
