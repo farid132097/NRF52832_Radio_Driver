@@ -486,7 +486,7 @@ Removing Unused input sections from the image.
     Removing timeout.o(.ARM.exidx.text.Timeout_Elapsed_Time_Get), (8 bytes).
     Removing timeout.o(.ARM.exidx.text.Timeout_Init), (8 bytes).
     Removing radio.o(.text), (0 bytes).
-    Removing radio.o(.text.Radio_Struct_Init), (36 bytes).
+    Removing radio.o(.text.Radio_Struct_Init), (44 bytes).
     Removing radio.o(.ARM.exidx.text.Radio_Struct_Init), (8 bytes).
     Removing radio.o(.text.Radio_Reg_Init), (128 bytes).
     Removing radio.o(.ARM.exidx.text.Radio_Reg_Init), (8 bytes).
@@ -767,7 +767,7 @@ Removing Unused input sections from the image.
     Removing system_nrf52.o(.ARM.exidx.text.SystemCoreClockUpdate), (8 bytes).
     Removing system_nrf52.o(.ARM.exidx.text.SystemInit), (8 bytes).
 
-305 unused section(s) (total 9858 bytes) removed from the image.
+305 unused section(s) (total 9866 bytes) removed from the image.
 
 ==============================================================================
 
@@ -917,24 +917,24 @@ Image Symbol Table
     [Anonymous Symbol]                       0x00000700   Section        0  rtc.o(.text.RTC_RTC1_Timeout_Event)
     [Anonymous Symbol]                       0x0000070c   Section        0  rtc.o(.text.RTC_RTC1_Timeout_Event_Clear)
     [Anonymous Symbol]                       0x0000071c   Section        0  radio.o(.text.Radio_Init)
-    [Anonymous Symbol]                       0x000007d8   Section        0  radio.o(.text.Radio_Mode_Rx)
-    [Anonymous Symbol]                       0x000008d0   Section        0  radio.o(.text.Radio_Mode_Tx)
-    [Anonymous Symbol]                       0x000009c4   Section        0  radio.o(.text.Radio_Rx_Basic)
-    [Anonymous Symbol]                       0x00000abc   Section        0  radio.o(.text.Radio_Tx_Basic)
-    [Anonymous Symbol]                       0x00000bc4   Section        0  radio.o(.text.Radio_Tx_Get_Ack)
-    [Anonymous Symbol]                       0x00000c48   Section        0  system_nrf52.o(.text.SystemInit)
-    [Anonymous Symbol]                       0x00000e70   Section        0  timeout.o(.text.Timeout_Clear_Assignment)
-    [Anonymous Symbol]                       0x00000e80   Section        0  timeout.o(.text.Timeout_Delay)
-    [Anonymous Symbol]                       0x00000ec8   Section        0  timeout.o(.text.Timeout_Elapsed_Time_Get)
-    [Anonymous Symbol]                       0x00000ecc   Section        0  timeout.o(.text.Timeout_Error_Assign)
-    [Anonymous Symbol]                       0x00000f00   Section        0  timeout.o(.text.Timeout_Error_Clear)
-    [Anonymous Symbol]                       0x00000f10   Section        0  timeout.o(.text.Timeout_Error_Force_Assign)
-    [Anonymous Symbol]                       0x00000f2c   Section        0  timeout.o(.text.Timeout_Error_Get)
-    [Anonymous Symbol]                       0x00000f38   Section        0  timeout.o(.text.Timeout_Init)
-    [Anonymous Symbol]                       0x00000f54   Section        0  timeout.o(.text.Timeout_Set_MicroSeconds)
-    [Anonymous Symbol]                       0x00000f58   Section        0  main.o(.text.main)
-    $v0                                      0x00000f62   Number         0  fpinit.o(x$fpl$fpinit)
-    x$fpl$fpinit                             0x00000f62   Section       26  fpinit.o(x$fpl$fpinit)
+    [Anonymous Symbol]                       0x000007e0   Section        0  radio.o(.text.Radio_Mode_Rx)
+    [Anonymous Symbol]                       0x000008d8   Section        0  radio.o(.text.Radio_Mode_Tx)
+    [Anonymous Symbol]                       0x000009cc   Section        0  radio.o(.text.Radio_Rx_Basic)
+    [Anonymous Symbol]                       0x00000ac4   Section        0  radio.o(.text.Radio_Tx_Basic)
+    [Anonymous Symbol]                       0x00000bd0   Section        0  radio.o(.text.Radio_Tx_Get_Ack)
+    [Anonymous Symbol]                       0x00000c8c   Section        0  system_nrf52.o(.text.SystemInit)
+    [Anonymous Symbol]                       0x00000eb4   Section        0  timeout.o(.text.Timeout_Clear_Assignment)
+    [Anonymous Symbol]                       0x00000ec4   Section        0  timeout.o(.text.Timeout_Delay)
+    [Anonymous Symbol]                       0x00000f0c   Section        0  timeout.o(.text.Timeout_Elapsed_Time_Get)
+    [Anonymous Symbol]                       0x00000f10   Section        0  timeout.o(.text.Timeout_Error_Assign)
+    [Anonymous Symbol]                       0x00000f44   Section        0  timeout.o(.text.Timeout_Error_Clear)
+    [Anonymous Symbol]                       0x00000f54   Section        0  timeout.o(.text.Timeout_Error_Force_Assign)
+    [Anonymous Symbol]                       0x00000f70   Section        0  timeout.o(.text.Timeout_Error_Get)
+    [Anonymous Symbol]                       0x00000f7c   Section        0  timeout.o(.text.Timeout_Init)
+    [Anonymous Symbol]                       0x00000f98   Section        0  timeout.o(.text.Timeout_Set_MicroSeconds)
+    [Anonymous Symbol]                       0x00000f9c   Section        0  main.o(.text.main)
+    $v0                                      0x00000fa6   Number         0  fpinit.o(x$fpl$fpinit)
+    x$fpl$fpinit                             0x00000fa6   Section       26  fpinit.o(x$fpl$fpinit)
     __tagsym$$used.0                         0x20000000   Number         0  system_nrf52.o(.data.SystemCoreClock)
     .bss                                     0x20000008   Section       96  libspace.o(.bss)
     Clocks.0                                 0x20000068   Data           1  clocks.o(.bss.Clocks.0)
@@ -945,19 +945,19 @@ Image Symbol Table
     [Anonymous Symbol]                       0x2000006a   Section        0  clocks.o(.bss.Clocks.2)
     RTC                                      0x2000006c   Data          16  rtc.o(.bss.RTC)
     [Anonymous Symbol]                       0x2000006c   Section        0  rtc.o(.bss.RTC)
-    Radio                                    0x2000007c   Data         124  radio.o(.bss.Radio)
+    Radio                                    0x2000007c   Data         136  radio.o(.bss.Radio)
     [Anonymous Symbol]                       0x2000007c   Section        0  radio.o(.bss.Radio)
-    Timeout.0                                0x200000f8   Data           1  timeout.o(.bss.Timeout.0)
-    [Anonymous Symbol]                       0x200000f8   Section        0  timeout.o(.bss.Timeout.0)
-    Timeout.1                                0x200000f9   Data           1  timeout.o(.bss.Timeout.1)
-    [Anonymous Symbol]                       0x200000f9   Section        0  timeout.o(.bss.Timeout.1)
-    buf                                      0x200000fa   Data          32  app.o(.bss.buf)
-    [Anonymous Symbol]                       0x200000fa   Section        0  app.o(.bss.buf)
-    Heap_Mem                                 0x20000120   Data        4096  arm_startup_nrf52.o(HEAP)
-    HEAP                                     0x20000120   Section     4096  arm_startup_nrf52.o(HEAP)
-    Stack_Mem                                0x20001120   Data        4096  arm_startup_nrf52.o(STACK)
-    STACK                                    0x20001120   Section     4096  arm_startup_nrf52.o(STACK)
-    __initial_sp                             0x20002120   Data           0  arm_startup_nrf52.o(STACK)
+    Timeout.0                                0x20000104   Data           1  timeout.o(.bss.Timeout.0)
+    [Anonymous Symbol]                       0x20000104   Section        0  timeout.o(.bss.Timeout.0)
+    Timeout.1                                0x20000105   Data           1  timeout.o(.bss.Timeout.1)
+    [Anonymous Symbol]                       0x20000105   Section        0  timeout.o(.bss.Timeout.1)
+    buf                                      0x20000106   Data          32  app.o(.bss.buf)
+    [Anonymous Symbol]                       0x20000106   Section        0  app.o(.bss.buf)
+    Heap_Mem                                 0x20000128   Data        4096  arm_startup_nrf52.o(HEAP)
+    HEAP                                     0x20000128   Section     4096  arm_startup_nrf52.o(HEAP)
+    Stack_Mem                                0x20001128   Data        4096  arm_startup_nrf52.o(STACK)
+    STACK                                    0x20001128   Section     4096  arm_startup_nrf52.o(STACK)
+    __initial_sp                             0x20002128   Data           0  arm_startup_nrf52.o(STACK)
 
     Global Symbols
 
@@ -1121,28 +1121,28 @@ Image Symbol Table
     RTC_RTC1_Set_Timeout                     0x0000067d   Thumb Code   132  rtc.o(.text.RTC_RTC1_Set_Timeout)
     RTC_RTC1_Timeout_Event                   0x00000701   Thumb Code    12  rtc.o(.text.RTC_RTC1_Timeout_Event)
     RTC_RTC1_Timeout_Event_Clear             0x0000070d   Thumb Code    14  rtc.o(.text.RTC_RTC1_Timeout_Event_Clear)
-    Radio_Init                               0x0000071d   Thumb Code   186  radio.o(.text.Radio_Init)
-    Radio_Mode_Rx                            0x000007d9   Thumb Code   246  radio.o(.text.Radio_Mode_Rx)
-    Radio_Mode_Tx                            0x000008d1   Thumb Code   242  radio.o(.text.Radio_Mode_Tx)
-    Radio_Rx_Basic                           0x000009c5   Thumb Code   248  radio.o(.text.Radio_Rx_Basic)
-    Radio_Tx_Basic                           0x00000abd   Thumb Code   264  radio.o(.text.Radio_Tx_Basic)
-    Radio_Tx_Get_Ack                         0x00000bc5   Thumb Code   130  radio.o(.text.Radio_Tx_Get_Ack)
-    SystemInit                               0x00000c49   Thumb Code   552  system_nrf52.o(.text.SystemInit)
-    Timeout_Clear_Assignment                 0x00000e71   Thumb Code    14  timeout.o(.text.Timeout_Clear_Assignment)
-    Timeout_Delay                            0x00000e81   Thumb Code    70  timeout.o(.text.Timeout_Delay)
-    Timeout_Elapsed_Time_Get                 0x00000ec9   Thumb Code     4  timeout.o(.text.Timeout_Elapsed_Time_Get)
-    Timeout_Error_Assign                     0x00000ecd   Thumb Code    50  timeout.o(.text.Timeout_Error_Assign)
-    Timeout_Error_Clear                      0x00000f01   Thumb Code    14  timeout.o(.text.Timeout_Error_Clear)
-    Timeout_Error_Force_Assign               0x00000f11   Thumb Code    28  timeout.o(.text.Timeout_Error_Force_Assign)
-    Timeout_Error_Get                        0x00000f2d   Thumb Code    12  timeout.o(.text.Timeout_Error_Get)
-    Timeout_Init                             0x00000f39   Thumb Code    26  timeout.o(.text.Timeout_Init)
-    Timeout_Set_MicroSeconds                 0x00000f55   Thumb Code     4  timeout.o(.text.Timeout_Set_MicroSeconds)
-    main                                     0x00000f59   Thumb Code    10  main.o(.text.main)
-    _fp_init                                 0x00000f63   Thumb Code    26  fpinit.o(x$fpl$fpinit)
-    __fplib_config_fpu_vfp                   0x00000f7b   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    __fplib_config_pureend_doubles           0x00000f7b   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    Region$$Table$$Base                      0x00000f7c   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x00000f9c   Number         0  anon$$obj.o(Region$$Table)
+    Radio_Init                               0x0000071d   Thumb Code   194  radio.o(.text.Radio_Init)
+    Radio_Mode_Rx                            0x000007e1   Thumb Code   246  radio.o(.text.Radio_Mode_Rx)
+    Radio_Mode_Tx                            0x000008d9   Thumb Code   242  radio.o(.text.Radio_Mode_Tx)
+    Radio_Rx_Basic                           0x000009cd   Thumb Code   248  radio.o(.text.Radio_Rx_Basic)
+    Radio_Tx_Basic                           0x00000ac5   Thumb Code   268  radio.o(.text.Radio_Tx_Basic)
+    Radio_Tx_Get_Ack                         0x00000bd1   Thumb Code   186  radio.o(.text.Radio_Tx_Get_Ack)
+    SystemInit                               0x00000c8d   Thumb Code   552  system_nrf52.o(.text.SystemInit)
+    Timeout_Clear_Assignment                 0x00000eb5   Thumb Code    14  timeout.o(.text.Timeout_Clear_Assignment)
+    Timeout_Delay                            0x00000ec5   Thumb Code    70  timeout.o(.text.Timeout_Delay)
+    Timeout_Elapsed_Time_Get                 0x00000f0d   Thumb Code     4  timeout.o(.text.Timeout_Elapsed_Time_Get)
+    Timeout_Error_Assign                     0x00000f11   Thumb Code    50  timeout.o(.text.Timeout_Error_Assign)
+    Timeout_Error_Clear                      0x00000f45   Thumb Code    14  timeout.o(.text.Timeout_Error_Clear)
+    Timeout_Error_Force_Assign               0x00000f55   Thumb Code    28  timeout.o(.text.Timeout_Error_Force_Assign)
+    Timeout_Error_Get                        0x00000f71   Thumb Code    12  timeout.o(.text.Timeout_Error_Get)
+    Timeout_Init                             0x00000f7d   Thumb Code    26  timeout.o(.text.Timeout_Init)
+    Timeout_Set_MicroSeconds                 0x00000f99   Thumb Code     4  timeout.o(.text.Timeout_Set_MicroSeconds)
+    main                                     0x00000f9d   Thumb Code    10  main.o(.text.main)
+    _fp_init                                 0x00000fa7   Thumb Code    26  fpinit.o(x$fpl$fpinit)
+    __fplib_config_fpu_vfp                   0x00000fbf   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    __fplib_config_pureend_doubles           0x00000fbf   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    Region$$Table$$Base                      0x00000fc0   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00000fe0   Number         0  anon$$obj.o(Region$$Table)
     SystemCoreClock                          0x20000000   Data           4  system_nrf52.o(.data.SystemCoreClock)
     __libspace_start                         0x20000008   Data          96  libspace.o(.bss)
     __temporary_stack_top$libspace           0x20000068   Data           0  libspace.o(.bss)
@@ -1155,9 +1155,9 @@ Memory Map of the image
 
   Image Entry point : 0x000002cd
 
-  Load Region LR_1 (Base: 0x00000000, Size: 0x00000fa0, Max: 0xffffffff, ABSOLUTE)
+  Load Region LR_1 (Base: 0x00000000, Size: 0x00000fe4, Max: 0xffffffff, ABSOLUTE)
 
-    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000f9c, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000fe0, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -1248,44 +1248,44 @@ Memory Map of the image
     0x00000700   0x00000700   0x0000000c   Code   RO          365    .text.RTC_RTC1_Timeout_Event  rtc.o
     0x0000070c   0x0000070c   0x0000000e   Code   RO          367    .text.RTC_RTC1_Timeout_Event_Clear  rtc.o
     0x0000071a   0x0000071a   0x00000002   PAD
-    0x0000071c   0x0000071c   0x000000ba   Code   RO           97    .text.Radio_Init    radio.o
-    0x000007d6   0x000007d6   0x00000002   PAD
-    0x000007d8   0x000007d8   0x000000f6   Code   RO           75    .text.Radio_Mode_Rx  radio.o
-    0x000008ce   0x000008ce   0x00000002   PAD
-    0x000008d0   0x000008d0   0x000000f2   Code   RO           73    .text.Radio_Mode_Tx  radio.o
-    0x000009c2   0x000009c2   0x00000002   PAD
-    0x000009c4   0x000009c4   0x000000f8   Code   RO           79    .text.Radio_Rx_Basic  radio.o
-    0x00000abc   0x00000abc   0x00000108   Code   RO           77    .text.Radio_Tx_Basic  radio.o
-    0x00000bc4   0x00000bc4   0x00000082   Code   RO           81    .text.Radio_Tx_Get_Ack  radio.o
-    0x00000c46   0x00000c46   0x00000002   PAD
-    0x00000c48   0x00000c48   0x00000228   Code   RO          421    .text.SystemInit    system_nrf52.o
-    0x00000e70   0x00000e70   0x0000000e   Code   RO           33    .text.Timeout_Clear_Assignment  timeout.o
-    0x00000e7e   0x00000e7e   0x00000002   PAD
-    0x00000e80   0x00000e80   0x00000046   Code   RO           35    .text.Timeout_Delay  timeout.o
-    0x00000ec6   0x00000ec6   0x00000002   PAD
-    0x00000ec8   0x00000ec8   0x00000004   Code   RO           45    .text.Timeout_Elapsed_Time_Get  timeout.o
-    0x00000ecc   0x00000ecc   0x00000032   Code   RO           29    .text.Timeout_Error_Assign  timeout.o
-    0x00000efe   0x00000efe   0x00000002   PAD
-    0x00000f00   0x00000f00   0x0000000e   Code   RO           39    .text.Timeout_Error_Clear  timeout.o
-    0x00000f0e   0x00000f0e   0x00000002   PAD
-    0x00000f10   0x00000f10   0x0000001c   Code   RO           31    .text.Timeout_Error_Force_Assign  timeout.o
-    0x00000f2c   0x00000f2c   0x0000000c   Code   RO           37    .text.Timeout_Error_Get  timeout.o
-    0x00000f38   0x00000f38   0x0000001a   Code   RO           47    .text.Timeout_Init  timeout.o
+    0x0000071c   0x0000071c   0x000000c2   Code   RO           97    .text.Radio_Init    radio.o
+    0x000007de   0x000007de   0x00000002   PAD
+    0x000007e0   0x000007e0   0x000000f6   Code   RO           75    .text.Radio_Mode_Rx  radio.o
+    0x000008d6   0x000008d6   0x00000002   PAD
+    0x000008d8   0x000008d8   0x000000f2   Code   RO           73    .text.Radio_Mode_Tx  radio.o
+    0x000009ca   0x000009ca   0x00000002   PAD
+    0x000009cc   0x000009cc   0x000000f8   Code   RO           79    .text.Radio_Rx_Basic  radio.o
+    0x00000ac4   0x00000ac4   0x0000010c   Code   RO           77    .text.Radio_Tx_Basic  radio.o
+    0x00000bd0   0x00000bd0   0x000000ba   Code   RO           81    .text.Radio_Tx_Get_Ack  radio.o
+    0x00000c8a   0x00000c8a   0x00000002   PAD
+    0x00000c8c   0x00000c8c   0x00000228   Code   RO          421    .text.SystemInit    system_nrf52.o
+    0x00000eb4   0x00000eb4   0x0000000e   Code   RO           33    .text.Timeout_Clear_Assignment  timeout.o
+    0x00000ec2   0x00000ec2   0x00000002   PAD
+    0x00000ec4   0x00000ec4   0x00000046   Code   RO           35    .text.Timeout_Delay  timeout.o
+    0x00000f0a   0x00000f0a   0x00000002   PAD
+    0x00000f0c   0x00000f0c   0x00000004   Code   RO           45    .text.Timeout_Elapsed_Time_Get  timeout.o
+    0x00000f10   0x00000f10   0x00000032   Code   RO           29    .text.Timeout_Error_Assign  timeout.o
+    0x00000f42   0x00000f42   0x00000002   PAD
+    0x00000f44   0x00000f44   0x0000000e   Code   RO           39    .text.Timeout_Error_Clear  timeout.o
     0x00000f52   0x00000f52   0x00000002   PAD
-    0x00000f54   0x00000f54   0x00000004   Code   RO           27    .text.Timeout_Set_MicroSeconds  timeout.o
-    0x00000f58   0x00000f58   0x0000000a   Code   RO           14    .text.main          main.o
-    0x00000f62   0x00000f62   0x0000001a   Code   RO          524    x$fpl$fpinit        fz_wm.l(fpinit.o)
-    0x00000f7c   0x00000f7c   0x00000020   Data   RO          599    Region$$Table       anon$$obj.o
+    0x00000f54   0x00000f54   0x0000001c   Code   RO           31    .text.Timeout_Error_Force_Assign  timeout.o
+    0x00000f70   0x00000f70   0x0000000c   Code   RO           37    .text.Timeout_Error_Get  timeout.o
+    0x00000f7c   0x00000f7c   0x0000001a   Code   RO           47    .text.Timeout_Init  timeout.o
+    0x00000f96   0x00000f96   0x00000002   PAD
+    0x00000f98   0x00000f98   0x00000004   Code   RO           27    .text.Timeout_Set_MicroSeconds  timeout.o
+    0x00000f9c   0x00000f9c   0x0000000a   Code   RO           14    .text.main          main.o
+    0x00000fa6   0x00000fa6   0x0000001a   Code   RO          524    x$fpl$fpinit        fz_wm.l(fpinit.o)
+    0x00000fc0   0x00000fc0   0x00000020   Data   RO          599    Region$$Table       anon$$obj.o
 
 
-    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x00000f9c, Size: 0x00000004, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x00000fe0, Size: 0x00000004, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x00000f9c   0x00000004   Data   RW          423    .data.SystemCoreClock  system_nrf52.o
+    0x20000000   0x00000fe0   0x00000004   Data   RW          423    .data.SystemCoreClock  system_nrf52.o
 
 
-    Execution Region ER_ZI (Exec base: 0x20000008, Load base: 0x00000fa0, Size: 0x00002118, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_ZI (Exec base: 0x20000008, Load base: 0x00000fe4, Size: 0x00002120, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -1293,15 +1293,15 @@ Memory Map of the image
     0x20000068        -       0x00000001   Zero   RW          309    .bss.Clocks.0       clocks.o
     0x20000069        -       0x00000001   Zero   RW          310    .bss.Clocks.1       clocks.o
     0x2000006a        -       0x00000001   Zero   RW          311    .bss.Clocks.2       clocks.o
-    0x2000006b   0x00000fa0   0x00000001   PAD
+    0x2000006b   0x00000fe4   0x00000001   PAD
     0x2000006c        -       0x00000010   Zero   RW          383    .bss.RTC            rtc.o
-    0x2000007c        -       0x0000007c   Zero   RW           99    .bss.Radio          radio.o
-    0x200000f8        -       0x00000001   Zero   RW           49    .bss.Timeout.0      timeout.o
-    0x200000f9        -       0x00000001   Zero   RW           50    .bss.Timeout.1      timeout.o
-    0x200000fa        -       0x00000020   Zero   RW            6    .bss.buf            app.o
-    0x2000011a   0x00000fa0   0x00000006   PAD
-    0x20000120        -       0x00001000   Zero   RW          406    HEAP                arm_startup_nrf52.o
-    0x20001120        -       0x00001000   Zero   RW          405    STACK               arm_startup_nrf52.o
+    0x2000007c        -       0x00000088   Zero   RW           99    .bss.Radio          radio.o
+    0x20000104        -       0x00000001   Zero   RW           49    .bss.Timeout.0      timeout.o
+    0x20000105        -       0x00000001   Zero   RW           50    .bss.Timeout.1      timeout.o
+    0x20000106        -       0x00000020   Zero   RW            6    .bss.buf            app.o
+    0x20000126   0x00000fe4   0x00000002   PAD
+    0x20000128        -       0x00001000   Zero   RW          406    HEAP                arm_startup_nrf52.o
+    0x20001128        -       0x00001000   Zero   RW          405    STACK               arm_startup_nrf52.o
 
 
 ==============================================================================
@@ -1317,15 +1317,15 @@ Image component sizes
        234          0          0          0          3       4741   clocks.o
         62          0          0          0          0       1785   led.o
         10          0          0          0          0        385   main.o
-      1316          0          0          0        124       8556   radio.o
+      1384          0          0          0        136       8850   radio.o
        416          0          0          0         16       7195   rtc.o
        552          0          0          4          0       8439   system_nrf52.o
        222          0          0          0          2       2789   timeout.o
 
     ----------------------------------------------------------------------
-      3098         26        544          4       8376      37657   Object Totals
+      3166         26        544          4       8384      37951   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-        36          0          0          0          7          0   (incl. Padding)
+        36          0          0          0          3          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -1374,15 +1374,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      3452         42        544          4       8472      38109   Grand Totals
-      3452         42        544          4       8472      38109   ELF Image Totals
-      3452         42        544          4          0          0   ROM Totals
+      3520         42        544          4       8480      38403   Grand Totals
+      3520         42        544          4       8480      38403   ELF Image Totals
+      3520         42        544          4          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 3996 (   3.90kB)
-    Total RW  Size (RW Data + ZI Data)              8476 (   8.28kB)
-    Total ROM Size (Code + RO Data + RW Data)       4000 (   3.91kB)
+    Total RO  Size (Code + RO Data)                 4064 (   3.97kB)
+    Total RW  Size (RW Data + ZI Data)              8484 (   8.29kB)
+    Total ROM Size (Code + RO Data + RW Data)       4068 (   3.97kB)
 
 ==============================================================================
 
