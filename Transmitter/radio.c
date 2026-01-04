@@ -430,6 +430,10 @@ uint32_t Radio_Rx_Packet_Dst_Addr(void){
 	return Radio.RxPacket.DstAddr;
 }
 
+uint8_t Radio_Buf_Get(uint8_t index){
+	return Radio.RxPacket.Buf[index];
+}
+
 uint8_t Radio_Ack_Data_Len(void){
 	return Radio.AckDataLen;
 }

@@ -16,7 +16,7 @@
 #define  STOP                    0x00U
 #define  STARTED                 0x01U
 #define  STOPPED                 0x00U
-#define  ENABLE                  0x01U
+//#define  ENABLE                  0x01U
 #define  DISABLE                 0x00U
 #define  ENABLED                 0x01U
 #define  DISABLED                0x00U
